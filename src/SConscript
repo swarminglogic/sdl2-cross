@@ -1,0 +1,130 @@
+import os, re, imp
+
+Import('env')
+
+base ='#/src'
+target = '#/bin/main'
+
+cppFiles      = Glob('*.cpp')     + Glob('*/*.cpp')     + Glob('*/*/*.cpp')
+cppFilesPrune = Glob('main.cpp') + Glob('Test*.cpp') + Glob('*/Test*.cpp') + Glob('*/*/Test*.cpp')
+testFiles     = Glob('Test*.h')   + Glob('*/Test*.h')   + Glob('*/*/Test*.h')
+sourceFiles = list(set(cppFiles) - set(cppFilesPrune))
+
+pathBoost  = os.environ["BOOSTDIR"];
+pathSdl    = os.environ["SDL2DIR"];
+pathGlm    = os.environ["GLMDIR"];
+pathAngel  = os.environ["ANGELSCRIPTDIR"];
+pathBullet = os.environ["BULLETDIR"];
+
+libs = ['SDL2', 'SDL2_image', 'SDL2_ttf', 'SDL2_mixer',
+        'BulletCollision',
+        'BulletDynamics',
+        # 'BulletFileLoader',
+        # 'BulletSoftBody',
+        # 'BulletWorldImporter',
+        # 'BulletXmlWorldImporter',
+        # 'ConvexDecomposition',
+        # 'GIMPACTUtils',
+        # 'HACD',
+        'LinearMath',
+        'angelscript', 'boost_system', 'boost_filesystem',
+        'GL', 'GLU', 'm', 'dl', 'rt']
+
+
+#angelAddons = ['scriptbuilder', 'scriptstdstring']
+angelAddons = []
+
+libpaths = [
+   pathBoost + "/lib",
+   pathAngel + '/lib',
+   pathSdl + '/lib',
+   pathBullet + '/lib']
+
+sourcepaths = [
+   base,
+   base + '/../android/jni/SDL/include',
+   pathBoost + '/include',
+   pathGlm,
+   pathAngel + '/include',
+   pathBullet + '/include/bullet/',
+   #   os.environ["CXXTESTDIR"],
+   pathSdl + "/include/"]
+
+
+cppflags = ['-O0', '-g', '-gdwarf-2', '-fno-strict-aliasing',
+            '-D_REENTRANT', '-DBOOST_FILESYSTEM_NO_DEPRECATED',
+            '-DGLM_FORCE_RADIANS']
+#cppflags = ['-O3', '-DGL_GLEXT_PROTOTYPES', '-D_REENTRANT']
+
+
+# Macros definitions
+macroDefinitions = [
+   'USING_SDL',           # Should always be set in SDL projects.
+#   'LOGGING_DISABLED',    # Disables all logging
+#   'LOG2STREAM_DISABLED', # Disables logging to stream
+#   'LOG2FILE_DISABLED',   # Disables logging to file
+]
+for macro in macroDefinitions:
+   cppflags.append('-D' + macro)
+
+# Adding ignore paths for external libraries
+cppflags.extend(['-isystem', pathBoost + '/include',
+                 '-isystem', pathSdl + '/include/',
+                 '-isystem', pathGlm,
+                 '-isystem', pathBullet + '/include/bullet',
+                 '-isystem', pathAngel + '/include',
+                 '-isystem', pathAngel + '/include/angelscript'
+              ])
+for addon in angelAddons:
+   cppflags.append(['-isystem', pathAngel + '/addon/' + addon])
+
+if env['CXX'] == 'g++':
+   cppflags.append(['-std=c++11'])
+#'-Waggregate-return', # Problem with iterators in stl containers.
+   cppflags.append([
+         '-Wall', '-Wextra', '-Wcast-align', '-Wcast-qual',
+         '-fpermissive',
+         '-Wconversion', '-Wdisabled-optimization', #'-Weffc++',
+         '-Wfloat-equal', '-Wformat=2', '-Wimport', '-Winit-self',
+         '-Winline', '-Winvalid-pch', '-Wlong-long',
+         '-Wmissing-format-attribute', '-Wmissing-include-dirs',
+         '-Wmissing-noreturn', '-Wpacked', '-Wpointer-arith',
+         '-Wredundant-decls', '-Wshadow', '-Wstack-protector',
+         '-Wstrict-aliasing=2', '-Wunreachable-code',
+         '-Wunsafe-loop-optimizations', '-Wunused',
+         '-Wvariadic-macros', '-Wwrite-strings', '-pedantic',
+         '-pedantic-errors', '-Woverloaded-virtual',
+         '-Wswitch-enum', # '-Werror'
+   ])
+
+elif env['CXX'] == 'clang':
+   cppflags.append(['-std=c++11'])
+
+angelSources = []
+for addon in angelAddons:
+   addonPath = pathAngel + '/addon/' + addon
+   assert os.path.exists(addonPath), "NOT A DIRECTORY: [" + addonPath + "]"
+   angelSources += Glob(addonPath + '/*.cpp')
+angellib = env.StaticLibrary('#/lib/angeladdon', angelSources,
+                             LIBS = libs,
+                             LIBPATH = [pathAngel + '/lib'],
+                             CPPFLAGS = cppflags,
+                             CPPPATH = [pathAngel + '/include']);
+Default(angellib)
+
+applib = env.StaticLibrary('#/lib/main', sourceFiles,
+                           LIBS = libs,
+                           LIBPATH = libpaths,
+                           CPPFLAGS = cppflags,
+                           CPPPATH = sourcepaths);
+Default(applib)
+Clean(applib, '#/build')
+
+cppMain = Glob('main.cpp')
+app = env.Program(target, cppMain,
+                  LIBS = applib + angellib + libs,
+                  LIBPATH = libpaths,
+                  CPPFLAGS = cppflags,
+                  CPPPATH = sourcepaths);
+Default(app)
+
