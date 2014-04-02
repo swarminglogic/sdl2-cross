@@ -20,14 +20,6 @@ Options
     exit
 }
 
-function buildAndroid() {
-    (cd android && nice ndk-build -j6)
-}
-
-function buildLinux() {
-    scons
-}
-
 function echoerr() {
     echo -e "$@" 1>&2;
 }
