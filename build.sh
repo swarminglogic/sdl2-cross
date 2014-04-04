@@ -10,6 +10,8 @@ Possible targets:
 Options
  General:
     -c, --clean   Cleans build files for all specified targets.
+    -v, --verbose Verbose compilation output
+    -s, --serial  Only use one core when compiling.
  For android:
     -p, --push    Pushes the compiled apk to a connected device.
 
@@ -33,6 +35,14 @@ while test $# -gt 0; do
         -c|--clean)
             shift
             cleanTarget=yes
+            ;;
+        -v|--verbose)
+            shift
+            isVerbose=yes
+            ;;
+        -s|--serial)
+            shift
+            isSerial=yes
             ;;
         -p|--push)
             shift
@@ -61,17 +71,26 @@ while test $# -gt 0; do
     esac
 done
 
+serial='-j6'
+if [[ $isSerial ]] ; then
+    serial="-j1"
+fi
+
 if [[ $android ]] ; then
+    if [[ $isVerbose ]] ; then
+        verbose="V=1"
+    fi
+
     if [[ $cleanTarget ]] ; then
         echo "Cleaning Android build ..."
-        (cd android && ndk-build clean);
+        (cd android && ndk-build clean $verbose);
     else
         if [[ ! -e android/project.properties ]] ; then
             echo "Running android/initialize_project.sh ..."
             (cd android && ./initialize_project.sh)
         fi
 
-        (cd android && nice ndk-build -j6)
+        (cd android && nice ndk-build $serial $verbose)
         if [[ $pushToAndroid ]] ; then
             (cd android && ant debug install)
         fi
@@ -83,6 +102,6 @@ if [[ $linux ]] ; then
         echo "Cleaning Linux build ..."
         scons -c;
     else
-        nice scons -j6
+        nice scons $serial
     fi
 fi
