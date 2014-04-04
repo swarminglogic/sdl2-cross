@@ -40,27 +40,27 @@ while test $# -gt 0; do
             ;;
         b)
             shift
-            ./build.sh $@
+            ./compile.sh $@
             exit
             ;;
         ba)
             shift
-            ./build.sh a $@
+            ./compile.sh a $@
             exit
             ;;
         bap)
             shift
-            ./build.sh a -p $@
+            ./compile.sh a -p $@
             exit
             ;;
         bl)
             shift
-            ./build.sh l $@
+            ./compile.sh l $@
             exit
             ;;
         bal)
             shift
-            ./build.sh all $@
+            ./compile.sh all $@
             exit
             ;;
         p)
@@ -72,24 +72,24 @@ while test $# -gt 0; do
             shift
             watchfile -s "find . \
             | grep -P '\./src/[^\.](.*\.mk|.*\.cpp$|.*\.h$)' \
-            | xargs cat | md5sum" -e ./build.sh a $@
+            | xargs cat | md5sum" -e ./compile.sh a $@
              exit
              ;;
         wl)
             shift
              watchfile -s "find . \
              | grep -P '(\./src/[^\.](.*\.cpp$|.*\.h$)|\./(src/|)SCons.*)' \
-             | xargs cat | md5sum" -e ./build.sh l $@
+             | xargs cat | md5sum" -e ./compile.sh l $@
              exit
              ;;
         # wal)
         #     shift
         #      watchfile --no-clear -s "find . \
         #      | grep -P '(\./src/[^\.](.*\.cpp$|.*\.h$)|\./(src/|)SCons.*)' \
-        #      | xargs cat | md5sum" -e ./build.sh l&
+        #      | xargs cat | md5sum" -e ./compile.sh l&
         #      watchfile --no-clear -s "find . \
         #      | grep -P '\./src/[^\.](.*\.mk|.*\.cpp$|.*\.h$)' \
-        #      | xargs cat | md5sum" -e ./build.sh a&
+        #      | xargs cat | md5sum" -e ./compile.sh a&
         #      wait $(jobs -p)
         #      exit
         #      ;;
