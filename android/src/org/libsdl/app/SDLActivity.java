@@ -46,10 +46,11 @@ public class SDLActivity extends Activity {
 
     // Load the .so
     static {
-        // System.loadLibrary("stlport_shared");
+        System.loadLibrary("gnustl_shared");
         System.loadLibrary("SDL2");
         System.loadLibrary("SDL2_image");
         System.loadLibrary("SDL2_mixer");
+        System.loadLibrary("bullet");
         //System.loadLibrary("SDL2_net");
         //System.loadLibrary("SDL2_ttf");
         System.loadLibrary("main");
