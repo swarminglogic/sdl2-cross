@@ -1,12 +1,13 @@
-	LOCAL_PATH := $(call my-dir)
+LOCAL_PATH := $(call my-dir)
 
 include $(CLEAR_VARS)
 
 LOCAL_MODULE := main
 
-SDL_PATH := ../android/jni/SDL
-SDL_IMAGE_PATH := ../android/jni/SDL_image
-SDL_MIXER_PATH := ../android/jni/SDL_mixer
+JNI_PATH := ../android/jni
+SDL_PATH := $(JNI_PATH)/SDL
+SDL_IMAGE_PATH := $(JNI_PATH)/SDL_image
+SDL_MIXER_PATH := $(JNI_PATH)/SDL_mixer
 
 LOCAL_C_INCLUDES := $(LOCAL_PATH)/$(SDL_PATH)/include \
 	$(LOCAL_PATH)/$(SDL_IMAGE_PATH) \
@@ -16,7 +17,13 @@ LOCAL_C_INCLUDES := $(LOCAL_PATH)/$(SDL_PATH)/include \
 
 # Add your application source files here...
 LOCAL_SRC_FILES := $(SDL_PATH)/src/main/android/SDL_android_main.c \
-		main.cpp
+	$(shell find $(JNI_PATH)/src/ -name "*.cpp")
+
+# Alternative way to wildcard-include files.
+#	$(wildcard $(JNI_PATH)/src/*.cpp)
+
+# To view variables use:
+# $(warning $(LOCAL_SRC_FILES))
 
 LOCAL_SHARED_LIBRARIES := SDL2 SDL2_image SDL2_mixer bullet
 LOCAL_STATIC_LIBRARIES := cpufeatures
