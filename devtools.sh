@@ -70,16 +70,23 @@ while test $# -gt 0; do
             ;;
         wa)
             shift
-            watchfile -s "find . \
-            | grep -P '\./src/[^\.](.*\.mk|.*\.cpp$|.*\.h$)' \
-            | xargs cat | md5sum" -e ./compile.sh a $@
+            watchfile -s "find ./src ./android/jni/ \
+                -name '[!\.]*.cpp' -or \
+                -name '[!\.]*.h'   -or \
+                -name '[!\.]*.tpp' -or \
+                -name '[!\.]*.mk'
+               | xargs cat | md5sum" -e ./compile.sh a $@
              exit
              ;;
         wl)
             shift
-             watchfile -s "find . \
-             | grep -P '(\./src/[^\.](.*\.cpp$|.*\.h$)|\./(src/|)SCons.*)' \
-             | xargs cat | md5sum" -e ./compile.sh l $@
+            watchfile -s "find ./src ./SConstruct \
+                -name '[!\.]*.cpp' -or \
+                -name '[!\.]*.h'   -or \
+                -name '[!\.]*.tpp' -or \
+                -name 'SConscript*' -or \
+                -name 'SConstruct' \
+               | xargs cat | md5sum" -e ./compile.sh l $@
              exit
              ;;
         # wal)
