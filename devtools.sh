@@ -12,11 +12,11 @@ Possible targets:
     p            Pushes Android APK to device
     wa           Auto-rebuild android on changes.
     wl           Auto-rebuild linux on changes.
-    lg,log       adb logcat with SDL and SDL/APP filter
-    lga,loga     adb logcat only SDL/APP filter
+    lg,log       adb logcat with SWL filter
+    lga,loga     adb logcat with SWL, SDL, SDL/* filter
     lgall,logall adb logcat with no filter
+    clean        removal of all build directories (use with caution)
 "
-#    wal          Auto-rebuilds either on change.
     exit
 }
 
@@ -89,30 +89,39 @@ while test $# -gt 0; do
                | xargs cat | md5sum" -e ./compile.sh l $@
              exit
              ;;
-        # wal)
-        #     shift
-        #      watchfile --no-clear -s "find . \
-        #      | grep -P '(\./src/[^\.](.*\.cpp$|.*\.h$)|\./(src/|)SCons.*)' \
-        #      | xargs cat | md5sum" -e ./compile.sh l&
-        #      watchfile --no-clear -s "find . \
-        #      | grep -P '\./src/[^\.](.*\.mk|.*\.cpp$|.*\.h$)' \
-        #      | xargs cat | md5sum" -e ./compile.sh a&
-        #      wait $(jobs -p)
-        #      exit
-        #      ;;
         lg|log)
             shift
-            adb logcat -c && adb logcat -s "SDL","SDL/APP"
+            adb logcat -c && adb logcat -s "SWL"
             exit
             ;;
         lga|loga)
             shift
-            adb logcat -c && adb logcat -s "SDL/APP"
+            adb logcat -c && adb logcat -s "SWL","SDL","SDL/APP",\
+            "SDL/ERROR","SDL/SYSTEM","SDL/AUDIO","SDL/VIDEO",\
+            "SDL/RENDER","SDL/INPUT"
             exit
             ;;
         lgall|logall)
             shift
             adb logcat -c && adb logcat
+            exit
+            ;;
+        clean)
+            while true; do
+                read -p "Removing build directories: \
+./{bin,build,lib}/ android/{bin,gen,libs,obj}/
+Are you sure? [y/n] " yn
+                case $yn in
+                    [Yy]* )
+                        rm -rf \
+                             ./{bin,build,lib}/ android/{bin,gen,libs,obj}/ ;
+                        break
+                        ;;
+                    [Nn]* )
+                        exit;;
+                    * ) echo "Please answer yes or no.";;
+                esac
+            done
             exit
             ;;
         *)
