@@ -26,6 +26,33 @@ function echoerr() {
     echo -e "$@" 1>&2;
 }
 
+
+function writeGitRevHeader() {
+echo "#ifndef UTIL_GITREV_H
+#define UTIL_GITREV_H
+
+#define CURRENT_GIT_REV \"$1\"
+
+#endif" > src/util/gitrev.h
+}
+
+function prepareGitRevHeader() {
+    gitrev=`git rev-parse --short HEAD`
+    if [ ! -e src/util/gitrev.h ] ; then
+        echo "src/util/gitrev.h not found. Attempting to create."
+        writeGitRevHeader $gitrev
+        if [ $? -eq 0 ]; then
+            echo "src/util/gitrev.h was created successfully."
+        else
+            echo "Failed to create src/util/gitrev.h. Aborting!"
+            exit
+        fi
+    else
+        writeGitRevHeader $gitrev
+    fi
+}
+
+
 while test $# -gt 0; do
     case "$1" in
         -h|--help)
@@ -85,6 +112,7 @@ if [[ $android ]] ; then
         echo "Cleaning Android build ..."
         (cd android && ndk-build clean $verbose);
     else
+        prepareGitRevHeader
         if [[ ! -e android/project.properties ]] ; then
             echo "Running android/initialize_project.sh ..."
             (cd android && ./initialize_project.sh)
@@ -102,6 +130,7 @@ if [[ $linux ]] ; then
         echo "Cleaning Linux build ..."
         scons -c;
     else
+        prepareGitRevHeader
         nice scons $serial
     fi
 fi
