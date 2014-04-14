@@ -5,13 +5,15 @@ include $(CLEAR_VARS)
 LOCAL_MODULE := main
 
 JNI_PATH := ../android/jni
-SDL_PATH := $(JNI_PATH)/SDL
-SDL_IMAGE_PATH := $(JNI_PATH)/SDL_image
-SDL_MIXER_PATH := $(JNI_PATH)/SDL_mixer
+SDL_PATH        := $(JNI_PATH)/SDL
+SDL_IMAGE_PATH  := $(JNI_PATH)/SDL_image
+SDL_MIXER_PATH  := $(JNI_PATH)/SDL_mixer
+SDL_TTF_PATH    := $(JNI_PATH)/SDL_ttf
 
 LOCAL_C_INCLUDES := $(LOCAL_PATH)/$(SDL_PATH)/include \
   $(LOCAL_PATH)/$(SDL_IMAGE_PATH) \
   $(LOCAL_PATH)/$(SDL_MIXER_PATH) \
+  $(LOCAL_PATH)/$(SDL_TTF_PATH) \
   $(BULLETDIR)/include/bullet \
   $(BOOSTDIR)/include \
   $(GLMDIR)
@@ -26,7 +28,7 @@ LOCAL_SRC_FILES := $(SDL_PATH)/src/main/android/SDL_android_main.c \
 # To view variables use:
 # $(warning $(LOCAL_SRC_FILES))
 
-LOCAL_SHARED_LIBRARIES := SDL2 SDL2_image SDL2_mixer bullet
+LOCAL_SHARED_LIBRARIES := SDL2 SDL2_image SDL2_mixer SDL2_ttf bullet
 LOCAL_STATIC_LIBRARIES := cpufeatures
 
 LOCAL_LDLIBS := -lGLESv1_CM -lGLESv2 -llog

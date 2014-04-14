@@ -12,12 +12,13 @@ pathAngel  = os.environ["ANGELSCRIPTDIR"];
 pathBullet = os.environ["BULLETDIR"];
 
 lSDL      = ['SDL2']
-lSDLImage = ['SDL2_image']
-lSDLMixer = ['SDL2_mixer']
+lSDLimage = ['SDL2_image']
+lSDLmixer = ['SDL2_mixer']
+lSDLttf   = ['SDL2_ttf']
 lBullet   = ['BulletCollision', 'BulletDynamics', 'LinearMath']
 lGL       = ['GL', 'GLU']
 lOther    = ['m', 'dl', 'rt']
-lAll  = lSDL + lSDLImage + lSDLMixer + lBullet + lGL + lOther
+lAll  = lSDL + lSDLimage + lSDLmixer + lSDLttf + lBullet + lGL + lOther
 
 libpaths = [pathAngel + '/lib',
             pathSdl + '/lib',
@@ -126,7 +127,7 @@ audioFiles = [Glob('audio/*.cpp') +
               Glob('audio/*/*/*.cpp')]
 audioLib = env.SharedLibrary('#/lib/audio',
                              audioFiles,
-                             LIBS = lSDL + lSDLMixer + mathLib + utilLib,
+                             LIBS = lSDL + lSDLmixer + mathLib + utilLib,
                              LIBPATH = libpaths,
                              CPPFLAGS = cppflags,
                              CPPPATH = [sourcepaths]);
@@ -141,7 +142,7 @@ graphicsFiles = [Glob('graphics/*.cpp') +
                  Glob('graphics/*/*/*.cpp')]
 graphicsLib = env.SharedLibrary('#/lib/graphics',
                              graphicsFiles,
-                             LIBS = lSDL + lSDLImage + mathLib + utilLib + lGL,
+                             LIBS = lSDL + lSDLimage + lSDLttf + mathLib + utilLib + lGL,
                              LIBPATH = libpaths,
                              CPPFLAGS = cppflags,
                              CPPPATH = [sourcepaths]);
@@ -182,9 +183,9 @@ Default(modelLib)
 # Main Application
 #######################
 cppMain = [Glob('main.cpp') +
-           Glob('main/*.cpp') +
-           Glob('main/*/*.cpp') +
-           Glob('main/*/*/*.cpp')]
+           Glob('core/*.cpp') +
+           Glob('core/*/*.cpp') +
+           Glob('core/*/*/*.cpp')]
 app = env.Program(target, cppMain,
                   LIBS = mathLib + utilLib + externLib +
                          audioLib + modelLib + ioLib + graphicsLib + lAll,
