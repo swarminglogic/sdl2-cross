@@ -2,11 +2,7 @@
 #include <iostream>
 #include <memory>
 
-#ifdef __ANDROID__
-#include <SDL.h>
-#else
-#include <SDL2/SDL.h>
-#endif
+#include <util/SDL.h>
 
 [[ noreturn ]]
 void quit(int returnCode) {
