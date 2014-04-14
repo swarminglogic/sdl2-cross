@@ -12,10 +12,12 @@ The framework will rely on the following libraries
 | Library    | Description |
 | :--------- | :------------------------------------------------------ |
 | SDL2       | OpenGL glue, touch/gesture and keyboard input, and more |
-| SDL_mixer  | sound                                                   |
 | SDL_image  | png/jpg loading                                         |
-| GLM        | math library similar to GLSL                            |
+| SDL_mixer  | ogg loading, sound playback                             |
+| SDL_ttf    | ttf loading                                             |
 | bullet     | physics                                                 |
+| GLM        | math library similar to GLSL (headers only)             |
+| boost      | boost (headers only)                                    |
 
 
 ### Project Structure
@@ -24,9 +26,12 @@ The framework will rely on the following libraries
 │   ├── assets -> ../assets (symlink)
 │   ├── fixes                       { Various fixes for external libraries, etc. }
 │   ├── jni
+│   │   ├── bullet-android          { Android.mk for building bullet library }
+│   │   ├── bullet-src -> [Bullet Source]    (symlink)
 │   │   ├── SDL ->        [SDL Source]       (symlink)
 │   │   ├── SDL_image ->  [SDL_image Source] (symlink)
 │   │   ├── SDL_mixer ->  [SDL_mixer Source] (symlink)
+│   │   ├── SDL_ttf ->    [SDL_ttf Source]   (symlink)
 │   │   └── src -> ../../src (symlink)
 │   ├── res                         { Android specific assets }
 │   │   ├── drawable-hdpi
@@ -42,16 +47,71 @@ The framework will rely on the following libraries
 │               └── app             { JNI Java wrapper stuff }
 ├── assets                          { All resources used by the application }
 └── src                             { All code source files used by the application, excl. shaders }
+    ├── audio                       { linked w/SDL, SDL_mixer}
+    ├── core                        { linked w/All }
+    ├── extern                      { base library }
+    ├── graphics                    { linked w/SDL, SDL_image, SDL_opengl, SDL_ttf, GL}
+    ├── io                          { linked w/SDL }
+    ├── math                        { base library }
+    ├── model                       { linked w/SDL, bullet }
+    └── util                        { base library }
 ```
+
+### Dependancy tree
+
+To enforce decoupling, and quicker build times, the source is structured into
+modules, compiled as shared libraries. This currently only applies to the
+desktop build, but will soon also be used for android.
+
+```
+    +––––––––––––––––––––––––––––––––––––––––––––––––––––––+
+    |                  Common libraries                    |
+    |                                                      |
+    |    +––––––––––––+   +–––––––––––+   +––––––––––+     |
+    |    |    math    |   |   util    |   |  extern  |     |
+    |    |            |   |           |   |          |     |
+    |    |            |   | SDL       |   |          |     |
+    |    +––––––––––––+   +–––––––––––+   +––––––––––+     |
+    |                                                      |
+    +–––––––––––––––––––––––––+––––––––––––––––––––––––––––+
+                              |
+    +–––––––––––––––––––––––––+––––––––––––––––––––––––––––+
+    |                                                      |
+    |   +––––––––––––––––+   +–––––––––––––––––––––+       |
+    |   |     audio      |   |     graphics        |       |
+    |   |                |   |                     |       |
+    |   | SDL, SDL_Mixer |   | SDL, SDL_image, GL  |       |
+    |   +––––––––––––––––+   | SDL_ttf             |       |
+    |                        +–––––––––––––––––––––+       |
+    |   +––––––––––––––––+   +–––––––––+                   |
+    |   |      model     |   |    io   |                   |
+    |   |                |   |         |                   |
+    |   | SDL, bullet    |   | SDL     |                   |
+    |   +––––––––––––––––+   +–––––––––+                   |
+    |                                                      |
+    +–––––––––––––––––––––––––+––––––––––––––––––––––––––––+
+                              |
+    +–––––––––––––––––––––––––+––––––––––––––––––––––––––––+
+    |                                                      |
+    |             +–––––––––––––––––––––––+                |
+    |             |         core          |                |
+    |             |                       |                |
+    |             |    all of the above   |                |
+    |             +–––––––––––––––––––––––+                |
+    |                                                      |
+    +––––––––––––––––––––––––––––––––––––––––––––––––––––––+
+```
+
 
 ### Compilation & Special Files
 * Special files:
 
 | File    | Description |
-| :--------------------------------- | :--------------------------------------------------- |
-| `./android/initialize_project.sh`  | Sets up symbolic links, pay attention to all errors  |
-| `./build.sh`                       | Utility for simplifying build commands               |
-| `./devtools.sh`                    | Another utility for simplifying development commands |
+| :--------------------------------- | :-------------------------------------------------------- |
+| `./android/initialize_project.sh`  | Sets up symbolic links, pay attention to all errors       |
+| `./build.sh`                       | Utility for simplifying build commands                    |
+| `./devtools.sh`                    | Another utility for simplifying development commands      |
+| `./src/util/gitrev.h`              | Automatically generated file for accessing current git id |
 
 * Linux/Android:
 See `./devtools.sh` and `./build.sh`.
@@ -66,9 +126,13 @@ android/gen/
 android/libs/
 android/obj/
 android/project.properties
+android/local.properties
 android/jni/SDL_image
 android/jni/SDL_mixer
+android/jni/SDL_ttf
 android/jni/SDL
+android/jni/bullet-src
+src/util/gitrev.h
 ```
 
 ### Troubleshooting
