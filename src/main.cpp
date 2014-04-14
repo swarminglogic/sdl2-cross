@@ -2,24 +2,62 @@
 #include <iostream>
 #include <memory>
 
+#include <audio/SDL_mixer.h>
+#include <core/MainManager.h>
+#include <graphics/SDL_image.h>
+#include <graphics/SDL_opengl.h>
+#include <util/Log.h>
 #include <util/SDL.h>
 
-[[ noreturn ]]
-void quit(int returnCode) {
-  SDL_Log("Terminating SDL");
+
+void quitSdl() {
+  // SDL_image
+  IMG_Quit();
+
+  // SDL_mixer
+  const int nOpenAudio = Mix_QuerySpec(nullptr, nullptr, nullptr);
+  for (int i = 0 ; i < nOpenAudio ; ++i)
+    Mix_CloseAudio();
+  while(Mix_Init(0))
+    Mix_Quit();
+
+  // SDL
   SDL_Quit();
-  exit(returnCode);
+}
+
+[[ noreturn ]]
+void quit(int exitCode) {
+  Log log("main");
+  if (exitCode == EXIT_SUCCESS)
+    log.i("Terminating application normally");
+  else
+    log.i("Terminating application due to error");
+  log.i("Terminating SDL");
+  quitSdl();
+
+  exit(exitCode);
 }
 
 int main(int argc, char *argv[]) {
   (void)argc; (void)argv;
 
-  SDL_Log("Initializing SDL");
-  if (SDL_Init(SDL_INIT_EVERYTHING) == -1) {
-    SDL_Log("Failed to initialize SDL: %s", SDL_GetError());
+  Log log("main");
+
+  try {
+    MainManager& mainManager = MainManager::instance();
+    mainManager.initialize();
+    mainManager.run();
+  }
+  catch (Exception e) {
+    log.e(std::string("Terminating early due to exception: ") + e.what());
+    quit(EXIT_FAILURE);
+  }
+  catch (...) {
+    log.e(std::string("Terminating early due to unhandled exception"));
+    quit(EXIT_FAILURE);
   }
 
-
+  MainManager::instance().finalize();
   quit(EXIT_SUCCESS);
-  return 0;
+  return EXIT_SUCCESS;
 }
