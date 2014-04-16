@@ -20,13 +20,13 @@ lGL       = ['GL', 'GLU']
 lOther    = ['m', 'dl', 'rt']
 lAll  = lSDL + lSDLimage + lSDLmixer + lSDLttf + lBullet + lGL + lOther
 
-libpaths = [pathAngel + '/lib',
-            pathSdl + '/lib',
+libpaths = [pathAngel  + '/lib',
+            pathSdl    + '/lib',
             pathBullet + '/lib']
 
 # Macros definitions
 macroDefinitions = [
-   'USING_SDL',           # Should always be set in SDL projects.
+   'USING_SDL',            # Should always be set in SDL projects.
 #   'LOGGING_DISABLED',    # Disables all logging
 #   'LOG2STREAM_DISABLED', # Disables logging to stream
 #   'LOG2FILE_DISABLED',   # Disables logging to file
@@ -45,7 +45,7 @@ gccWarningLevel = [
    '-Wunsafe-loop-optimizations', '-Wunused',
    '-Wvariadic-macros', '-Wwrite-strings', '-pedantic',
    '-pedantic-errors', '-Woverloaded-virtual',
-   '-Wswitch-enum', # '-Werror'
+   '-Wswitch-enum', '-Werror'
 ]
 
 # CPPFLAGS
@@ -56,23 +56,23 @@ cppflags.extend(['-fno-strict-aliasing',
                  '-std=c++11',
                  '-D_REENTRANT',# '-DBOOST_FILESYSTEM_NO_DEPRECATED',
                  '-DGLM_FORCE_RADIANS'])
-cppflags.extend(['-isystem', pathBoost + '/include',
-                 '-isystem', pathSdl + '/include/',
+cppflags.extend(['-isystem', pathBoost  + '/include',
+                 '-isystem', pathSdl    + '/include/',
                  '-isystem', pathGlm,
                  '-isystem', pathBullet + '/include/bullet',
-                 '-isystem', pathAngel + '/include',
-                 '-isystem', pathAngel + '/include/angelscript'])
+                 '-isystem', pathAngel  + '/include',
+                 '-isystem', pathAngel  + '/include/angelscript'])
 cppflags.extend(gccWarningLevel)
 for macro in macroDefinitions:
    cppflags.append('-D' + macro)
 
 sourcepaths = [
    base,
-   pathBoost + '/include',
+   pathBoost  + '/include',
    pathGlm,
-   pathAngel + '/include',
+   pathAngel  + '/include',
    pathBullet + '/include/bullet/',
-   pathSdl + "/include/"]
+   pathSdl    + "/include/"]
 
 ######################
 # SHARED EXTERNAL LIBRARY
@@ -82,10 +82,10 @@ externFiles = [Glob('extern/*.cpp') +
                Glob('extern/*/*/*.cpp')]
 externLib = env.SharedLibrary('#/lib/extern',
                               externFiles,
-                              LIBS = [],
-                              LIBPATH = [],
+                              LIBS     = [],
+                              LIBPATH  = [],
                               CPPFLAGS = cppflags,
-                              CPPPATH = [sourcepaths]);
+                              CPPPATH  = [sourcepaths]);
 Default(externLib)
 
 
@@ -97,10 +97,10 @@ mathFiles = [Glob('math/*.cpp') +
              Glob('math/*/*/*.cpp')]
 mathLib = env.SharedLibrary('#/lib/math',
                             mathFiles,
-                            LIBS = [],
-                            LIBPATH = [],
+                            LIBS     = [],
+                            LIBPATH  = [],
                             CPPFLAGS = cppflags,
-                            CPPPATH = [sourcepaths]);
+                            CPPPATH  = [sourcepaths]);
 Default(mathLib)
 
 
@@ -112,10 +112,10 @@ utilFiles = [Glob('util/*.cpp') +
              Glob('util/*/*/*.cpp')]
 utilLib = env.SharedLibrary('#/lib/util',
                             utilFiles,
-                            LIBS = lSDL,
-                            LIBPATH = libpaths,
+                            LIBS     = lSDL,
+                            LIBPATH  = libpaths,
                             CPPFLAGS = cppflags,
-                            CPPPATH = [sourcepaths]);
+                            CPPPATH  = [sourcepaths]);
 Default(utilLib)
 
 
@@ -127,10 +127,10 @@ audioFiles = [Glob('audio/*.cpp') +
               Glob('audio/*/*/*.cpp')]
 audioLib = env.SharedLibrary('#/lib/audio',
                              audioFiles,
-                             LIBS = lSDL + lSDLmixer + mathLib + utilLib,
-                             LIBPATH = libpaths,
+                             LIBS     = lSDL + lSDLmixer + mathLib + utilLib,
+                             LIBPATH  = libpaths,
                              CPPFLAGS = cppflags,
-                             CPPPATH = [sourcepaths]);
+                             CPPPATH  = [sourcepaths]);
 Default(audioLib)
 
 
@@ -142,10 +142,11 @@ graphicsFiles = [Glob('graphics/*.cpp') +
                  Glob('graphics/*/*/*.cpp')]
 graphicsLib = env.SharedLibrary('#/lib/graphics',
                              graphicsFiles,
-                             LIBS = lSDL + lSDLimage + lSDLttf + mathLib + utilLib + lGL,
-                             LIBPATH = libpaths,
+                             LIBS     = lSDL + lSDLimage + lSDLttf +
+                                mathLib + utilLib + lGL,
+                             LIBPATH  = libpaths,
                              CPPFLAGS = cppflags,
-                             CPPPATH = [sourcepaths]);
+                             CPPPATH  = [sourcepaths]);
 Default(graphicsLib)
 
 
@@ -157,10 +158,10 @@ ioFiles = [Glob('io/*.cpp') +
            Glob('io/*/*/*.cpp')]
 ioLib = env.SharedLibrary('#/lib/io',
                              ioFiles,
-                             LIBS = lSDL + mathLib + utilLib,
-                             LIBPATH = libpaths,
+                             LIBS     = lSDL + mathLib + utilLib,
+                             LIBPATH  = libpaths,
                              CPPFLAGS = cppflags,
-                             CPPPATH = [sourcepaths]);
+                             CPPPATH  = [sourcepaths]);
 Default(ioLib)
 
 
@@ -172,10 +173,10 @@ modelFiles = [Glob('model/*.cpp') +
               Glob('model/*/*/*.cpp')]
 modelLib = env.SharedLibrary('#/lib/model',
                              modelFiles,
-                             LIBS = lSDL + lBullet + mathLib + utilLib,
-                             LIBPATH = libpaths,
+                             LIBS     = lSDL + lBullet + mathLib + utilLib,
+                             LIBPATH  = libpaths,
                              CPPFLAGS = cppflags,
-                             CPPPATH = [sourcepaths]);
+                             CPPPATH  = [sourcepaths]);
 Default(modelLib)
 
 

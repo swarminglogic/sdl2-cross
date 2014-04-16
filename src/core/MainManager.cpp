@@ -4,6 +4,7 @@
 #include <sstream>
 
 #include <audio/SDL_mixer.h>
+#include <graphics/GraphicsManager.h>
 #include <graphics/SDL_image.h>
 #include <graphics/SDL_opengl.h>
 #include <graphics/SDL_ttf.h>
@@ -13,7 +14,10 @@
 
 
 MainManager::MainManager()
-  : log_("MainManager")
+  : log_("MainManager"),
+    graphics_(nullptr),
+    runtime_(new Timer),
+    isRunning_(true)
 {
   initSDL();
   initSDLimg();
@@ -36,6 +40,8 @@ MainManager& MainManager::instance()
 void MainManager::initialize()
 {
   log_.i("Initializing resources.");
+  graphics_.reset(new GraphicsManager);
+  runtime_->start();
 }
 
 
@@ -62,7 +68,41 @@ float MainManager::getCurrentTimeDelta() const
 
 
 void MainManager::run() {
-  // TODO swarminglogic, 2014-04-14: main loop
+  SDL_Event event;
+
+  float previousTime = runtime_->getSeconds();
+
+  while (isRunning_) {
+#ifndef NDEBUG
+    const char* err = SDL_GetError();
+    if (err[0] != '\0') {
+      log_.e() << "SDL_GetError(): " << err << Log::end;
+    }
+#endif
+    SDL_ClearError();
+
+    while (SDL_PollEvent(&event)) {
+      handleEvent(event);
+    }
+
+    currentTimeDelta_ = runtime_->getSeconds() - previousTime;
+    previousTime = runtime_->getSeconds();
+    graphics_->swapBuffers();
+
+    // TODO swarminglogic, 2014-04-16: Implement this
+    if (runtime_->getSeconds() > 1.0f) {
+      log_.w() << "Quitting after 1.0 second of runtime" << Log::end;
+      isRunning_ = false;
+    }
+  }
+}
+
+
+void MainManager::handleEvent(const SDL_Event& event)
+{
+  // TODO swarminglogic, 2014-04-16: Handle events
+  (void)event;
+  log_.w() << "Event received" << Log::end;
 }
 
 

@@ -5,9 +5,11 @@
 
 #include <util/Log.h>
 #include <util/SDL.h>
+#include <util/SDL_Event_fwd.h>
 
 
 class Timer;
+class GraphicsManager;
 
 /**
  * MainManager class for managing application internals
@@ -46,11 +48,13 @@ public:
 
 private:
   MainManager();
+  void handleEvent(const SDL_Event& event);
 
   void initSDL();
   void initSDLimg();
   void initSDLttf();
   void initSDLmixer();
+
 
   void logSDLVersion(const std::string& what,
                      const SDL_version& compiled,
@@ -67,8 +71,10 @@ private:
   MainManager& operator=(const MainManager& c);
 
   Log log_;
+  std::unique_ptr<GraphicsManager> graphics_;
   std::unique_ptr<Timer> runtime_;
   float currentTimeDelta_;
+  bool isRunning_;
 };
 
 #endif

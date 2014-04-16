@@ -25,6 +25,7 @@ void quitSdl() {
   SDL_Quit();
 }
 
+
 [[ noreturn ]]
 void quit(int exitCode) {
   Log log("main");
@@ -37,6 +38,7 @@ void quit(int exitCode) {
 
   exit(exitCode);
 }
+
 
 int main(int argc, char *argv[]) {
   (void)argc; (void)argv;
