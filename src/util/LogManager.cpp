@@ -31,8 +31,18 @@ LogManager::LogManager(LogLevel fileLogLevel,
   : fileLogLevel_(fileLogLevel),
     streamLogLevel_(streamLogLevel),
     streamColorMode_(colorMode),
-    logfilePath_("")
+    logfilePath_(""),
+    androidLoggerTag_("SWL")
 {
+  // Print columns for the rest of the log
+  const std::string header =
+    " GIT ID | LEVEL | DATE     | TIME    | LOGGER NAME      | MESSAGE";
+  const std::string separator =
+    "--------+-------+----------+---------+------------------+"
+    "--------------------------------------";
+  log2Stream(LEVEL_INFO, separator);
+  log2Stream(LEVEL_INFO, header);
+  log2Stream(LEVEL_INFO, separator);
 }
 
 
@@ -85,15 +95,7 @@ void LogManager::log2Stream(
 {
 #ifndef LOG2STREAM_DISABLED
 #ifdef __ANDROID__
-  int priority = 0;
-  switch (level) {
-  case LEVEL_DEBUG:   priority = ANDROID_LOG_DEBUG;  break;
-  case LEVEL_INFO:    priority = ANDROID_LOG_INFO;   break;
-  case LEVEL_WARNING: priority = ANDROID_LOG_WARN;   break;
-  case LEVEL_ERROR:   priority = ANDROID_LOG_ERROR;  break;
-  case LEVEL_NONE:    priority = ANDROID_LOG_SILENT; break;
-  }
-  __android_log_write(priority, "SWL", formatted.c_str());
+  log2AndroidStream(level, formatted);
 #else
   std::cout << formatted << std::endl;
   (void)level;
@@ -102,6 +104,28 @@ void LogManager::log2Stream(
   (void)formatted;
 #endif
 }
+
+
+void LogManager::log2AndroidStream(LogLevel level,
+                                   const std::string& formatted) const
+{
+#ifdef __ANDROID__
+  int priority = 0;
+  switch (level) {
+  case LEVEL_DEBUG:   priority = ANDROID_LOG_DEBUG;  break;
+  case LEVEL_INFO:    priority = ANDROID_LOG_INFO;   break;
+  case LEVEL_WARNING: priority = ANDROID_LOG_WARN;   break;
+  case LEVEL_ERROR:   priority = ANDROID_LOG_ERROR;  break;
+  case LEVEL_NONE:    priority = ANDROID_LOG_SILENT; break;
+  }
+  __android_log_write(priority,
+                      androidLoggerTag_.c_str(),
+                      formatted.c_str());
+#else
+  (void)level; (void)formatted;
+#endif
+}
+
 
 void LogManager::log2File(const std::string& formatted) const
 {

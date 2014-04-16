@@ -56,6 +56,9 @@ public:
 private:
   void log2Stream(LogLevel level,
                   const std::string& formatted) const;
+  void log2AndroidStream(LogLevel level,
+                         const std::string& formatted) const;
+
   void log2File(const std::string& formatted) const;
 
   static std::string logLevelAsString(LogLevel level);
@@ -65,7 +68,7 @@ private:
   ColorMode streamColorMode_;
 
   std::string logfilePath_;
-
+  const std::string androidLoggerTag_;
 
   // NonCopyable
   LogManager(const LogManager& c);
