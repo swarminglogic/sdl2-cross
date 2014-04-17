@@ -89,24 +89,41 @@ void MainManager::run() {
     currentTimeDelta_ = runtime_->getSeconds() - previousTime;
     previousTime = runtime_->getSeconds();
     graphics_->swapBuffers();
-
-    // TODO swarminglogic, 2014-04-16: Implement this
-    if (runtime_->getSeconds() > 4.0f) {
-      log_.w() << "Quitting after 4.0 second of runtime" << Log::end;
-      isRunning_ = false;
-    }
   }
 }
 
 
 void MainManager::handleEvent(const SDL_Event& event)
 {
-  (void)event;
-
-  // TODO swarminglogic, 2014-04-16: Handle events
 #ifdef LOG_SDL_EVENTS_VERBOSELY
   LogUtil::log(event);
 #endif
+
+ switch (event.type) {
+  case SDL_WINDOWEVENT:
+    if (event.window.event == SDL_WINDOWEVENT_RESIZED ||
+        event.window.event == SDL_WINDOWEVENT_SIZE_CHANGED) {
+      const int width  = event.window.data1;
+      const int height = event.window.data2;
+      log_.i() << "Window resized to " << width << " x " << height << Log::end;
+      graphics_->setScreenSize(Size(width, height));
+    }
+  case SDL_MOUSEBUTTONDOWN:
+    break;
+  case SDL_KEYUP:
+    break;
+  case SDL_KEYDOWN:
+    if (event.key.keysym.scancode == SDL_SCANCODE_ESCAPE ||
+        event.key.keysym.scancode == SDL_SCANCODE_AC_BACK) {
+      isRunning_ = false;
+    }
+    break;
+  case SDL_QUIT:
+    isRunning_ = false;
+    break;
+  default:
+    break;
+  }
 }
 
 
