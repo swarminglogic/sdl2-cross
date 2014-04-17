@@ -77,16 +77,26 @@ void GraphicsManager::initalizeOpenGL(const ViewConfig& viewConfig)
   // Create OpenGL Context
   log_.i("Creating OpenGL Context");
 
-  // Lists opengl versions intended to try
+  SDL_GLContext context = nullptr;
+
+  // Lists opengl es versions intended to try
+#ifdef USE_OPENGLES
+  const std::pair<int, int> glVersions[4]
+     {{3,1}, {3,0},
+      {2,0}, {1,1}
+    };
+  const std::string glName = "OpenGL ES";
+#else
   const std::pair<int, int> glVersions[11]
      {{4,4}, {4,3}, {4,2}, {4,1}, {4,0},
       {3,3}, {3,2}, {3,1}, {3,0},
       {2,1}, {2,0}
     };
+  const std::string glName = "OpenGL";
+#endif
 
-  SDL_GLContext context = nullptr;
   for (auto& glVersion : glVersions) {
-    log_.d() << "Trying to create GL " << glVersion.first << "."
+    log_.d() << "Trying to create " << glName << " " << glVersion.first << "."
              << glVersion.second << " context" << Log::end;
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, glVersion.first);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, glVersion.second);
@@ -94,8 +104,10 @@ void GraphicsManager::initalizeOpenGL(const ViewConfig& viewConfig)
     if (context != nullptr)
       break;
   }
+
   if (context == nullptr)
     throw log_.exception("Failed to create OpenGL Context", SDL_GetError);
+
   context_.reset(new SDL_GLContext(context));
   SDL_ClearError();
 
@@ -106,9 +118,21 @@ void GraphicsManager::initalizeOpenGL(const ViewConfig& viewConfig)
   // // Make it the current context
   SDL_GL_MakeCurrent(window_.get(), *context_);
 
+  logAcquiredGlVersion(glName);
   logStaticOpenGLInfo();
   logGraphicsDriverInfo();
   logOpenGLContextInfo();
+}
+
+
+void GraphicsManager::logAcquiredGlVersion(const std::string& glName) const
+{
+  int minorVersion = 0;
+  int majorVersion = 0;
+  glGetIntegerv(GL_MINOR_VERSION, &minorVersion);
+  glGetIntegerv(GL_MAJOR_VERSION, &majorVersion);
+  log_.d() << "Created " << glName << " context: "
+           << majorVersion << "." << minorVersion << Log::end;
 }
 
 

@@ -28,6 +28,7 @@ private:
   void initalizeOpenGL(const ViewConfig& viewConfig);
 
   // Debug function for logging graphics driver information
+  void logAcquiredGlVersion(const std::string& glName) const;
   void logGraphicsDriverInfo() const;
   void logOpenGLContextInfo() const;
   void logStaticOpenGLInfo() const;
