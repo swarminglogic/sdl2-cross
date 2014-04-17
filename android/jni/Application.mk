@@ -9,5 +9,5 @@ APP_STL := c++_shared
 APP_ABI := armeabi #armeabi-v7a x86
 APP_PLATFORM := android-18
 APP_ARM_MODE := thumb
-APP_CPPFLAGS := -DUSING_SDL -fexceptions -frtti
+APP_CPPFLAGS := -fexceptions -frtti
 LIBCXX_FORCE_REBUILD := false

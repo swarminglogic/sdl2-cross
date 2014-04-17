@@ -44,6 +44,13 @@ LOCAL_CFLAGS += -isystem $(NDK_PLATFORMS_ROOT)/$(APP_PLATFORM)/arch-$(TARGET_ARC
 LOCAL_CFLAGS += -isystem $(NDK_ROOT)/sources/cxx-stl/llvm-libc++/libcxx/include/
 LOCAL_CFLAGS += -isystem $(NDK_ROOT)/sources/cxx-stl/gabi++/include
 
+# Application specific defines
+LOCAL_CPPFLAGS += -DUSING_SDL
+LOCAL_CPPFLAGS += -DLOG_SDL_EVENTS_VERBOSELY
+# LOCAL_CPPFLAGS += -DLOGGING_DISABLED    # Disables all logging
+# LOCAL_CPPFLAGS += -DLOG2STREAM_DISABLED # Disables logging to stream
+# LOCAL_CPPFLAGS += -DLOG2FILE_DISABLED   # Disables logging to file
+
 LOCAL_CPPFLAGS += -std=c++11
 LOCAL_CPPFLAGS += -Wall -Wextra -Wcast-align -Wcast-qual \
      -fpermissive \

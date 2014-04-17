@@ -51,11 +51,11 @@ public:
   Exception exception(const std::string& message,
                       FunctionPtr func = nullptr) const;
 
-
   const Log& d() const;
   const Log& i() const;
   const Log& w() const;
   const Log& e() const;
+  const Log& level(LogManager::LogLevel logLevel) const;
 
   static void end(){}
   friend const Log& operator<<(const Log& lhs,
@@ -73,8 +73,8 @@ public:
   { lhs.streamLog_ << str; return lhs; }
   friend const Log& operator<<(const Log& lhs, const int i)
   { lhs.streamLog_ << i; return lhs; }
-  friend const Log& operator<<(const Log& lhs, const std::size_t ui)
-  { lhs.streamLog_ << ui; return lhs; }
+  friend const Log& operator<<(const Log& lhs, const unsigned int i)
+  { lhs.streamLog_ << i; return lhs; }
   friend const Log& operator<<(const Log& lhs, const float f)
   { lhs.streamLog_ << f; return lhs; }
   friend const Log& operator<<(const Log& lhs, const double d)
@@ -91,7 +91,7 @@ private:
   // Can only be instantiated through non-default constructor
   Log();
 
-  void log(LogManager::LogLevel level,
+  void log(LogManager::LogLevel logLevel,
            const std::string& message) const;
 
   // Denotes globally set log levels.

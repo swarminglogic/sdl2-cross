@@ -30,6 +30,7 @@ macroDefinitions = [
 #   'LOGGING_DISABLED',    # Disables all logging
 #   'LOG2STREAM_DISABLED', # Disables logging to stream
 #   'LOG2FILE_DISABLED',   # Disables logging to file
+   'LOG_SDL_EVENTS_VERBOSELY'
 ]
 
 gccWarningLevel = [

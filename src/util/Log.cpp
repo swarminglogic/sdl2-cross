@@ -57,6 +57,11 @@ const Log& Log::e() const {
   return *this;
 }
 
+const Log& Log::level(LogManager::LogLevel logLevel) const {
+  assert(!streamLog_.rdbuf()->in_avail());
+  this->streamLogLevel_ = logLevel;
+  return *this;
+}
 
 Exception Log::exception(const std::string& message,
                          FunctionPtr func) const
@@ -70,11 +75,11 @@ Exception Log::exception(const std::string& message,
 }
 
 
-void Log::log(LogManager::LogLevel level,
+void Log::log(LogManager::LogLevel logLevel,
               const std::string& message) const
 {
 #ifndef LOGGING_DISABLED
-  LogManager::instance().log(level, loggerName_, message);
+  LogManager::instance().log(logLevel, loggerName_, message);
 #endif
 }
 

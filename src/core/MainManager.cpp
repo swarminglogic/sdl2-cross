@@ -9,6 +9,7 @@
 #include <graphics/SDL_opengl.h>
 #include <graphics/SDL_ttf.h>
 #include <util/Log.h>
+#include <util/LogUtil.h>
 #include <util/SDL.h>
 #include <util/Timer.h>
 
@@ -90,8 +91,8 @@ void MainManager::run() {
     graphics_->swapBuffers();
 
     // TODO swarminglogic, 2014-04-16: Implement this
-    if (runtime_->getSeconds() > 1.0f) {
-      log_.w() << "Quitting after 1.0 second of runtime" << Log::end;
+    if (runtime_->getSeconds() > 4.0f) {
+      log_.w() << "Quitting after 4.0 second of runtime" << Log::end;
       isRunning_ = false;
     }
   }
@@ -100,9 +101,12 @@ void MainManager::run() {
 
 void MainManager::handleEvent(const SDL_Event& event)
 {
-  // TODO swarminglogic, 2014-04-16: Handle events
   (void)event;
-  log_.w() << "Event received" << Log::end;
+
+  // TODO swarminglogic, 2014-04-16: Handle events
+#ifdef LOG_SDL_EVENTS_VERBOSELY
+  LogUtil::log(event);
+#endif
 }
 
 
