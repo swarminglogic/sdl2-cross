@@ -107,13 +107,22 @@ desktop build, but will soon also be used for android.
 
 | File    | Description |
 | :--------------------------------- | :-------------------------------------------------------- |
-| `./android/initialize_project.sh`  | Sets up symbolic links, pay attention to all errors       |
-| `./build.sh`                       | Utility for simplifying build commands                    |
+| `./initialize_project.sh`          | Check all dependancies and sets up symbolic links         |
+| `./compile.sh`                     | Utility for simplifying build commands                    |
 | `./devtools.sh`                    | Another utility for simplifying development commands      |
 | `./src/util/gitrev.h`              | Automatically generated file for accessing current git id |
 
 * Linux/Android:
-See `./devtools.sh` and `./build.sh`.
+
+1. Run `. ./initialize_project.sh` and pay attention to output
+
+   Note that it is `. ./initialize_project.sh` and not `./initialize_project.sh`
+
+   It is recommended that you define the detected enviroment variable paths, so that this script isn't necessary.
+
+1. `./devtools.sh ball` (builds android and linux)
+
+See `./initialize_project.sh`, `./devtools.sh` and `./compile.sh` for details.
 
 ### Suggested `.gitignore` content
 ```

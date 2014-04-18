@@ -1,0 +1,549 @@
+#!/bin/bash
+hasFailed=
+isQuiet=
+targetAndroidPlatform=android-18
+
+RED=$(tput setaf 1)
+GREEN=$(tput setaf 2)
+YELLOW=$(tput setaf 3)
+BLUE=$(tput setaf 4)
+TEAL=$(tput setaf 6)
+NORMAL=$(tput sgr0)
+
+while test $# -gt 0; do
+    case "$1" in
+        -q|--quiet)
+            shift
+            isQuiet=yes
+            ;;
+        *)
+            echo "Invalid parameter";
+            exit
+            ;;
+    esac
+done
+
+# $1=text $2=status(0:ok, 1:warning, 2:failed)
+function writeStatus {
+    if [[ $2 -eq 0 ]] ; then
+        color=$GREEN
+    elif [[ $2 -eq 1 ]] ; then
+        color=$YELLOW
+    else
+        color=$RED
+    fi
+    let COL=$(tput cols)-${#1}+${#color}+${#NORMAL}
+
+    if [[ $2 -eq 0 ]] ; then
+        if [[ ! $isQuiet ]] ; then
+            printf "%s%${COL}s" "$1" "$color[OK]$NORMAL        "
+        fi
+    elif [[ $2 -eq 1 ]] ; then
+        printf "%s%${COL}s" "$1" "$color[WARNING]$NORMAL   "
+    elif [[ $2 -eq 2 ]] ; then
+        printf "%s%${COL}s" "$1" "$color[FAILED]$NORMAL    "
+    else
+        exit "Something wrong in script"
+    fi
+}
+
+# $1=text
+function message {
+    if [[ ! $isQuiet ]] ; then
+        echo -e "$1"
+    fi
+}
+
+# $1:=environment-variable
+function validateEnvironmentVariable {
+    if env | grep -q ^$1= ; then
+        writeStatus "  - Environment variable $1 found" 0
+        return 0
+    else
+        writeStatus "  - Environment variable $1 not set" 1
+        return 1
+    fi
+}
+
+# $1=path $2=libraryfile (lib[THIS].so)
+function validateSharedLibrary {
+    libraryPath=$1/lib${2}.so
+    statusCode=0
+    if [[ ! -e $libraryPath ]] ; then
+        hasFailed=true
+        statusCode=2
+    fi
+    writeStatus "  - $2 ($libraryPath)" $statusCode
+}
+
+function findBoost {
+    message "${GREEN}[boost library]${NORMAL}"
+    TMPBOOST_DIR=
+    if ! validateEnvironmentVariable BOOST_DIR ; then
+        if validateEnvironmentVariable BOOST_ROOT ; then
+            TMPBOOST_DIR=$BOOST_ROOT
+        elif validateEnvironmentVariable BOOSTROOT ; then
+            TMPBOOST_DIR=$BOOSTROOT
+        else
+            echo "  - Attempting to automatically find boost (may take some time)"
+            filepath="/include/boost/algorithm/string.hpp"
+            possible=`locate "$filepath" | sed 's/.\{'${#filepath}'\}$//'`
+            if [[ $possible ]] ; then
+                sorted=`echo "$possible" | awk '{ print length($0) " " $0; }' | sort -n | cut -d ' ' -f 2-`
+                for i in $sorted ; do
+                    if [[ -e $i/include/boost/version.hpp ]] ; then
+                        TMPBOOST_DIR=$i
+                        break
+                    fi
+                done
+            fi
+        fi
+        if [[ $TMPBOOST_DIR ]] ; then
+            message "  - Boost library found at ${BLUE}${TMPBOOST_DIR}${NORMAL}"
+            message "  - Setting environment variable: BOOST_DIR=$TMPBOOST_DIR"
+            export BOOST_DIR=$TMPBOOST_DIR
+        else
+            writeStatus "  - Failed to find boost library" 2
+            hasFailed=true
+            return
+        fi
+    fi
+
+    # Test the actual content of the boost directory
+    pathStatusCode=0
+    [[ ! -e $BOOSTDIR/include/boost/version.hpp ]] && pathStatusCode=2
+    writeStatus "  - Checking boost library ($BOOSTDIR)" $pathStatusCode
+    [[ $pathStatusCode -eq 2 ]] && hasFailed=true
+}
+
+function findSDLlib {
+    message "${GREEN}[sdl2 library]${NORMAL}"
+    TMPSDL2_DIR=
+    if ! validateEnvironmentVariable SDL2_DIR ; then
+        if [[ ! $TMPSDL2_DIR ]] ; then
+            if [[ -x `which sdl2-config` ]] ; then
+                TMPSDL2_DIR=`sdl2-config --prefix`
+                writeStatus "  - Found sdl2 path using sdl2-config utility" 0
+            else
+                writeStatus "  - Did not find sdl2-config utility in PATH" 1
+            fi
+        fi
+        if [[ ! $TMPSDL2_DIR ]] ; then
+            if pkg-config sdl2 ; then
+                tmppath=`pkg-config sdl2 --variable=prefix`
+                if [[ -d $tmppath ]] ; then
+                    TMPSDL2_DIR=`pkg-config sdl2 --variable=prefix`
+                    writeStatus "  - Found sdl2 path using pkg-config" 0
+                fi
+            fi
+        fi
+        if [[ ! $TMPSDL2_DIR ]] ; then
+            echo "  - Attempting to automatically find sdl2 (may take some time)"
+            sdl2configs=`locate bin/sdl2-config`
+            if [[ $sdl2configs ]] ; then
+                sorted=`echo "$sdl2configs" | awk '{ print length($0) " " $0; }' | sort -n | cut -d ' ' -f 2-`
+                for i in $sorted ;  do
+                    if [[ -x $i ]] && [[ -e `$i --prefix` ]] ; then
+                        TMPSDL2_DIR=`$i --prefix`
+                        break
+                    fi
+                done
+            fi
+        fi
+
+        if [[ $TMPSDL2_DIR ]] ; then
+            message "  - SDL2 library found at ${BLUE}${TMPSDL2_DIR}${NORMAL}"
+            message "  - Setting environment variable: SDL2_DIR=$TMPSDL2_DIR"
+            export SDL2_DIR=$TMPSDL2_DIR
+        else
+            writeStatus "  - Failed to find sdl2 library" 2
+            hasFailed=true
+            return
+        fi
+    fi
+
+    # Test the actual content of the sdl2 directory
+    pathStatusCode=0
+    [[ ! -e $SDL2_DIR/include/SDL2/SDL.h ]] && pathStatusCode=2
+    [[ ! -e $SDL2_DIR/lib/libSDL2-2.0.so.0 ]] && pathStatusCode=2
+    writeStatus "  - Checking sdl2 library ($SDL2_DIR)" $pathStatusCode
+    if [[ $pathStatusCode -eq 0 ]] ; then
+        validateSharedLibrary $SDL2_DIR/lib SDL2_image
+        validateSharedLibrary $SDL2_DIR/lib SDL2_mixer
+        validateSharedLibrary $SDL2_DIR/lib SDL2_ttf
+    else
+        hasFailed=true
+    fi
+}
+
+function findGLM {
+    message "${GREEN}[GLM header files]${NORMAL}"
+    TMPGLM_DIR=
+    if ! validateEnvironmentVariable GLM_DIR ; then
+        if [[ ! $TMPGLM_DIR ]] ; then
+            echo "  - Attempting to automatically find GLM (may take some time)"
+            filepath="/glm/glm.hpp"
+            possible=`locate "$filepath" | sed 's/.\{'${#filepath}'\}$//'`
+            if [[ $possible ]] ; then
+                sorted=`echo "$possible" | awk '{ print length($0) " " $0; }' | sort -n | cut -d ' ' -f 2-`
+                for i in $sorted ; do
+                    if [[ -e $i/glm/glm.hpp ]] ; then
+                        TMPGLM_DIR=$i
+                        break
+                    fi
+                done
+            fi
+        fi
+
+        if [[ $TMPGLM_DIR ]] ; then
+            message "  - GLM headers found at ${BLUE}${TMPGLM_DIR}${NORMAL}"
+            message "  - Setting environment variable: GLM_DIR=$TMPGLM_DIR"
+            export GLM_DIR=$TMPGLM_DIR
+        else
+            writeStatus "  - Failed to find GLM headers" 2
+            hasFailed=true
+            return
+        fi
+    fi
+
+    # Test the actual content of the sdl2 directory
+    pathStatusCode=0
+    [[ ! -e $GLM_DIR/glm/glm.hpp ]] && pathStatusCode=2
+    writeStatus "  - Checking GLM path ($GLM_DIR)" $pathStatusCode
+    [[ $pathStatusCode -eq 2 ]] && hasFailed=true
+}
+
+function findBulletLib {
+    message "${GREEN}[Bullet library]${NORMAL}"
+    TMPBULLET_DIR=
+    if ! validateEnvironmentVariable BULLET_DIR ; then
+        if [[ ! $TMPBULLET_DIR ]] ; then
+            if pkg-config bullet ; then
+                tmppath=`pkg-config bullet --variable=prefix`
+                if [[ -d $tmppath ]] ; then
+                    TMPBULLET_DIR=$tmppath
+                    writeStatus "  - Found bullet path using pkg-config" 0
+                fi
+            fi
+        fi
+        if [[ ! $TMPBULLET_DIR ]] ; then
+            echo "  - Attempting to automatically find bullet library (may take some time)"
+            filepath="/include/bullet/btBulletDynamicsCommon.h"
+            possible=`locate "$filepath" | sed 's/.\{'${#filepath}'\}$//'`
+            if [[ $possible ]] ; then
+                sorted=`echo "$possible" | awk '{ print length($0) " " $0; }' | sort -n | cut -d ' ' -f 2-`
+                for i in $sorted ; do
+                    if [[ -e $i/include/bullet/btBulletDynamicsCommon.h ]] ; then
+                        TMPBULLET_DIR=$i
+                        break
+                    fi
+                done
+            fi
+        fi
+
+        if [[ $TMPBULLET_DIR ]] ; then
+            message "  - Bullet library found at ${BLUE}${TMPBULLET_DIR}${NORMAL}"
+            message "  - Setting environment variable: BULLET_DIR=$TMPBULLET_DIR"
+            export BULLET_DIR=$TMPBULLET_DIR
+        else
+            writeStatus "  - Failed to find bullet library" 2
+            hasFailed=true
+            return
+        fi
+    fi
+
+    # Test the actual content of the bullet directory
+    pathStatusCode=0
+    [[ ! -e $BULLET_DIR/include/bullet/btBulletDynamicsCommon.h ]] && pathStatusCode=2
+    writeStatus "  - Checking bullet library ($BULLET_DIR)" $pathStatusCode
+    if [[ $pathStatusCode -eq 0 ]] ; then
+        validateSharedLibrary $BULLET_DIR/lib BulletDynamics
+        validateSharedLibrary $BULLET_DIR/lib BulletCollision
+        validateSharedLibrary $BULLET_DIR/lib LinearMath
+    fi
+    [[ $pathStatusCode -eq 2 ]] && hasFailed=true
+}
+
+
+function findNDK {
+    message "${GREEN}[Android Native Development Kit]${NORMAL}"
+
+    ndkBuildPath=`which ndk-build`
+
+    TMPNDK_HOME=
+    if ! validateEnvironmentVariable NDK_HOME ; then
+        if [[ ! $TMPNDK_HOME ]] ; then
+            if [[ -x $ndkBuildPath ]] ; then
+                tmppath=`which ndk-build | sed 's/\/ndk-build//g'`
+                if [[ -d $tmppath ]] ; then
+                    TMPNDK_HOME=$tmppath
+                    writeStatus "  - Found possible Android NDK path" 0
+                fi
+            fi
+        fi
+
+        if [[ $TMPNDK_HOME ]] ; then
+            message "  - Android NDK found at ${BLUE}${TMPNDK_HOME}${NORMAL}"
+            message "  - Setting environment variable: NDK_HOME=$TMPNDK_HOME"
+            export NDK_HOME=$TMPNDK_HOME
+        else
+            writeStatus "  - Failed to find Android NDK" 2
+            hasFailed=true
+            return
+        fi
+    fi
+
+    # ndk-build
+    if [[ -x $ndkBuildPath ]] ; then
+        writeStatus "  - ndk-build utility ($ndkBuildPath)" 0
+    else
+        writeStatus "  - ndk-build utility not found in PATH" 1
+        hasFailed=true
+    fi
+
+    targetPlatformPath=$NDK_HOME/platforms/${targetAndroidPlatform}
+    statusCode=0
+    androidLibPath=$targetPlatformPath/arch-arm/usr/lib/libandroid.so
+    [[ ! -e $androidLibPath ]] && statusCode=2 && hasFailed=true
+    writeStatus "  - NDK target platform (${targetAndroidPlatform})" $statusCode
+}
+
+
+function findSDK {
+    message "${GREEN}[Android Software Development Kit]${NORMAL}"
+
+    TMPSDK_HOME=
+    if ! validateEnvironmentVariable SDK_HOME ; then
+        if [[ ! $TMPSDK_HOME ]] ; then
+            androidPath=`which android`
+            if [[ -x $androidPath ]] ; then
+                tmppath=`which android | sed 's/\/tools.*//g'`
+                if [[ -d $tmppath ]] ; then
+                    TMPSDK_HOME=$tmppath
+                    writeStatus "  - Found possible Android SDK path" 0
+                fi
+            fi
+        fi
+        if [[ ! $TMPSDK_HOME ]] ; then
+            echo "  - Attempting to automatically find the Android SDK (may take some time)"
+            filepath="/platform-tools/adb"
+            possible=`locate "$filepath" | grep ${filepath}$ |  sed 's/.\{'${#filepath}'\}$//'`
+            if [[ $possible ]] ; then
+                sorted=`echo "$possible" | awk '{ print length($0) " " $0; }' | sort -n | cut -d ' ' -f 2-`
+                for i in $sorted ; do
+                    if [[ -d $i/platforms/$targetAndroidPlatform ]] ; then
+                        TMPSDK_HOME=$i
+                        break
+                    fi
+                done
+            fi
+        fi
+
+        if [[ $TMPSDK_HOME ]] ; then
+            message "  - Android SDK found at ${BLUE}${TMPSDK_HOME}${NORMAL}"
+            message "  - Setting environment variable: SDK_HOME=$TMPSDK_HOME"
+            export SDK_HOME=$TMPSDK_HOME
+        else
+            writeStatus "  - Failed to find Android SDK" 2
+            hasFailed=true
+            return
+        fi
+    fi
+
+    statusCode=0
+    [[ ! -d $SDK_HOME/platforms/$targetAndroidPlatform/ ]] && statusCode=2 && hasFailed=true
+    writeStatus "  - SDK target platform (${targetAndroidPlatform})" $statusCode
+}
+
+
+function findBulletSource {
+    message "${GREEN}[Bullet source]${NORMAL}"
+    TMPBULLET_SRC_DIR=
+    if ! validateEnvironmentVariable BULLET_SRC_DIR ; then
+        if [[ ! $TMPBULLET_SRC_DIR ]] ; then
+            echo "  - Attempting to automatically find bullet library (may take some time)"
+            filepath="/src/BulletDynamics/Dynamics/btSimpleDynamicsWorld.cpp"
+            possible=`locate "$filepath" | sed 's/.\{'${#filepath}'\}$//'`
+            if [[ $possible ]] ; then
+                sorted=`echo "$possible" | awk '{ print length($0) " " $0; }' | sort -n | cut -d ' ' -f 2-`
+                for i in $sorted ; do
+                    if [[ -e $i/$filepath ]] ; then
+                        TMPBULLET_SRC_DIR=$i
+                        break
+                    fi
+                done
+            fi
+        fi
+
+        if [[ $TMPBULLET_SRC_DIR ]] ; then
+            message "  - Bullet source found at ${BLUE}${TMPBULLET_SRC_DIR}${NORMAL}"
+            message "  - Setting environment variable: BULLET_SRC_DIR=$TMPBULLET_SRC_DIR"
+            export BULLET_SRC_DIR=$TMPBULLET_SRC_DIR
+        else
+            writeStatus "  - Failed to find bullet source" 2
+            hasFailed=true
+            return
+        fi
+    fi
+
+    # Test the actual content of the bullet directory
+    pathStatusCode=0
+    [[ ! -e $BULLET_SRC_DIR/src/btBulletDynamicsCommon.h ]] && pathStatusCode=2
+    [[ ! -e $BULLET_SRC_DIR/src/BulletDynamics/Dynamics/btSimpleDynamicsWorld.cpp ]] && pathStatusCode=2
+    writeStatus "  - Checking bullet source ($BULLET_SRC_DIR)" $pathStatusCode
+    [[ $pathStatusCode -eq 2 ]] && hasFailed=true
+}
+
+
+function findSDL2Source {
+    message "${GREEN}[sdl2 source]${NORMAL}"
+    TMPSDL2_SRC_DIR=
+    if ! validateEnvironmentVariable SDL2_SRC_DIR ; then
+        if [[ ! $TMPSDL2_SRC_DIR ]] ; then
+            if [[ -x `which sdl2-config` ]] ; then
+                # check to see it is located common subdirectory?
+                tmppath=`sdl2-config --prefix | sed 's/sdl2-x86/SDL/g'`
+                if [[ -e $tmppath/src/SDL.c ]] ; then
+                    writeStatus "  - Found possible sdl2 source path" 0
+                    TMPSDL2_SRC_DIR=$tmppath
+                fi
+            fi
+        fi
+
+        if [[ ! $TMPSDL2_SRC_DIR ]] ; then
+            echo "  - Attempting to automatically find sdl2 source (may take some time)"
+            filepath="/src/SDL.c"
+            possible=`locate "$filepath" | grep ${filepath}$ |  sed 's/.\{'${#filepath}'\}$//'`
+            if [[ $possible ]] ; then
+                sorted=`echo "$possible" | awk '{ print length($0) " " $0; }' | sort -n | cut -d ' ' -f 2-`
+                for i in $sorted ; do
+                    if [[ -e $i/$filepath ]] ; then
+                        TMPSDL2_SRC_DIR=$i
+                        break
+                    fi
+                done
+            fi
+        fi
+
+        if [[ $TMPSDL2_SRC_DIR ]] ; then
+            message "  - SDL2 source found at ${BLUE}${TMPSDL2_SRC_DIR}${NORMAL}"
+            message "  - Setting environment variable: SDL2_SRC_DIR=$TMPSDL2_SRC_DIR"
+            export SDL2_SRC_DIR=$TMPSDL2_SRC_DIR
+        else
+            writeStatus "  - Failed to find sdl2 source" 2
+            hasFailed=true
+            return
+        fi
+    fi
+
+    # Test the actual content of the sdl2 directory
+    pathStatusCode=0
+    [[ ! -e $SDL2_SRC_DIR/Android.mk ]] && pathStatusCode=2
+    [[ ! -e $SDL2_SRC_DIR/src/SDL.c ]] && pathStatusCode=2
+    writeStatus "  - Checking sdl2 source ($SDL2_SRC_DIR)" $pathStatusCode
+    [[ ! $pathStatusCode -eq 0 ]] && hasFailed=true
+}
+
+# $1={image,mixer,ttf} $2=requiredFile1 (e.g. IMG.c) $3=requiredFile2 (e.g. SDL_image.h)
+function findSDL2UtilSource {
+    message "${GREEN}[SDL2_$1 source]${NORMAL}"
+
+    util=$1
+    UTIL=${1^^}
+    requiredFile1=$2
+    requiredFile2=$3
+    TMP_SRC_DIR=
+    if ! validateEnvironmentVariable SDL2_${UTIL}_SRC_DIR ; then
+        if [[ ! $TMP_SRC_DIR ]] ; then
+            if [[ -x `which sdl2-config` ]] ; then
+                # check to see it is located common subdirectory?
+                tmppath=`sdl2-config --prefix | sed 's/sdl2-x86/SDL_'${util}'/g'`
+                if [[ -e $tmppath/${requiredFile1} ]] ; then
+                    writeStatus "  - Found possible SDL2_${util} source path" 0
+                    TMP_SRC_DIR=$tmppath
+                fi
+            fi
+        fi
+
+        if [[ ! $TMP_SRC_DIR ]] ; then
+            echo "  - Attempting to automatically find SDL2_${util} source (may take some time)"
+            filepath=${requiredFile1}
+            possible=`locate "$filepath" | grep ${filepath}$ |  sed 's/.\{'${#filepath}'\}$//'`
+            if [[ $possible ]] ; then
+                sorted=`echo "$possible" | awk '{ print length($0) " " $0; }' | sort -n | cut -d ' ' -f 2-`
+                for i in $sorted ; do
+                    if [[ -e $i/${requiredFile2} ]] ; then
+                        TMP_SRC_DIR=$i
+                        break
+                    fi
+                done
+            fi
+        fi
+
+        if [[ $TMP_SRC_DIR ]] ; then
+            message "  - SDL2_${util} source found at ${BLUE}${TMP_SRC_DIR}${NORMAL}"
+            message "  - Setting environment variable: SDL2_${UTIL}_SRC_DIR=$TMP_SRC_DIR"
+            export SDL2_${UTIL}_SRC_DIR=$TMP_SRC_DIR
+        else
+            writeStatus "  - Failed to find SDL2_${util} source" 2
+            hasFailed=true
+            return
+        fi
+    fi
+
+    # Test the actual content of the sdl2 directory
+    pathStatusCode=0
+    envVar="SDL2_${UTIL}_SRC_DIR"
+    [[ ! -e ${!envVar}/${requiredFile1} ]] && pathStatusCode=2
+    [[ ! -e ${!envVar}/${requiredFile2} ]] && pathStatusCode=2
+    writeStatus "  - Checking SDL2_${util} source (${!envVar})" $pathStatusCode
+    [[ ! $pathStatusCode -eq 0 ]] && hasFailed=true
+}
+
+message "${TEAL}-----------------------------------${NORMAL}"
+message "${TEAL}Checking desktop build dependencies${NORMAL}"
+message "${TEAL}-----------------------------------${NORMAL}"
+findBoost
+findSDLlib
+findGLM
+findBulletLib
+
+message "\n"
+message "${TEAL}-----------------------------------${NORMAL}"
+message "${TEAL}Checking android build dependencies${NORMAL}"
+message "${TEAL}-----------------------------------${NORMAL}"
+findNDK
+findSDK
+findBulletSource
+findSDL2Source
+findSDL2UtilSource image IMG.c Android.mk
+findSDL2UtilSource mixer mixer.c Android.mk
+findSDL2UtilSource ttf showfont.c Android.mk
+
+message "\n"
+if [[ $hasFailed ]] ; then
+    echo "${RED}Error occurred${NORMAL}"
+    echo "Please amend the reported failure message(s) and try again"
+else
+    message "All environment variables and required libraries: ${GREEN}OK${NORMAL}"
+    message "Configuring android project"
+
+    # Creating symbolic link to SDL source path
+    PATH_JNI=./android/jni
+    [[ ! -e $PATH_JNI/SDL ]]        && ln -s $SDL2_SRC_DIR       $PATH_JNI/SDL
+    [[ ! -e $PATH_JNI/SDL_image ]]  && ln -s $SDL2_IMAGE_SRC_DIR $PATH_JNI/SDL_image
+    [[ ! -e $PATH_JNI/SDL_mixer ]]  && ln -s $SDL2_MIXER_SRC_DIR $PATH_JNI/SDL_mixer
+    [[ ! -e $PATH_JNI/SDL_ttf ]]    && ln -s $SDL2_TTF_SRC_DIR   $PATH_JNI/SDL_ttf
+    [[ ! -e $PATH_JNI/bullet-src ]] && ln -s $BULLET_SRC_DIR     $PATH_JNI/bullet-src
+
+    # Create the local.properties file, with the path to the sdk
+    m="# This file is automatically generated by initialize_project.sh
+# Do not modify this file -- YOUR CHANGES WILL BE ERASED!
+#
+sdk.dir=$SDK_HOME
+target=android-18
+"
+    echo "$m" > ./android/project.properties
+
+    message "Done"
+fi

@@ -5,11 +5,10 @@ Import('env')
 base ='#/src'
 target = '#/bin/main'
 
-pathBoost  = os.environ["BOOSTDIR"];
-pathSdl    = os.environ["SDL2DIR"];
-pathGlm    = os.environ["GLMDIR"];
-pathAngel  = os.environ["ANGELSCRIPTDIR"];
-pathBullet = os.environ["BULLETDIR"];
+pathBoost  = os.environ["BOOST_DIR"];
+pathSdl    = os.environ["SDL2_DIR"];
+pathGlm    = os.environ["GLM_DIR"];
+pathBullet = os.environ["BULLET_DIR"];
 
 lSDL      = ['SDL2']
 lSDLimage = ['SDL2_image']
@@ -20,8 +19,7 @@ lGL       = ['GL', 'GLU']
 lOther    = ['m', 'dl', 'rt']
 lAll  = lSDL + lSDLimage + lSDLmixer + lSDLttf + lBullet + lGL + lOther
 
-libpaths = [pathAngel  + '/lib',
-            pathSdl    + '/lib',
+libpaths = [pathSdl    + '/lib',
             pathBullet + '/lib']
 
 # Macros definitions
@@ -60,9 +58,7 @@ cppflags.extend(['-fno-strict-aliasing',
 cppflags.extend(['-isystem', pathBoost  + '/include',
                  '-isystem', pathSdl    + '/include/',
                  '-isystem', pathGlm,
-                 '-isystem', pathBullet + '/include/bullet',
-                 '-isystem', pathAngel  + '/include',
-                 '-isystem', pathAngel  + '/include/angelscript'])
+                 '-isystem', pathBullet + '/include/bullet'])
 cppflags.extend(gccWarningLevel)
 for macro in macroDefinitions:
    cppflags.append('-D' + macro)
@@ -71,7 +67,6 @@ sourcepaths = [
    base,
    pathBoost  + '/include',
    pathGlm,
-   pathAngel  + '/include',
    pathBullet + '/include/bullet/',
    pathSdl    + "/include/"]
 

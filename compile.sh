@@ -114,8 +114,8 @@ if [[ $android ]] ; then
     else
         prepareGitRevHeader
         if [[ ! -e android/project.properties ]] ; then
-            echo "Running android/initialize_project.sh ..."
-            (cd android && ./initialize_project.sh)
+            echo "Running initialize_project.sh ..."
+            (./initialize_project.sh --quiet)
         fi
 
         (cd android && nice ndk-build $serial $verbose)

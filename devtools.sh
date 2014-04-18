@@ -8,8 +8,8 @@ Possible targets:
     ba           Builds android
     bap          Builds android, pushes .apk on completion
     bl           Builds linux
-    bal          Builds all
-    p            Pushes Android APK to device
+    bal,bla,ball Builds android and linux
+    p            Pushes android APK to device
     wa           Auto-rebuild android on changes.
     wl           Auto-rebuild linux on changes.
     lg,log       adb logcat with SWL filter
@@ -58,7 +58,7 @@ while test $# -gt 0; do
             ./compile.sh l $@
             exit
             ;;
-        bal)
+        bal|bla|ball)
             shift
             ./compile.sh all $@
             exit
