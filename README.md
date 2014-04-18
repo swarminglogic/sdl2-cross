@@ -1,5 +1,4 @@
-SDL2-cross (gamedev framework)
-===========================================================
+![Swarming Logic cross-platform framework](/swl_logo.png)
 
 SDL2, C++11, OpenGL 4, OpenGL ES 3, Android/Desktop Project.
 
