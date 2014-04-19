@@ -34,16 +34,12 @@ function writeStatus {
     fi
     let COL=$(tput cols)-${#1}+${#color}+${#NORMAL}
 
-    if [[ $2 -eq 0 ]] ; then
-        if [[ ! $isQuiet ]] ; then
-            printf "%s%${COL}s" "$1" "$color[OK]$NORMAL        "
-        fi
-    elif [[ $2 -eq 1 ]] ; then
+    if [[ $2 -eq 0 ]] && [[ ! $isQuiet ]] ; then
+        printf "%s%${COL}s" "$1" "$color[OK]$NORMAL        "
+    elif [[ $2 -eq 1 ]] && [[ ! $isQuiet ]] ; then
         printf "%s%${COL}s" "$1" "$color[WARNING]$NORMAL   "
     elif [[ $2 -eq 2 ]] ; then
         printf "%s%${COL}s" "$1" "$color[FAILED]$NORMAL    "
-    else
-        exit "Something wrong in script"
     fi
 }
 
@@ -76,6 +72,54 @@ function validateSharedLibrary {
     writeStatus "  - $2 ($libraryPath)" $statusCode
 }
 
+
+
+# $1=name (e.g. boost) $2=searchFile  $3=requiredMatch [$4=specialExecutableArguments]
+# If $4 is set, it assumes $3 in an executable finds paths with  `$2 $4`
+# Both path/$2 and path/$3 must exist for the path to be valid.
+# Value stored in $retvalue, if it finds a match.
+function locateAny {
+    message "  - Attempting to automatically find $1 (may take some time)"
+    retvalue=
+    searchFile=$2
+    requiredMatch=$3
+    possible=`locate "$searchFile" | grep ${searchFile}$ |  sed 's/.\{'${#searchFile}'\}$//'`
+    if [[ $possible ]] ; then
+        sorted=`echo "$possible" | awk '{ print length($0) " " $0; }' | sort -n | cut -d ' ' -f 2-`
+        for i in $sorted ; do
+            if [[ $# -eq 4 ]] ; then
+                iexec=$i/$searchFile
+                if [[ -x $iexec ]] && [[ -e `$iexec $4`/${requiredMatch} ]] ; then
+                    retvalue=`$iexec $4`
+                    return 0
+                fi
+            else
+                if [[ -e ${i}/${requiredMatch} ]] ; then
+                    retvalue=$i
+                    return 0
+                fi
+            fi
+        done
+    fi
+    return 1
+}
+
+accumVarDefines=
+# $1=name (e.g. boost) $2=variableNameSet [$3=value, ${!TMP{2}} if not set]
+function setEnvVariable {
+    newPath=$3
+    if [[ $# -eq 2 ]] ; then
+        tmpprefix=TMP${2}
+        newPath=${!tmpprefix}
+    fi
+
+    # echo ${!tmp}
+    message "  - $1 found at ${BLUE}${newPath}${NORMAL}"
+    message "  - Setting environment variable: $2=${newPath}"
+    export ${2}=${newPath}
+    accumVarDefines=${accumVarDefines}"\nexport "${2}=${newPath}
+}
+
 function findBoost {
     message "${GREEN}[boost library]${NORMAL}"
     TMPBOOST_DIR=
@@ -85,23 +129,14 @@ function findBoost {
         elif validateEnvironmentVariable BOOSTROOT ; then
             TMPBOOST_DIR=$BOOSTROOT
         else
-            echo "  - Attempting to automatically find boost (may take some time)"
-            filepath="/include/boost/algorithm/string.hpp"
-            possible=`locate "$filepath" | sed 's/.\{'${#filepath}'\}$//'`
-            if [[ $possible ]] ; then
-                sorted=`echo "$possible" | awk '{ print length($0) " " $0; }' | sort -n | cut -d ' ' -f 2-`
-                for i in $sorted ; do
-                    if [[ -e $i/include/boost/version.hpp ]] ; then
-                        TMPBOOST_DIR=$i
-                        break
-                    fi
-                done
+            if locateAny "boost" \
+                "/include/boost/algorithm/string.hpp" \
+                "/include/boost/version.hpp" ; then
+                TMPBOOST_DIR=$retvalue
             fi
         fi
         if [[ $TMPBOOST_DIR ]] ; then
-            message "  - Boost library found at ${BLUE}${TMPBOOST_DIR}${NORMAL}"
-            message "  - Setting environment variable: BOOST_DIR=$TMPBOOST_DIR"
-            export BOOST_DIR=$TMPBOOST_DIR
+            setEnvVariable "Boost library" "BOOST_DIR"
         else
             writeStatus "  - Failed to find boost library" 2
             hasFailed=true
@@ -111,8 +146,8 @@ function findBoost {
 
     # Test the actual content of the boost directory
     pathStatusCode=0
-    [[ ! -e $BOOSTDIR/include/boost/version.hpp ]] && pathStatusCode=2
-    writeStatus "  - Checking boost library ($BOOSTDIR)" $pathStatusCode
+    [[ ! -e $BOOST_DIR/include/boost/version.hpp ]] && pathStatusCode=2
+    writeStatus "  - Checking boost library ($BOOST_DIR)" $pathStatusCode
     [[ $pathStatusCode -eq 2 ]] && hasFailed=true
 }
 
@@ -138,23 +173,13 @@ function findSDLlib {
             fi
         fi
         if [[ ! $TMPSDL2_DIR ]] ; then
-            echo "  - Attempting to automatically find sdl2 (may take some time)"
-            sdl2configs=`locate bin/sdl2-config`
-            if [[ $sdl2configs ]] ; then
-                sorted=`echo "$sdl2configs" | awk '{ print length($0) " " $0; }' | sort -n | cut -d ' ' -f 2-`
-                for i in $sorted ;  do
-                    if [[ -x $i ]] && [[ -e `$i --prefix` ]] ; then
-                        TMPSDL2_DIR=`$i --prefix`
-                        break
-                    fi
-                done
+            if locateAny "sdl2" "bin/sdl2-config" "include/SDL2/SDL.h" "--prefix" ; then
+                TMPSDL2_DIR=$retvalue
             fi
         fi
 
         if [[ $TMPSDL2_DIR ]] ; then
-            message "  - SDL2 library found at ${BLUE}${TMPSDL2_DIR}${NORMAL}"
-            message "  - Setting environment variable: SDL2_DIR=$TMPSDL2_DIR"
-            export SDL2_DIR=$TMPSDL2_DIR
+            setEnvVariable "SDL2 library" "SDL2_DIR"
         else
             writeStatus "  - Failed to find sdl2 library" 2
             hasFailed=true
@@ -181,24 +206,13 @@ function findGLM {
     TMPGLM_DIR=
     if ! validateEnvironmentVariable GLM_DIR ; then
         if [[ ! $TMPGLM_DIR ]] ; then
-            echo "  - Attempting to automatically find GLM (may take some time)"
-            filepath="/glm/glm.hpp"
-            possible=`locate "$filepath" | sed 's/.\{'${#filepath}'\}$//'`
-            if [[ $possible ]] ; then
-                sorted=`echo "$possible" | awk '{ print length($0) " " $0; }' | sort -n | cut -d ' ' -f 2-`
-                for i in $sorted ; do
-                    if [[ -e $i/glm/glm.hpp ]] ; then
-                        TMPGLM_DIR=$i
-                        break
-                    fi
-                done
+            if locateAny "GLM" "/glm/glm.hpp" "/glm/glm.hpp" ; then
+                TMPGLM_DIR=$retvalue
             fi
         fi
 
         if [[ $TMPGLM_DIR ]] ; then
-            message "  - GLM headers found at ${BLUE}${TMPGLM_DIR}${NORMAL}"
-            message "  - Setting environment variable: GLM_DIR=$TMPGLM_DIR"
-            export GLM_DIR=$TMPGLM_DIR
+            setEnvVariable "GLM headers" "GLM_DIR"
         else
             writeStatus "  - Failed to find GLM headers" 2
             hasFailed=true
@@ -227,24 +241,14 @@ function findBulletLib {
             fi
         fi
         if [[ ! $TMPBULLET_DIR ]] ; then
-            echo "  - Attempting to automatically find bullet library (may take some time)"
-            filepath="/include/bullet/btBulletDynamicsCommon.h"
-            possible=`locate "$filepath" | sed 's/.\{'${#filepath}'\}$//'`
-            if [[ $possible ]] ; then
-                sorted=`echo "$possible" | awk '{ print length($0) " " $0; }' | sort -n | cut -d ' ' -f 2-`
-                for i in $sorted ; do
-                    if [[ -e $i/include/bullet/btBulletDynamicsCommon.h ]] ; then
-                        TMPBULLET_DIR=$i
-                        break
-                    fi
-                done
+            file="/include/bullet/btBulletDynamicsCommon.h"
+            if locateAny "bullet library" $file $file ; then
+                TMPBULLET_DIR=$retvalue
             fi
         fi
 
         if [[ $TMPBULLET_DIR ]] ; then
-            message "  - Bullet library found at ${BLUE}${TMPBULLET_DIR}${NORMAL}"
-            message "  - Setting environment variable: BULLET_DIR=$TMPBULLET_DIR"
-            export BULLET_DIR=$TMPBULLET_DIR
+            setEnvVariable "Bullet library" "BULLET_DIR"
         else
             writeStatus "  - Failed to find bullet library" 2
             hasFailed=true
@@ -283,9 +287,7 @@ function findNDK {
         fi
 
         if [[ $TMPNDK_HOME ]] ; then
-            message "  - Android NDK found at ${BLUE}${TMPNDK_HOME}${NORMAL}"
-            message "  - Setting environment variable: NDK_HOME=$TMPNDK_HOME"
-            export NDK_HOME=$TMPNDK_HOME
+            setEnvVariable "Android NDK" "NDK_HOME"
         else
             writeStatus "  - Failed to find Android NDK" 2
             hasFailed=true
@@ -297,7 +299,7 @@ function findNDK {
     if [[ -x $ndkBuildPath ]] ; then
         writeStatus "  - ndk-build utility ($ndkBuildPath)" 0
     else
-        writeStatus "  - ndk-build utility not found in PATH" 1
+        writeStatus "  - ndk-build utility not found in PATH" 2
         hasFailed=true
     fi
 
@@ -325,24 +327,14 @@ function findSDK {
             fi
         fi
         if [[ ! $TMPSDK_HOME ]] ; then
-            echo "  - Attempting to automatically find the Android SDK (may take some time)"
-            filepath="/platform-tools/adb"
-            possible=`locate "$filepath" | grep ${filepath}$ |  sed 's/.\{'${#filepath}'\}$//'`
-            if [[ $possible ]] ; then
-                sorted=`echo "$possible" | awk '{ print length($0) " " $0; }' | sort -n | cut -d ' ' -f 2-`
-                for i in $sorted ; do
-                    if [[ -d $i/platforms/$targetAndroidPlatform ]] ; then
-                        TMPSDK_HOME=$i
-                        break
-                    fi
-                done
+            if locateAny "Android SDK" "/platform-tools/adb" \
+                "/platforms/$targetAndroidPlatform" ; then
+                TMPSDK_HOME=$retvalue
             fi
         fi
 
         if [[ $TMPSDK_HOME ]] ; then
-            message "  - Android SDK found at ${BLUE}${TMPSDK_HOME}${NORMAL}"
-            message "  - Setting environment variable: SDK_HOME=$TMPSDK_HOME"
-            export SDK_HOME=$TMPSDK_HOME
+            setEnvVariable "Android SDK" "SDK_HOME"
         else
             writeStatus "  - Failed to find Android SDK" 2
             hasFailed=true
@@ -361,24 +353,14 @@ function findBulletSource {
     TMPBULLET_SRC_DIR=
     if ! validateEnvironmentVariable BULLET_SRC_DIR ; then
         if [[ ! $TMPBULLET_SRC_DIR ]] ; then
-            echo "  - Attempting to automatically find bullet library (may take some time)"
             filepath="/src/BulletDynamics/Dynamics/btSimpleDynamicsWorld.cpp"
-            possible=`locate "$filepath" | sed 's/.\{'${#filepath}'\}$//'`
-            if [[ $possible ]] ; then
-                sorted=`echo "$possible" | awk '{ print length($0) " " $0; }' | sort -n | cut -d ' ' -f 2-`
-                for i in $sorted ; do
-                    if [[ -e $i/$filepath ]] ; then
-                        TMPBULLET_SRC_DIR=$i
-                        break
-                    fi
-                done
+            if locateAny "bullet library" $filepath $filepath ; then
+                TMPBULLET_SRC_DIR=$retvalue
             fi
         fi
 
         if [[ $TMPBULLET_SRC_DIR ]] ; then
-            message "  - Bullet source found at ${BLUE}${TMPBULLET_SRC_DIR}${NORMAL}"
-            message "  - Setting environment variable: BULLET_SRC_DIR=$TMPBULLET_SRC_DIR"
-            export BULLET_SRC_DIR=$TMPBULLET_SRC_DIR
+            setEnvVariable "Bullet source" "BULLET_SRC_DIR"
         else
             writeStatus "  - Failed to find bullet source" 2
             hasFailed=true
@@ -411,24 +393,14 @@ function findSDL2Source {
         fi
 
         if [[ ! $TMPSDL2_SRC_DIR ]] ; then
-            echo "  - Attempting to automatically find sdl2 source (may take some time)"
             filepath="/src/SDL.c"
-            possible=`locate "$filepath" | grep ${filepath}$ |  sed 's/.\{'${#filepath}'\}$//'`
-            if [[ $possible ]] ; then
-                sorted=`echo "$possible" | awk '{ print length($0) " " $0; }' | sort -n | cut -d ' ' -f 2-`
-                for i in $sorted ; do
-                    if [[ -e $i/$filepath ]] ; then
-                        TMPSDL2_SRC_DIR=$i
-                        break
-                    fi
-                done
+            if locateAny "sdl2 source" $filepath $filepath ; then
+                TMPSDL2_SRC_DIR=$retvalue
             fi
         fi
 
         if [[ $TMPSDL2_SRC_DIR ]] ; then
-            message "  - SDL2 source found at ${BLUE}${TMPSDL2_SRC_DIR}${NORMAL}"
-            message "  - Setting environment variable: SDL2_SRC_DIR=$TMPSDL2_SRC_DIR"
-            export SDL2_SRC_DIR=$TMPSDL2_SRC_DIR
+            setEnvVariable "SDL2 source" "SDL2_SRC_DIR"
         else
             writeStatus "  - Failed to find sdl2 source" 2
             hasFailed=true
@@ -466,24 +438,13 @@ function findSDL2UtilSource {
         fi
 
         if [[ ! $TMP_SRC_DIR ]] ; then
-            echo "  - Attempting to automatically find SDL2_${util} source (may take some time)"
-            filepath=${requiredFile1}
-            possible=`locate "$filepath" | grep ${filepath}$ |  sed 's/.\{'${#filepath}'\}$//'`
-            if [[ $possible ]] ; then
-                sorted=`echo "$possible" | awk '{ print length($0) " " $0; }' | sort -n | cut -d ' ' -f 2-`
-                for i in $sorted ; do
-                    if [[ -e $i/${requiredFile2} ]] ; then
-                        TMP_SRC_DIR=$i
-                        break
-                    fi
-                done
+            if locateAny "SDL2_${util} source" ${requiredFile1} ${requiredFile2} ; then
+                TMP_SRC_DIR=$retvalue
             fi
         fi
 
         if [[ $TMP_SRC_DIR ]] ; then
-            message "  - SDL2_${util} source found at ${BLUE}${TMP_SRC_DIR}${NORMAL}"
-            message "  - Setting environment variable: SDL2_${UTIL}_SRC_DIR=$TMP_SRC_DIR"
-            export SDL2_${UTIL}_SRC_DIR=$TMP_SRC_DIR
+            setEnvVariable "SDL2_${util} source" "SDL2_${UTIL}_SRC_DIR" $TMP_SRC_DIR
         else
             writeStatus "  - Failed to find SDL2_${util} source" 2
             hasFailed=true
@@ -521,6 +482,14 @@ findSDL2UtilSource mixer mixer.c Android.mk
 findSDL2UtilSource ttf showfont.c Android.mk
 
 message "\n"
+
+if [[ $accumVarDefines ]] ; then
+    message "${YELLOW}TIP:${NORMAL}
+To speed up this script, (or better, make it unneccesary), you can add the
+following lines to ${BLUE}~/.bashrc${NORMAL} (or similar), and then restart the terminal:"
+    message "${accumVarDefines}\n\n"
+fi
+
 if [[ $hasFailed ]] ; then
     echo "${RED}Error occurred${NORMAL}"
     echo "Please amend the reported failure message(s) and try again"
