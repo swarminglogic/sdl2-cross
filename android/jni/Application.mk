@@ -11,3 +11,7 @@ APP_PLATFORM := android-18
 APP_ARM_MODE := thumb
 APP_CPPFLAGS := -fexceptions -frtti
 LIBCXX_FORCE_REBUILD := false
+
+# For SDL_mixer
+SUPPORT_MOD_MIKMOD := false
+SUPPORT_MP3_SMPEG := false

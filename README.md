@@ -160,3 +160,6 @@ src/util/gitrev.h
   To revert this patch, before updating the repo, use
 
   `$ hg update --clean`
+
+  Note that as of SDL_mixer changeset 672, 0237197714b6, patching should no
+  longer be necessary.
