@@ -8,15 +8,15 @@ with the intention to be easily extended to OSX, iOS, Win7.
 ### External Libraries:
 The framework will rely on the following libraries
 
-| Library    | Description |
-| :--------- | :------------------------------------------------------ |
-| SDL2       | OpenGL glue, touch/gesture and keyboard input, and more |
-| SDL_image  | png/jpg loading                                         |
-| SDL_mixer  | ogg loading, sound playback                             |
-| SDL_ttf    | ttf loading                                             |
-| bullet     | physics                                                 |
-| GLM        | math library similar to GLSL (headers only)             |
-| boost      | boost (headers only)                                    |
+| Library    | Tested Version |Description |
+| :--------- | :------------ | :------------------------------------------------------ |
+| SDL2       | `2.0.3 (94af945dbb57)` | OpenGL glue, touch/gesture and keyboard input, and more |
+| SDL_image  | `2.0.0 (d78c7298eb3a)` | png/jpg loading                                         |
+| SDL_mixer  | `2.0.0 (f2811021d074)` | ogg loading, sound playback                             |
+| SDL_ttf    | `2.0.12 (2769b02e33c3)`| ttf loading                                             |
+| bullet     | `2.82-r2704`           | physics                                                 |
+| GLM        | `0.9.5.2`              | math library similar to GLSL (headers only)             |
+| boost      | `1.55`                 | boost (headers only)                                    |
 
 
 ### Project Structure
