@@ -3,13 +3,15 @@
 
 #include <memory>
 
+#include <audio/SoundChunk.h>
 #include <util/Log.h>
 #include <util/SDL.h>
 #include <util/SDL_Event_fwd.h>
 
 
-class Timer;
+class AudioResourceManager;
 class GraphicsManager;
+class Timer;
 
 /**
  * MainManager class for managing application internals
@@ -71,10 +73,12 @@ private:
   MainManager& operator=(const MainManager& c);
 
   Log log_;
+  std::unique_ptr<AudioResourceManager> audioResources_;
   std::unique_ptr<GraphicsManager> graphics_;
   std::unique_ptr<Timer> runtime_;
   float currentTimeDelta_;
   bool isRunning_;
+  SoundChunkShPtr sound_;
 };
 
 #endif

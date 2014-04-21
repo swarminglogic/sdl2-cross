@@ -3,6 +3,8 @@
 #include <cassert>
 #include <sstream>
 
+#include <audio/AudioPlayback.h>
+#include <audio/AudioResourceManager.h>
 #include <audio/SDL_mixer.h>
 #include <graphics/GraphicsManager.h>
 #include <graphics/SDL_image.h>
@@ -16,6 +18,7 @@
 
 MainManager::MainManager()
   : log_("MainManager"),
+    audioResources_(new AudioResourceManager),
     graphics_(nullptr),
     runtime_(new Timer),
     isRunning_(true)
@@ -42,6 +45,7 @@ void MainManager::initialize()
 {
   log_.i("Initializing resources.");
   graphics_.reset(new GraphicsManager);
+  sound_ = audioResources_->loadSound("audio.ogg");
   runtime_->start();
 }
 
@@ -99,8 +103,7 @@ void MainManager::handleEvent(const SDL_Event& event)
   LogUtil::log(event);
 #endif
 
- switch (event.type) {
-  case SDL_WINDOWEVENT:
+  if (event.type == SDL_WINDOWEVENT) {
     if (event.window.event == SDL_WINDOWEVENT_RESIZED ||
         event.window.event == SDL_WINDOWEVENT_SIZE_CHANGED) {
       const int width  = event.window.data1;
@@ -108,23 +111,24 @@ void MainManager::handleEvent(const SDL_Event& event)
       log_.i() << "Window resized to " << width << " x " << height << Log::end;
       graphics_->setScreenSize(Size(width, height));
     }
-  case SDL_MOUSEBUTTONDOWN:
-    break;
-  case SDL_KEYUP:
-    break;
-  case SDL_KEYDOWN:
+  }
+  else if (event.type == SDL_MOUSEBUTTONDOWN) {
+    // TODO swarminglogic, 2014-04-21: Remove sound test
+    const int gWidth = graphics_->getScreenSize().w();
+    float mSpan = (float)(event.button.x - gWidth/2) / (float)gWidth;
+    AudioPlayback::sound().play(sound_, mSpan, 0.7f);
+  }
+  else if (event.type == SDL_KEYDOWN) {
     if (event.key.keysym.scancode == SDL_SCANCODE_ESCAPE ||
         event.key.keysym.scancode == SDL_SCANCODE_AC_BACK) {
       isRunning_ = false;
     }
-    break;
-  case SDL_QUIT:
+  }
+  else if (event.type == SDL_QUIT) {
     isRunning_ = false;
-    break;
-  default:
-    break;
   }
 }
+
 
 
 void MainManager::initSDL()
