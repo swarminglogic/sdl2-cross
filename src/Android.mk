@@ -14,9 +14,9 @@ LOCAL_C_INCLUDES := $(LOCAL_PATH)/$(SDL_PATH)/include \
   $(LOCAL_PATH)/$(SDL_IMAGE_PATH) \
   $(LOCAL_PATH)/$(SDL_MIXER_PATH) \
   $(LOCAL_PATH)/$(SDL_TTF_PATH) \
-  $(BULLETDIR)/include/bullet \
-  $(BOOSTDIR)/include \
-  $(GLMDIR)
+  $(BULLET_DIR)/include/bullet \
+  $(BOOST_DIR)/include \
+  $(GLM_DIR)
 
 # Add your application source files here...
 LOCAL_SRC_FILES := $(SDL_PATH)/src/main/android/SDL_android_main.c \
@@ -33,10 +33,10 @@ LOCAL_STATIC_LIBRARIES := cpufeatures
 
 LOCAL_LDLIBS := -lGLESv1_CM -lGLESv2 -llog
 LOCAL_CFLAGS := -fno-strict-aliasing -D_REENTRANT -DGLM_FORCE_RADIANS
-LOCAL_CFLAGS += -isystem $(GLMDIR)
-LOCAL_CFLAGS += -isystem $(BOOSTDIR)/include
+LOCAL_CFLAGS += -isystem $(GLM_DIR)
+LOCAL_CFLAGS += -isystem $(BOOST_DIR)/include
 LOCAL_CFLAGS += -isystem $(LOCAL_PATH)/$(SDL_PATH)/include
-LOCAL_CFLAGS += -isystem $(BULLETDIR)/include/bullet
+LOCAL_CFLAGS += -isystem $(BULLET_DIR)/include/bullet
 
 
 # Android ndk and stl include paths
