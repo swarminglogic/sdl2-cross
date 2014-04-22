@@ -1,0 +1,103 @@
+import os, re, imp
+import common_build as c
+
+Import('env')
+
+c.sourcepaths.extend([c.pathCxxTest]);
+c.cppflags.extend(['-isystem', c.pathCxxTest]);
+c.libpaths.extend(['#/lib'])
+
+env_test = env.Clone(tools=['default','cxxtest'],
+                     toolpath=['#/common', c.pathCxxTest + '/build_tools/SCons/'])
+
+env_test.Replace(CXXTEST_INSTALL_DIR = c.pathCxxTest)
+env_test.Replace(CXXTEST_SUFFIX = '.h')
+env_test.Replace(CXXFLAGS = ' '.join(c.cppflags))
+env_test.Replace(CXXTEST_CPPPATH = ['#/src', c.pathCxxTest])
+env_test.Replace(CXXTEST_OPTS = '--have-eh')
+env_test.Replace(CPPPATH = c.sourcepaths)
+env_test.Replace(LIBPATH=c.libpaths)
+env_test.Replace(CXX=env['CXX'])
+
+
+######################
+# MATH LIBRARY TESTS
+#######################
+mathFiles = [Glob('math/Test*.h') +
+             Glob('math/*/Test*.h')]
+testMath = env_test.CxxTest('#/bin/tests/TestMath',
+                            mathFiles,
+                            LIBS = ['swl-math'])
+Default(testMath)
+
+######################
+# UTIL LIBRARY TESTS
+#######################
+utilFiles = [Glob('util/Test*.h') +
+             Glob('util/*/Test*.h')]
+testUtil = env_test.CxxTest('#/bin/tests/TestUtil',
+                            utilFiles,
+                            LIBS = ['swl-util'] + c.lSDL)
+Default(testUtil)
+
+
+######################
+# AUDIO LIBRARY TESTS
+#######################
+audioFiles = [Glob('audio/Test*.h') +
+             Glob('audio/*/Test*.h')]
+testAudio = env_test.CxxTest('#/bin/tests/TestAudio',
+                            audioFiles,
+                            LIBS = ['swl-audio'] + c.lSDLmixer + c.lSDL)
+Default(testAudio)
+
+
+######################
+# GRAPHICS LIBRARY TESTS
+#######################
+graphicsFiles = [Glob('graphics/Test*.h') +
+                 Glob('graphics/*/Test*.h')]
+testGraphics = env_test.CxxTest('#/bin/tests/TestGraphics',
+                                graphicsFiles,
+                                LIBS = ['swl-graphics', 'swl-util', 'swl-math']
+                                + c.lSDL + c.lSDLimage + c.lSDLttf + c.lGL)
+Default(testGraphics)
+
+
+######################
+# IO LIBRARY TESTS
+#######################
+ioFiles = [Glob('io/Test*.h') +
+           Glob('io/*/Test*.h')]
+testIo = env_test.CxxTest('#/bin/tests/TestIo',
+                          ioFiles,
+                          LIBS = ['swl-io', 'swl-util', 'swl-math']
+                          + c.lSDL)
+Default(testIo)
+
+
+######################
+# MODEL LIBRARY TESTS
+#######################
+modelFiles = [Glob('model/Test*.h') +
+              Glob('model/*/Test*.h')]
+testModel = env_test.CxxTest('#/bin/tests/TestModel',
+                             modelFiles,
+                             LIBS = ['swl-model', 'swl-util', 'swl-math']
+                             + c.lSDL + c.lBullet)
+Default(testModel)
+
+
+######################
+# CORE APPLICATION TESTS
+#######################
+coreFiles = [Glob('core/Test*.h') +
+             Glob('core/*/Test*.h')]
+testCore = env_test.CxxTest('#/bin/tests/TestCore',
+                             coreFiles,
+                             LIBS = ['swl-math', 'swl-util', 'swl-extern',
+                                     'swl-audio', 'swl-model', 'swl-io',
+                                     'swl-graphics', 'swl-core'] +
+                                     c.lAll)
+Default(testCore)
+

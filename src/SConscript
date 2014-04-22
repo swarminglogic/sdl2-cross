@@ -1,192 +1,117 @@
 import os, re, imp
+import common_build as c
 
 Import('env')
 
-base ='#/src'
 target = '#/bin/main'
 
-pathBoost  = os.environ["BOOST_DIR"];
-pathSdl    = os.environ["SDL2_DIR"];
-pathGlm    = os.environ["GLM_DIR"];
-pathBullet = os.environ["BULLET_DIR"];
-
-lSDL      = ['SDL2']
-lSDLimage = ['SDL2_image']
-lSDLmixer = ['SDL2_mixer']
-lSDLttf   = ['SDL2_ttf']
-lBullet   = ['BulletCollision', 'BulletDynamics', 'LinearMath']
-lGL       = ['GL', 'GLU']
-lOther    = ['m', 'dl', 'rt']
-lAll  = lSDL + lSDLimage + lSDLmixer + lSDLttf + lBullet + lGL + lOther
-
-libpaths = [pathSdl    + '/lib',
-            pathBullet + '/lib']
-
-# Macros definitions
-macroDefinitions = [
-   'USING_SDL',            # Should always be set in SDL projects.
-#   'LOGGING_DISABLED',    # Disables all logging
-#   'LOG2STREAM_DISABLED', # Disables logging to stream
-#   'LOG2FILE_DISABLED',   # Disables logging to file
-   'LOG_SDL_EVENTS_VERBOSELY'
-]
-
-gccWarningLevel = [
-   '-Wall', '-Wextra', '-Wcast-align', '-Wcast-qual',
-   '-fpermissive',
-   '-Wconversion', '-Wdisabled-optimization', #'-Weffc++',
-   '-Wfloat-equal', '-Wformat=2', '-Wimport', '-Winit-self',
-   '-Winline', '-Winvalid-pch', '-Wlong-long',
-   '-Wmissing-format-attribute', '-Wmissing-include-dirs',
-   '-Wmissing-noreturn', '-Wpacked', '-Wpointer-arith',
-   '-Wredundant-decls', '-Wshadow', '-Wstack-protector',
-   '-Wstrict-aliasing=2', '-Wunreachable-code',
-   '-Wunsafe-loop-optimizations', '-Wunused',
-   '-Wvariadic-macros', '-Wwrite-strings', '-pedantic',
-   '-pedantic-errors', '-Woverloaded-virtual',
-   '-Wswitch-enum', '-Werror'
-]
-
-# CPPFLAGS
-####################
-cppflags = ['-O0', '-g', '-gdwarf-2']
-#cppflags = ['-O3']
-cppflags.extend(['-fno-strict-aliasing',
-                 '-std=c++11',
-                 '-D_REENTRANT',# '-DBOOST_FILESYSTEM_NO_DEPRECATED',
-                 '-DGLM_FORCE_RADIANS'])
-cppflags.extend(['-isystem', pathBoost  + '/include',
-                 '-isystem', pathSdl    + '/include/',
-                 '-isystem', pathGlm,
-                 '-isystem', pathBullet + '/include/bullet'])
-cppflags.extend(gccWarningLevel)
-for macro in macroDefinitions:
-   cppflags.append('-D' + macro)
-
-sourcepaths = [
-   base,
-   pathBoost  + '/include',
-   pathGlm,
-   pathBullet + '/include/bullet/',
-   pathSdl    + "/include/"]
+# List of unit test files to prune away
+unitTests = set(Glob('Test*.cpp') + Glob('*/Test*.cpp') + Glob('*/*/Test*.cpp'))
+env.Append(CPPPATH  = c.sourcepaths)
+env.Append(LIBPATH  = c.libpaths)
+env.Append(CPPFLAGS = c.cppflags)
+env.Append(CPPPATH  = c.sourcepaths)
 
 ######################
 # SHARED EXTERNAL LIBRARY
 #######################
-externFiles = [Glob('extern/*.cpp') +
-               Glob('extern/*/*.cpp') +
-               Glob('extern/*/*/*.cpp')]
-externLib = env.SharedLibrary('#/lib/extern',
+externFiles = [list(set(Glob('extern/*.cpp') +
+                        Glob('extern/*/*.cpp')) - unitTests)]
+externLib = env.SharedLibrary('#/lib/swl-extern',
                               externFiles,
                               LIBS     = [],
-                              LIBPATH  = [],
-                              CPPFLAGS = cppflags,
-                              CPPPATH  = [sourcepaths]);
+                              LIBPATH  = []);
 Default(externLib)
 
 
 ######################
 # SHARED MATH LIBRARY
 #######################
-mathFiles = [Glob('math/*.cpp') +
-             Glob('math/*/*.cpp') +
-             Glob('math/*/*/*.cpp')]
-mathLib = env.SharedLibrary('#/lib/math',
+mathFiles = [list(set(Glob('math/*.cpp') +
+                      Glob('math/*/*.cpp')) - unitTests)]
+mathLib = env.SharedLibrary('#/lib/swl-math',
                             mathFiles,
-                            LIBS     = [],
-                            LIBPATH  = [],
-                            CPPFLAGS = cppflags,
-                            CPPPATH  = [sourcepaths]);
+                            LIBS    = [],
+                            LIBPATH = []);
 Default(mathLib)
 
 
 ######################
 # SHARED UTIL LIBRARY
 #######################
-utilFiles = [Glob('util/*.cpp') +
-             Glob('util/*/*.cpp') +
-             Glob('util/*/*/*.cpp')]
-utilLib = env.SharedLibrary('#/lib/util',
+utilFiles = [list(set(Glob('util/*.cpp') +
+                      Glob('util/*/*.cpp')) - unitTests)]
+utilLib = env.SharedLibrary('#/lib/swl-util',
                             utilFiles,
-                            LIBS     = lSDL,
-                            LIBPATH  = libpaths,
-                            CPPFLAGS = cppflags,
-                            CPPPATH  = [sourcepaths]);
+                            LIBS = c.lSDL);
 Default(utilLib)
 
 
 ######################
 # SHARED AUDIO LIBRARY
 #######################
-audioFiles = [Glob('audio/*.cpp') +
-              Glob('audio/*/*.cpp') +
-              Glob('audio/*/*/*.cpp')]
-audioLib = env.SharedLibrary('#/lib/audio',
+audioFiles = [list(set(Glob('audio/*.cpp') +
+                       Glob('audio/*/*.cpp')) - unitTests)]
+audioLib = env.SharedLibrary('#/lib/swl-audio',
                              audioFiles,
-                             LIBS     = lSDL + lSDLmixer + mathLib + utilLib,
-                             LIBPATH  = libpaths,
-                             CPPFLAGS = cppflags,
-                             CPPPATH  = [sourcepaths]);
+                             LIBS = c.lSDL + c.lSDLmixer + mathLib + utilLib);
 Default(audioLib)
 
 
 ######################
 # SHARED GRAPHICS LIBRARY
 #######################
-graphicsFiles = [Glob('graphics/*.cpp') +
-                 Glob('graphics/*/*.cpp') +
-                 Glob('graphics/*/*/*.cpp')]
-graphicsLib = env.SharedLibrary('#/lib/graphics',
+graphicsFiles = [list(set(Glob('graphics/*.cpp') +
+                          Glob('graphics/*/*.cpp')) - unitTests)]
+graphicsLib = env.SharedLibrary('#/lib/swl-graphics',
                              graphicsFiles,
-                             LIBS     = lSDL + lSDLimage + lSDLttf +
-                                mathLib + utilLib + lGL,
-                             LIBPATH  = libpaths,
-                             CPPFLAGS = cppflags,
-                             CPPPATH  = [sourcepaths]);
+                             LIBS = mathLib + utilLib +
+                                    c.lSDL + c.lSDLimage + c.lSDLttf +
+                                    c.lGL);
 Default(graphicsLib)
 
 
 ######################
 # SHARED IO LIBRARY
 #######################
-ioFiles = [Glob('io/*.cpp') +
-           Glob('io/*/*.cpp') +
-           Glob('io/*/*/*.cpp')]
-ioLib = env.SharedLibrary('#/lib/io',
+ioFiles = [list(set(Glob('io/*.cpp') +
+                    Glob('io/*/*.cpp')) - unitTests)]
+ioLib = env.SharedLibrary('#/lib/swl-io',
                              ioFiles,
-                             LIBS     = lSDL + mathLib + utilLib,
-                             LIBPATH  = libpaths,
-                             CPPFLAGS = cppflags,
-                             CPPPATH  = [sourcepaths]);
+                             LIBS = utilLib + c.lSDL + mathLib);
 Default(ioLib)
 
 
 ######################
 # SHARED MODEL LIBRARY
 #######################
-modelFiles = [Glob('model/*.cpp') +
-              Glob('model/*/*.cpp') +
-              Glob('model/*/*/*.cpp')]
-modelLib = env.SharedLibrary('#/lib/model',
+modelFiles = [list(set(Glob('model/*.cpp') +
+                       Glob('model/*/*.cpp')) - unitTests)]
+modelLib = env.SharedLibrary('#/lib/swl-model',
                              modelFiles,
-                             LIBS     = lSDL + lBullet + mathLib + utilLib,
-                             LIBPATH  = libpaths,
-                             CPPFLAGS = cppflags,
-                             CPPPATH  = [sourcepaths]);
+                             LIBS = mathLib + utilLib + c.lSDL + c.lBullet);
 Default(modelLib)
+
+
+######################
+# SHARED CORE LIBRARY
+#######################
+coreFiles = [list(set(Glob('core/*.cpp') +
+                       Glob('core/*/*.cpp')) - unitTests)]
+coreLib = env.SharedLibrary('#/lib/swl-core',
+                             coreFiles,
+                             LIBS = mathLib + utilLib + externLib +
+                                    audioLib + modelLib + ioLib + graphicsLib +
+                                    c.lAll);
+Default(coreLib)
 
 
 ######################
 # Main Application
 #######################
-cppMain = [Glob('main.cpp') +
-           Glob('core/*.cpp') +
-           Glob('core/*/*.cpp') +
-           Glob('core/*/*/*.cpp')]
+cppMain = Glob('main.cpp')
 app = env.Program(target, cppMain,
                   LIBS = mathLib + utilLib + externLib +
-                         audioLib + modelLib + ioLib + graphicsLib + lAll,
-                  LIBPATH  = libpaths,
-                  CPPFLAGS = cppflags,
-                  CPPPATH  = sourcepaths);
+                         audioLib + modelLib + ioLib + graphicsLib + coreLib +
+                         c.lAll);
 Default(app)

@@ -8,8 +8,8 @@ with the intention to be easily extended to OSX, iOS, Win7.
 ### External Libraries:
 The framework will rely on the following libraries
 
-| Library    | Tested Version |Description |
-| :--------- | :------------ | :------------------------------------------------------ |
+| Library    | Tested Version         | Description                                             |
+| :--------- | :--------------------- | :------------------------------------------------------ |
 | SDL2       | `2.0.3 (94af945dbb57)` | OpenGL glue, touch/gesture and keyboard input, and more |
 | SDL_image  | `2.0.0 (d78c7298eb3a)` | png/jpg loading                                         |
 | SDL_mixer  | `2.0.0 (f2811021d074)` | ogg loading, sound playback                             |
@@ -56,7 +56,7 @@ The framework will rely on the following libraries
     └── util                        { base library }
 ```
 
-### Dependancy tree
+### Dependency tree
 
 To enforce decoupling, and quicker build times, the source is structured into
 modules, compiled as shared libraries. This currently only applies to the
@@ -126,6 +126,7 @@ See `./initialize_project.sh`, `./devtools.sh` and `./compile.sh` for details.
 
 ### Suggested `.gitignore` content
 ```
+common_build.pyc
 bin/
 build/
 lib/
