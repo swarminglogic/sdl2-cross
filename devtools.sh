@@ -12,6 +12,7 @@ Possible targets:
     p            Pushes android APK to device
     wa           Auto-rebuild android on changes.
     wl           Auto-rebuild linux on changes.
+    testl        compile and run unit tests on linux
     lg,log       adb logcat with SWL filter
     lga,loga     adb logcat with SWL, SDL, SDL/* filter
     lgall,logall adb logcat with no filter
@@ -89,6 +90,16 @@ while test $# -gt 0; do
                | xargs cat | md5sum" -e ./compile.sh l $@
              exit
              ;;
+        testl)
+            shift
+            ./compile.sh l -t
+            LD_LIBRARY_PATH=./lib/:$LD_LIBRARY_PATH
+            if [[ $? ]] ; then
+                for t in ./bin/tests/* ; do
+                    ./$t
+                done
+            fi
+            ;;
         lg|log)
             shift
             adb logcat -c && adb logcat -s "SWL"

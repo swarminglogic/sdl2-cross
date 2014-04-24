@@ -17,7 +17,7 @@ Options
 
  # TODO swarminglogic, 2014-03-25:
  # For linux:
- #   -t, --tests   Runs the unit test system todo
+ #   -t, --tests   Compile & run the unit test system
 "
     exit
 }
@@ -75,6 +75,10 @@ while test $# -gt 0; do
             shift
             pushToAndroid=yes
             ;;
+        -t|--tests)
+            shift
+            runTests=yes
+            ;;
         a|android)
             shift
             android=yes
@@ -131,6 +135,10 @@ if [[ $linux ]] ; then
         scons -c;
     else
         prepareGitRevHeader
-        nice scons $serial
+        if [[ $runTests ]] ; then
+            nice scons $serial --tests
+        else
+            nice scons $serial
+        fi
     fi
 fi

@@ -11,8 +11,15 @@ env = Environment(ENV = {'PATH' : os.environ['PATH'],
                   CXX='g++',
                   tools=['default'], toolpath=[''])
 
+AddOption('--tests',
+          action='store_true',
+          help='compile and run unit tests',
+          default=False)
+
 VariantDir('build', 'src')
 Export('env')
 
 SConscript('build/SConscript')
-SConscript('build/SConscript_tests')
+if GetOption('tests'):
+    SConscript('build/SConscript_tests')
+
