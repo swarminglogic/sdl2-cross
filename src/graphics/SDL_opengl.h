@@ -11,6 +11,7 @@
 
 #if defined(__ANDROID__)
 // ANDROID SPECIFICS
+#define USE_OPENGLES
 #include <GLES3/gl3.h>
 #include <GLES3/gl3ext.h>
 
