@@ -27,7 +27,17 @@ public:
   virtual ~Asset();
 
   Asset::Type type() const;
+
+  /**
+   * Full path from base resource
+   * e.g. ./assets/shaders/deferredquad.frag
+   */
   std::string path() const;
+
+  /**
+   * Only filename
+   * e.g. deferredquad.frag
+   */
   std::string filename() const;
 
 

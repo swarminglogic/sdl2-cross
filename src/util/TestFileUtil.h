@@ -28,7 +28,7 @@ public:
     std::string readText = FileUtil::read(fileName);
     TS_ASSERT_EQUALS(text, readText);
     TS_ASSERT_THROWS(FileUtil::read("thisFileDoesNotExist"),
-                                        Exception);
+                     Exception);
     TS_ASSERT_EQUALS(std::remove(fileName.c_str()), 0);
   }
 

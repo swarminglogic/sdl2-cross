@@ -20,6 +20,8 @@ CREATE_RAII_UP(SDL_Texture,  SDL_DestroyTexture)  SdlTexturePtr;
 CREATE_RAII_UP(SDL_Renderer, SDL_DestroyRenderer) SdlRendererPtr;
 CREATE_RAII_UP(SDL_Window,   SDL_DestroyWindow)   SdlWindowPtr;
 
+CREATE_RAII_UP(SDL_RWops,    SDL_RWclose)         SdlRWopsPtr;
+
 CREATE_RAII2_UP(SDL_GLContext,   SDL_GL_DeleteContext)   SdlGLContextPtr;
 
 #endif
