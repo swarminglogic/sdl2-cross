@@ -52,7 +52,7 @@ cppflags = ['-O0', '-g', '-gdwarf-2']
 #cppflags = ['-O3']
 cppflags.extend(['-fno-strict-aliasing',
                  '-std=c++11',
-                 '-D_REENTRANT',# '-DBOOST_FILESYSTEM_NO_DEPRECATED',
+                 '-D_REENTRANT',
                  '-DGLM_FORCE_RADIANS'])
 cppflags.extend(['-isystem', pathBoost  + '/include',
                  '-isystem', pathSdl    + '/include/',

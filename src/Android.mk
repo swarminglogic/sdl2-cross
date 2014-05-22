@@ -20,18 +20,29 @@ LOCAL_C_INCLUDES := $(LOCAL_PATH)/$(SDL_PATH)/include \
 
 # Add your application source files here...
 LOCAL_SRC_FILES := $(SDL_PATH)/src/main/android/SDL_android_main.c \
-  $(shell find $(JNI_PATH)/src/ -name "*.cpp")
+	 $(wildcard $(JNI_PATH)/src/*.cpp) \
+	 $(wildcard $(JNI_PATH)/src/audio/*.cpp) \
+	 $(wildcard $(JNI_PATH)/src/core/*.cpp) \
+	 $(wildcard $(JNI_PATH)/src/extern/*.cpp) \
+	 $(wildcard $(JNI_PATH)/src/graphics/*.cpp) \
+	 $(wildcard $(JNI_PATH)/src/io/*.cpp) \
+	 $(wildcard $(JNI_PATH)/src/math/*.cpp) \
+	 $(wildcard $(JNI_PATH)/src/model/*.cpp) \
+	 $(wildcard $(JNI_PATH)/src/util/*.cpp)
+
+#  $(shell find $(JNI_PATH)/src/ -name "*.cpp")
 
 # Alternative way to wildcard-include files.
 #  $(wildcard $(JNI_PATH)/src/*.cpp)
 
 # To view variables use:
-# $(warning $(LOCAL_SRC_FILES))
+#$(warning $(LOCAL_SRC_FILES))
 
-LOCAL_SHARED_LIBRARIES := SDL2 SDL2_image SDL2_mixer SDL2_ttf bullet
+LOCAL_SHARED_LIBRARIES := SDL2 SDL2_image SDL2_mixer SDL2_ttf
+# bullet
 LOCAL_STATIC_LIBRARIES := cpufeatures
 
-LOCAL_LDLIBS := -lGLESv1_CM -lGLESv2 -llog
+LOCAL_LDLIBS := -llog -lGLESv3 -lEGL
 LOCAL_CFLAGS := -fno-strict-aliasing -D_REENTRANT -DGLM_FORCE_RADIANS
 LOCAL_CFLAGS += -isystem $(GLM_DIR)
 LOCAL_CFLAGS += -isystem $(BOOST_DIR)/include

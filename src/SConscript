@@ -12,17 +12,6 @@ env.Append(LIBPATH  = c.libpaths)
 env.Append(CPPFLAGS = c.cppflags)
 env.Append(CPPPATH  = c.sourcepaths)
 
-######################
-# SHARED EXTERNAL LIBRARY
-#######################
-externFiles = [list(set(Glob('extern/*.cpp') +
-                        Glob('extern/*/*.cpp')) - unitTests)]
-externLib = env.SharedLibrary('#/lib/swl-extern',
-                              externFiles,
-                              LIBS     = [],
-                              LIBPATH  = []);
-Default(externLib)
-
 
 ######################
 # SHARED MATH LIBRARY
@@ -37,13 +26,25 @@ Default(mathLib)
 
 
 ######################
+# SHARED EXTERNAL LIBRARY
+#######################
+externFiles = [list(set(Glob('extern/*.cpp') +
+                        Glob('extern/*/*.cpp')) - unitTests)]
+externLib = env.SharedLibrary('#/lib/swl-extern',
+                              externFiles,
+                              LIBS     = [],
+                              LIBPATH  = []);
+Default(externLib)
+
+
+######################
 # SHARED UTIL LIBRARY
 #######################
 utilFiles = [list(set(Glob('util/*.cpp') +
                       Glob('util/*/*.cpp')) - unitTests)]
 utilLib = env.SharedLibrary('#/lib/swl-util',
                             utilFiles,
-                            LIBS = c.lSDL);
+                            LIBS = mathLib + c.lSDL);
 Default(utilLib)
 
 
@@ -65,7 +66,7 @@ graphicsFiles = [list(set(Glob('graphics/*.cpp') +
                           Glob('graphics/*/*.cpp')) - unitTests)]
 graphicsLib = env.SharedLibrary('#/lib/swl-graphics',
                              graphicsFiles,
-                             LIBS = mathLib + utilLib +
+                             LIBS = mathLib + utilLib + externLib +
                                     c.lSDL + c.lSDLimage + c.lSDLttf +
                                     c.lGL);
 Default(graphicsLib)
