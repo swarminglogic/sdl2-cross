@@ -17,6 +17,8 @@ Possible targets:
     lga,loga     adb logcat with SWL, SDL, SDL/* filter
     lgall,logall adb logcat with no filter
     clean        removal of all build directories (use with caution)
+    cleanl       removal of all linux build directories (use with caution)
+    cleana       removal of all android build directories (use with caution)
 "
     exit
 }
@@ -118,14 +120,35 @@ while test $# -gt 0; do
             exit
             ;;
         clean)
+            shift
+            ./devtools.sh cleanl
+            ./devtools.sh cleana
+            ;;
+        cleanl)
+            shift
             while true; do
-                read -p "Removing build directories: \
-./{bin,build,lib}/ android/{bin,gen,libs,obj}/
-Are you sure? [y/n] " yn
+                read -p "Remove linux build directories: \
+./{bin,build,lib}/ ? [y/n] " yn
                 case $yn in
                     [Yy]* )
-                        rm -rf \
-                             ./{bin,build,lib}/ android/{bin,gen,libs,obj}/ ;
+                        rm -rf ./{bin,build,lib}/ ;
+                        break
+                        ;;
+                    [Nn]* )
+                        exit;;
+                    * ) echo "Please answer yes or no.";;
+                esac
+            done
+            exit
+            ;;
+        cleana)
+            shift
+            while true; do
+                read -p "Remove android build directories: \
+./android/{bin,gen,libs,obj}/ ? [y/n] " yn
+                case $yn in
+                    [Yy]* )
+                        rm -rf android/{bin,gen,libs,obj}/ ;
                         break
                         ;;
                     [Nn]* )

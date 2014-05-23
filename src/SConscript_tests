@@ -24,7 +24,7 @@ env_test.Replace(CXXTEST_OPTS        = '--have-eh')
 env_test.Replace(CPPPATH             = c.sourcepaths)
 env_test.Replace(LIBPATH             = c.libpaths)
 env_test.Replace(CXX                 = env['CXX'])
-
+env_test.Replace(LINKFLAGS           = c.linkflags)
 
 ######################
 # MATH LIBRARY TESTS

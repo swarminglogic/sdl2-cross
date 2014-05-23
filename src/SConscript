@@ -7,11 +7,11 @@ target = '#/bin/main'
 
 # List of unit test files to prune away
 unitTests = set(Glob('Test*.cpp') + Glob('*/Test*.cpp') + Glob('*/*/Test*.cpp'))
-env.Append(CPPPATH  = c.sourcepaths)
-env.Append(LIBPATH  = c.libpaths)
-env.Append(CPPFLAGS = c.cppflags)
-env.Append(CPPPATH  = c.sourcepaths)
-
+env.Append(CPPPATH   = c.sourcepaths)
+env.Append(LIBPATH   = c.libpaths)
+env.Append(CPPFLAGS  = c.cppflags)
+env.Append(CPPPATH   = c.sourcepaths)
+env.Append(LINKFLAGS = c.linkflags)
 
 ######################
 # SHARED MATH LIBRARY

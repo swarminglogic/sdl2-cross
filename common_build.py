@@ -61,6 +61,15 @@ cppflags.extend(['-isystem', pathBoost  + '/include',
 cppflags.extend(gccWarningLevel)
 for macro in macroDefinitions:
    cppflags.append('-D' + macro)
+if 'CPPFLAGS' in os.environ:
+   cppflags.extend(os.environ['CPPFLAGS'].split())
+
+# LINKFLAGS
+####################
+linkflags = []
+if 'LDFLAGS' in os.environ:
+   linkflags.extend(os.environ['LDFLAGS'].split())
+
 
 sourcepaths = [
    base,

@@ -72,9 +72,6 @@ desktop build, but will soon also be used for android.
     |    |            |                                    |
     |    +–––––+––––––+                                    |
     |          |                                           |
-    |          |                                           |
-    |          |                                           |
-    |          |                                           |
     |    +–––––+–––––+       +––––––––––+                  |
     |    |   util    |       |  extern  |                  |
     |    |           |       |          |                  |
@@ -152,6 +149,9 @@ android/jni/SDL_ttf
 android/jni/SDL
 android/jni/bullet-src
 src/util/gitrev.h
+html/
+coveragehistory/
+.coverage
 ```
 
 ### Troubleshooting
