@@ -45,7 +45,7 @@ public:
       MX_n_(0.0),
       x_()
   {
-    assert(N > 0 && "Cannot average 0 elements.");
+    assert(N > 0 && "Cannot average 0 elements."); // LCOV_EXCL_LINE
   }
   ~Averager() {}
 
@@ -70,7 +70,7 @@ public:
 
   double getAverage() const
   {
-    assert(N_ != 0);
+    assert(N_ != 0); // LCOV_EXCL_LINE
     return MX_n_ / static_cast<double>(N_);
   }
 

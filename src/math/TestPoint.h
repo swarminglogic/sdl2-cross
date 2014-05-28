@@ -62,19 +62,30 @@ public:
     Point opC(5,-3);
     opC *= 3.0;
     TS_ASSERT_EQUALS(opC, Point(15, -9));
+
+    opC /= 3.0;
+    TS_ASSERT_EQUALS(opC, Point(5, -3));
+
+    Point opD(14, 33);
+    opD /= 3.4f;
+    TS_ASSERT_EQUALS(opD, Point(4, 9));
   }
 
   void testFriendOperators() {
     Point opA(2, 3);
     Point opAcp(2, 3);
     Point opB(5, 7);
+    Point opC(2, 47);
+    Point opD(47, 3);
 
     // Comparison
     TS_ASSERT_DIFFERS(opA, opB);
     TS_ASSERT_EQUALS(opA, opA);
     TS_ASSERT_EQUALS(opA, opAcp);
     TS_ASSERT_EQUALS(opB, opB);
-    TS_ASSERT(opA != opB);
+    TS_ASSERT(!(opA != opAcp));
+    TS_ASSERT(opA != opC);
+    TS_ASSERT(opA != opD);
 
     // Addition
     Point resAdd = opA + opB;

@@ -28,7 +28,7 @@ public:
   }
 
   static int getInt(int min, int max) {
-    assert(min <= max);
+    assert(min <= max); // LCOV_EXCL_LINE
     std::uniform_int_distribution<int> dist(min, max);
     return dist(device_);
   }

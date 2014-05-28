@@ -82,6 +82,16 @@ public:
     Pointf opC(5,-3);
     opC *= 3.0;
     TS_ASSERT_EQUALS(opC, Pointf(15, -9));
+
+    const float delta = 0.00001f;
+    opC /= 3.0;
+    TS_ASSERT_DELTA(opC.x(), 5.0f, delta);
+    TS_ASSERT_DELTA(opC.y(), -3.0f, delta);
+
+    Pointf opD(14, 33);
+    opD /= 3.4f;
+    TS_ASSERT_DELTA(opD.x(), 4.117647059f, delta);
+    TS_ASSERT_DELTA(opD.y(), 9.705882353f, delta);
   }
 
   void testFriendOperators() {

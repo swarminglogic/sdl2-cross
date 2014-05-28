@@ -79,8 +79,8 @@ Pointf& Pointf::operator*=(float rhs)
 
 Pointf& Pointf::operator/=(float rhs)
 {
-  d_[1] /= d_[1] / rhs;
-  d_[0] /= d_[0] / rhs;
+  d_[1] /= rhs;
+  d_[0] /= rhs;
   return *this;
 }
 

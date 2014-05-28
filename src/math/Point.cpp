@@ -62,17 +62,16 @@ Point& Point::operator-=(const Point& rhs)
 Point& Point::operator*=(double rhs)
 {
   d_[1] = static_cast<int>(d_[1] * rhs);
-  d_[0]  = static_cast<int>(d_[0] * rhs);
+  d_[0] = static_cast<int>(d_[0] * rhs);
   return *this;
 }
 
 Point& Point::operator/=(double rhs)
 {
   d_[1] = static_cast<int>(d_[1] / rhs);
-  d_[0]  = static_cast<int>(d_[0] / rhs);
+  d_[0] = static_cast<int>(d_[0] / rhs);
   return *this;
 }
-
 
 const int* Point::getData() const
 {return d_;}

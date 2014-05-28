@@ -3,6 +3,7 @@
 
 #include <math/MathUtil.h>
 #include <math/Rectf.h>
+#include <math/Size.h>
 
 #include <cxxtest/TestSuite.h>
 
@@ -190,6 +191,31 @@ public:
     TS_ASSERT(MathUtil::isSquare(789*789));
     TS_ASSERT(!MathUtil::isSquare(789*789+1));
     TS_ASSERT(!MathUtil::isSquare(789*789-1));
+  }
+
+
+  void testNextPow2TexCoord()
+  {
+    const float delta = 0.000001f;
+    TS_ASSERT_DELTA(MathUtil::nextPow2TexCoord(0.6f, 128), 0.6f, delta);
+    TS_ASSERT_DELTA(MathUtil::nextPow2TexCoord(0.2f, 64), 0.2f, delta);
+
+    // 1.0f * 192 / 256
+    TS_ASSERT_DELTA(MathUtil::nextPow2TexCoord(1.0f, 192), 0.75f, delta);
+
+    // 0.2 * (66 / 128)
+    TS_ASSERT_DELTA(MathUtil::nextPow2TexCoord(0.2f, 66), 0.103125f, delta);
+
+    // w/Pointf,Size
+    Pointf res1 = MathUtil::nextPow2TexCoord(Pointf(0.6f, 0.2f),
+                                             Size(128, 64));
+    TS_ASSERT_DELTA(res1.x(), 0.6f, delta);
+    TS_ASSERT_DELTA(res1.y(), 0.2f, delta);
+
+    Pointf res2 = MathUtil::nextPow2TexCoord(Pointf(1.0f, 0.2f),
+                                             Size(192, 66));
+    TS_ASSERT_DELTA(res2.x(), 0.75f, delta);
+    TS_ASSERT_DELTA(res2.y(), 0.103125f, delta);
   }
 
 

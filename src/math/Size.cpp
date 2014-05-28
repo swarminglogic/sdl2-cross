@@ -67,14 +67,14 @@ Size& Size::operator-=(const Size& rhs)
 Size& Size::operator*=(double rhs)
 {
   d_[1] = static_cast<int>(d_[1] * rhs);
-  d_[0]  = static_cast<int>(d_[0] * rhs);
+  d_[0] = static_cast<int>(d_[0] * rhs);
   return *this;
 }
 
 Size& Size::operator/=(double rhs)
 {
   d_[1] = static_cast<int>(d_[1] / rhs);
-  d_[0]  = static_cast<int>(d_[0] / rhs);
+  d_[0] = static_cast<int>(d_[0] / rhs);
   return *this;
 }
 

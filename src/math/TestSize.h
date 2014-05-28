@@ -64,19 +64,31 @@ public:
     opC *= 3.0;
     TS_ASSERT_EQUALS(opC, Size(15, -9));
 
+    opC /= 3.0;
+    TS_ASSERT_EQUALS(opC, Size(5, -3));
+
+    Size opD(14, 33);
+    opD /= 3.4f;
+    TS_ASSERT_EQUALS(opD, Size(4, 9));
   }
 
   void testFriendOperators() {
     Size opA(2, 3);
     Size opAcp(2, 3);
     Size opB(5, 7);
+    Size opC(2, 47);
+    Size opD(47, 3);
 
     // Comparison
     TS_ASSERT_DIFFERS(opA, opB);
     TS_ASSERT_EQUALS(opA, opA);
     TS_ASSERT_EQUALS(opA, opAcp);
     TS_ASSERT_EQUALS(opB, opB);
-    TS_ASSERT(opA != opB);
+    TS_ASSERT(!(opA != opAcp));
+    TS_ASSERT(opA != opC);
+    TS_ASSERT(opA != opD);
+    TS_ASSERT(!(opA == opC));
+    TS_ASSERT(!(opA == opD));
 
     // Addition
     Size resAdd = opA + opB;

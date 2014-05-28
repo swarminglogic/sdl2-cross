@@ -2,6 +2,7 @@
 #define MATH_TESTRECTF_H
 
 #include <math/Rectf.h>
+#include <math/Sizef.h>
 
 #include <cxxtest/TestSuite.h>
 
@@ -14,6 +15,25 @@
 class TestRectf : public CxxTest::TestSuite
 {
 public:
+  void testBasic()
+  {
+    const float delta = 0.00001f;
+
+    Rectf rect(Sizef(3.5f, 4.2f));
+    TS_ASSERT_DELTA(rect.x(), 0, delta);
+    TS_ASSERT_DELTA(rect.y(), 0, delta);
+    TS_ASSERT_DELTA(rect.w(), 3.5f, delta);
+    TS_ASSERT_DELTA(rect.h(), 4.2f, delta);
+
+    Rectf rect2(5.1f, 6.2f, 7.3f, 8.4f);
+    TS_ASSERT_DELTA(rect2.x(), 5.1f, delta);
+    TS_ASSERT_DELTA(rect2.y(), 6.2f, delta);
+    TS_ASSERT_DELTA(rect2.w(), 7.3f, delta);
+    TS_ASSERT_DELTA(rect2.h(), 8.4f, delta);
+  }
+
+
+
   void testRectf()
   {
     // == !=, constructors
@@ -36,6 +56,7 @@ public:
     Rectf rect2(rect);
     TS_ASSERT_EQUALS(rect, rect1);
     TS_ASSERT_EQUALS(rect, rect2);
+    TS_ASSERT(!(rect1 == Rectf(pos, size * 2)));
 
     // Getters
     TS_ASSERT_EQUALS(rect.x(), pos.x());
