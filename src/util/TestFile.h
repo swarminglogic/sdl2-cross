@@ -67,32 +67,31 @@ public:
     const std::string& loaded = file.read();
     TS_ASSERT_EQUALS(loaded, content);
     TS_ASSERT(!file.isUpdated());
-    TS_ASSERT(!file.isModified());
-    TS_ASSERT(!file.isModified());
-    TS_ASSERT_EQUALS(file.readCopy(), content);
+    TS_ASSERT(!file.update());
+    TS_ASSERT(!file.update());
+    TS_ASSERT_EQUALS(file.getLocalCopy(), content);
 
-    // [modify], isModified, [modify], readCopy, !isModified
+    // [modify], update, !update, [modify], getLocalCopy, !update
     const std::string text1 {"Text1"};
     FileUtil::write(filename, text1);
-    TS_ASSERT(file.isModified());
-    TS_ASSERT(file.isModified());
-    std::string getText1 = {file.readCopy()};
+    TS_ASSERT(file.update());
+    TS_ASSERT(!file.update());
+    std::string getText1 = {file.getLocalCopy()};
     TS_ASSERT_EQUALS(text1, getText1);
-    TS_ASSERT(!file.isModified());
+    TS_ASSERT(!file.update());
 
-    // [modify], isModified, [modify], read, !isModified
+    // [modify], update, [modify], read, !update
     const std::string text2 {"Text2"};
     FileUtil::write(filename, text2);
-    TS_ASSERT(file.isModified());
+    TS_ASSERT(file.update());
     std::string getText2 = {file.read()};
-    TS_ASSERT(!file.isModified());
-
+    TS_ASSERT(!file.update());
 
 #ifdef SLOW_TESTS
     msleep(1200);
     FileUtil::write(filename, "changed");
     TS_ASSERT(file.isUpdated());
-    TS_ASSERT(file.isModified());
+    TS_ASSERT(file.update());
 #endif
 
     TS_ASSERT(FileUtil::remove(filename.c_str()));
@@ -106,8 +105,8 @@ public:
     File file(filename);
     const std::string content { "This is the content." };
     FileUtil::write(filename, content);
-    file.readToLocal();
-    TS_ASSERT_EQUALS(file.readCopy(), content);
+    file.update();
+    TS_ASSERT_EQUALS(file.getLocalCopy(), content);
     TS_ASSERT(FileUtil::remove(filename.c_str()));
   }
 
@@ -126,17 +125,31 @@ public:
     // After copy
     const std::string text1 {"Text1"};
     FileUtil::write(filename, text1);
-    TS_ASSERT(file.isModified());
+    TS_ASSERT(file.update());
     File file3(file);
     File file4 = file;
-    TS_ASSERT(file3.isModified());
-    TS_ASSERT(file4.isModified());
+    TS_ASSERT(!file3.update());
+    TS_ASSERT(!file4.update());
     TS_ASSERT_EQUALS(file3.read(), text1);
-    TS_ASSERT(!file3.isModified());
-    TS_ASSERT(file4.isModified());
 
     TS_ASSERT(FileUtil::remove(filename.c_str()));
   }
+
+  void testSetFilename()
+  {
+    const std::string filename("./thisdoesexist.txt");
+    FileUtil::write(filename, "foobar");
+
+    File file(filename);
+    TS_ASSERT(file.exists());
+
+    const std::string filename2("./certainlythisdoesnotexist.txt");
+    file.setFilename(filename2);
+    TS_ASSERT(!file.exists());
+
+    TS_ASSERT(FileUtil::remove(filename.c_str()));
+  }
+
 };
 
 #endif

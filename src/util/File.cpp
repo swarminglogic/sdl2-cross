@@ -2,6 +2,7 @@
 
 #include <cassert>
 #include <functional>
+#include <limits>
 
 #include <util/Clock.h>
 #include <util/FileUtil.h>
@@ -9,9 +10,8 @@
 
 File::File(const std::string& filename)
   : filename_(filename),
-    timeLastRead_(),
+    timeLastRead_(0),
     localCopy_(""),
-    contentReadHash_(0),
     localCopyHash_(0)
 {
 }
@@ -33,53 +33,29 @@ bool File::exists() const
 }
 
 
-std::string File::read()
+const std::string& File::read()
 {
   timeLastRead_ = Clock::now();
   const std::string content = FileUtil::read(filename_);
-  assert(timeLastRead_ >= getLastModifiedTime());
-
   std::size_t contentHash = std::hash<std::string>()(content);
-  const bool isHashModified = contentHash != contentReadHash_;
-
-  if (isHashModified)
+  if (contentHash != localCopyHash_) {
     localCopy_ = content;
-  contentReadHash_ = contentHash;
-  return content;
+    localCopyHash_ = contentHash;
+  }
+  return localCopy_;
 }
 
-
-void File::readToLocal()
+const std::string& File::getLocalCopy() const
 {
-  isModified();
-}
-
-
-const std::string& File::readCopy()
-{
-  contentReadHash_ = localCopyHash_;
   return localCopy_;
 }
 
 
-bool File::isModified()
+bool File::update()
 {
-  timeLastRead_ = Clock::now();
-  const std::string content = FileUtil::read(filename_);
-  assert(timeLastRead_ >= getLastModifiedTime());
-
-  std::size_t contentHash = std::hash<std::string>()(content);
-  const bool isHashModified = contentHash != contentReadHash_;
-
-  if (isHashModified) {
-    const bool actualStoredContentDiffers = (contentHash != localCopyHash_);
-    if (actualStoredContentDiffers)
-      localCopy_ = content;
-  }
-
-  // Don't update local hash, even if you mantain a copy of the file!
-  localCopyHash_ = contentHash;
-  return isHashModified;
+  const std::size_t localCopyHashTmp =  localCopyHash_;
+  read();
+  return localCopyHash_ != localCopyHashTmp;
 }
 
 
@@ -92,12 +68,6 @@ bool File::isUpdated() const
 std::time_t File::getLastModifiedTime() const
 {
   return FileUtil::getLastModifiedTime(filename_);
-}
-
-
-std::time_t File::getLastReadTime() const
-{
-  return timeLastRead_;
 }
 
 
@@ -114,7 +84,5 @@ void File::setFilename(const std::string& filename)
   filename_        = filename;
   timeLastRead_    = 0;
   localCopy_       = "";
-  contentReadHash_ = 0;
   localCopyHash_   = 0;
 }
-

@@ -52,6 +52,32 @@ public:
     TS_ASSERT_EQUALS(tb2.y(), cm.getCharOffset(CharMap::NO_TRAIT, ' ').y());
   }
 
+  void testBasic()
+  {
+    CharMap cm;
+    TS_ASSERT_EQUALS(cm.getCharSize(), Size(0,0));
+    cm.setCharSize(Size(5, 12));
+    TS_ASSERT_EQUALS(cm.getCharSize(), Size(5, 12));
+
+    CharMap cm2 = cm;
+
+    std::vector<CharMap::Trait> traits;
+    traits.push_back(CharMap::C_GOLDEN);
+    cm2.setTraits(traits);
+    cm.addTrait(CharMap::C_GOLDEN);
+
+    TS_ASSERT_EQUALS(cm.getNTraits(), cm.getTraits().size());
+    TS_ASSERT_EQUALS(1, cm.getTraits().size());
+    TS_ASSERT_EQUALS(cm2.getNTraits(), cm2.getTraits().size());
+    TS_ASSERT_EQUALS(cm.getTraits(), cm2.getTraits());
+
+    cm.addTrait(CharMap::C_CYAN);
+    TS_ASSERT_DIFFERS(cm.getTraits(), cm2.getTraits());
+    traits.push_back(CharMap::C_CYAN);
+    cm2.setTraits(traits);
+    TS_ASSERT_EQUALS(cm.getTraits(), cm2.getTraits());
+  }
+
   void testCharMap()
   {
     CharMap cm = init();
@@ -103,6 +129,41 @@ public:
     TS_ASSERT_EQUALS(CharMap::convertCharToTBoxIndex('c'), Point(7, 3));
     TS_ASSERT_EQUALS(CharMap::convertCharToTBoxIndex('{'), Point(11, 4));
   }
+
+  void testCharIndexOffest()
+  {
+    // 0  C_GOLDEN
+    // 1  C_CYAN
+    // 2  C_RED
+    // 3  C_MAGENTA
+    // 4  C_GREY
+    // 5  C_WHITE
+    // 6  C_GREEN
+    // 7  C_BLUE
+    // 8  C_OLIVE
+    //
+    //    [ 0 ] [ 2 ] [ 6 ] [ 12] [ 20]
+    //    [ 1 ] [ 3 ] [ 7 ] [ 13] [ 21]
+    //    [ 4 ] [ 5 ] [ 8 ] [ 14] [ 22]
+    //    [ 9 ] [ 10] [ 11] [ 15] [ 23]
+    //    [ 16] [ 17] [ 18] [ 19] [ 24]
+
+    CharMap cm = init();
+    TS_ASSERT_EQUALS(cm.getCharIndexOffset(CharMap::C_GOLDEN, 'c'),
+                     Point(7, 3));
+    TS_ASSERT_EQUALS(cm.getCharIndexOffset(CharMap::C_CYAN, 'c'),
+                     Point(7, 3 + 5));
+    TS_ASSERT_EQUALS(cm.getCharIndexOffset(CharMap::C_RED, 'c'),
+                     Point(7 + 20, 3));
+    TS_ASSERT_EQUALS(cm.getCharIndexOffset(CharMap::C_MAGENTA, 'c'),
+                     Point(7 + 20, 3 + 5));
+    TS_ASSERT_EQUALS(cm.getCharIndexOffset(CharMap::C_GREY, 'c'),
+                     Point(7, 3 + 10));
+    TS_ASSERT_EQUALS(cm.getCharIndexOffset(CharMap::C_BLUE, 'c'),
+                     Point(7 + 40, 3 + 5));
+
+  }
+
 
 private:
 };

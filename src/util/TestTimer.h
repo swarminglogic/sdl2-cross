@@ -22,6 +22,7 @@ public:
   {
     Timer timer;
     TS_ASSERT_EQUALS(timer.getTicks(), 0u);
+    TS_ASSERT_DELTA(timer.getSeconds(), 0.0f, 0.00001f);
   }
 
 
@@ -36,11 +37,17 @@ public:
 
     TS_ASSERT_LESS_THAN_EQUALS(milliseconds, timer.getTicks());
     TS_ASSERT_LESS_THAN(timer.getTicks(), milliseconds + 100u);
+    TS_ASSERT_LESS_THAN(timer.getSeconds(),
+                        (float)(milliseconds + 100u)/1000.0f);
 
     timer.pause();
     unsigned int timeWhenPaused = timer.getTicks();
+    float timeWhenPausedInSeconds = timer.getSeconds();
     msleep(5);
     TS_ASSERT_EQUALS(timeWhenPaused, timer.getTicks());
+    TS_ASSERT_DELTA(timeWhenPausedInSeconds,
+                    timer.getSeconds(),
+                    0.00001f);
   }
 
 

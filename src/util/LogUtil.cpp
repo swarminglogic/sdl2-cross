@@ -5,7 +5,7 @@
 #include <util/Log.h>
 #include <util/SDL.h>
 
-
+// LCOV_EXCL_START
 void LogUtil::log(const SDL_Event& event)
 {
   Log log("LogUtil");
@@ -319,9 +319,7 @@ void LogUtil::logWindowEvent(Log& logger,
   }
 }
 
-
-
-
 LogUtil::~LogUtil()
 {
 }
+// LCOV_EXCL_END

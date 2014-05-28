@@ -70,7 +70,6 @@ inline bool operator<(const Asset& lhs, const Asset& rhs) {
 
 inline bool operator==(const Asset& lhs, const Asset& rhs) {
   return ((lhs.type_ == rhs.type_) &&
-          (lhs.subfolder_ == rhs.subfolder_) &&
           (lhs.filename_ == rhs.filename_));
 }
 inline bool operator!=(const Asset& lhs, const Asset& rhs) {

@@ -14,6 +14,10 @@
 class BashColor
 {
 public:
+  static std::string setColor(const std::string& text,
+                              LogManager::LogLevel level);
+
+private:
   enum Color {
     NONE = 0,
     BLACK, RED, GREEN,
@@ -21,21 +25,13 @@ public:
     CYAN, WHITE
   };
 
-  static std::string setColor(const std::string& text,
-                              LogManager::LogLevel level);
-
-  ~BashColor();
-
-private:
   static BashColor::Color getLogLevelColor(LogManager::LogLevel level);
 
   static std::string setColor(const std::string& text,
-                              BashColor::Color foregroundColor,
-                              BashColor::Color backgroundColor = NONE);
+                              BashColor::Color foregroundColor);
 
-  static std::string makeColorTagVal(int foreground, int background);
-  static std::string makeColorTag(BashColor::Color foreground,
-                                  BashColor::Color background);
+  static std::string makeColorTagVal(int foreground);
+  static std::string makeColorTag(BashColor::Color foreground);
 
   BashColor();
   BashColor(const BashColor& c);

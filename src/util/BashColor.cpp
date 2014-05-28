@@ -3,11 +3,6 @@
 #include <sstream>
 
 
-BashColor::~BashColor()
-{
-}
-
-
 std::string BashColor::setColor(const std::string& text,
                                 LogManager::LogLevel level)
 {
@@ -16,11 +11,9 @@ std::string BashColor::setColor(const std::string& text,
 
 
 std::string BashColor::setColor(const std::string& text,
-                                BashColor::Color fg,
-                                BashColor::Color bg)
+                                BashColor::Color fg)
 {
-  return makeColorTag(fg,bg) + text + makeColorTag(BashColor::NONE,
-                                                   BashColor::NONE);
+  return makeColorTag(fg) + text + makeColorTag(BashColor::NONE);
 }
 
 
@@ -39,10 +32,10 @@ BashColor::Color BashColor::getLogLevelColor(LogManager::LogLevel level)
 }
 
 
-std::string BashColor::makeColorTagVal(int foreground, int background)
+std::string BashColor::makeColorTagVal(int foreground)
 {
   std::string s = "\033[";
-  if (foreground == 0 && background == 0) {
+  if (foreground == 0) {
     s += "0";
     return s + "m";
   }
@@ -50,21 +43,12 @@ std::string BashColor::makeColorTagVal(int foreground, int background)
     std::stringstream ss;
     ss << 29 + foreground;
     s += ss.str();
-    if (background != 0)
-      s += ";";
-  }
-  if (background != 0) {
-    std::stringstream ss;
-    ss << 39 + background;
-    s += ss.str();
   }
   return s + "m";
 }
 
 
-std::string BashColor::makeColorTag(BashColor::Color foreground,
-                                    BashColor::Color background)
+std::string BashColor::makeColorTag(BashColor::Color foreground)
 {
-  return makeColorTagVal(static_cast<int>(foreground),
-                         static_cast<int>(background));
+  return makeColorTagVal(static_cast<int>(foreground));
 }

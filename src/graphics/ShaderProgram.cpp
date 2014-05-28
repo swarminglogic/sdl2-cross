@@ -101,10 +101,11 @@ bool ShaderProgram::compile()
     if (shader.second.isUpdated()) {
       log_.i() << "Loading shader file: "
                << shader.second.getFilename() << Log::end;
-      shader.second.readToLocal();
+      shader.second.update();
     }
 
-    GLuint shaderId = prepareShader(shader.first, shader.second.readCopy());
+    GLuint shaderId = prepareShader(shader.first,
+                                    shader.second.getLocalCopy());
 
     if (shaderId != 0) {
       shaderIds.push_back(shaderId);

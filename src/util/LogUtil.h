@@ -11,6 +11,8 @@ class Log;
  * A static class dedicated to logging various data, which is mostly used for
  * debugging.
  *
+ * note: It is excluded from test coverage.
+ *
  * @author SwarmingLogic
  */
 class LogUtil

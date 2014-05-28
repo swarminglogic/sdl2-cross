@@ -10,14 +10,10 @@
  * Used for reading clear text files.
  * Supports:
  *   - Checking timestamp for updates : isUpdated()
- *   - Checking if content modified hash : isModified()
+ *   - Checking if content modified hash : update()
  *
- * Typical usage
- *   a) File(fn, false) -> read(), isUpdated(), read()
- *   b) File(fn)        -> read(), isModified(), getLocalCopy()
- *
- * Usage a) relies on OS-level timestamp, and might be inaccurate.
- * Usage b) relies on content hash, and is more costly.
+ * read() and update() to almost the same.
+ * A read() can be replaced by update(),getLocalCopy()
  *
  * @author SwarmingLogic (Roald Fernandez)
  */
@@ -42,17 +38,12 @@ public:
    * Reads the whole content of file, returned as string.
    * Optional is  isModified() ->[true]-> getLocalCopy()
    */
-  std::string read();
-
-  /**
-   * Reads the whole content of file, and stores it locally.
-   **/
-  void readToLocal();
+  const std::string& read();
 
   /**
    * @return Local copy.
    */
-  const std::string& readCopy();
+  const std::string& getLocalCopy() const;
 
   /**
    * Checks modified-timestamp of file, and compares it to when it was last
@@ -71,12 +62,12 @@ public:
   /**
    * Reads the file, and compares with hash from when it was last read.
    *
-   * @note Updates local copy (if enabled).
+   * @note Updates local copy.
    * @see getLocalCopy
    *
    * @return True if hash is different, suggesting content has changed.
    */
-  bool isModified();
+  bool update();
 
   /**
    * @note filename_ is const and cannot change -> return by const reference.
@@ -86,14 +77,13 @@ public:
   void setFilename(const std::string& filename);
 
 private:
-  std::time_t getLastReadTime() const;
   std::time_t getLastModifiedTime() const;
 
   std::string filename_;
   std::time_t timeLastRead_;
 
   std::string localCopy_;
-  std::size_t contentReadHash_;
+  // std::size_t contentReadHash_;
   std::size_t localCopyHash_;
 };
 

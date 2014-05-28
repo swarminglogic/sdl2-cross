@@ -32,6 +32,23 @@ public:
     TS_ASSERT_EQUALS(std::remove(fileName.c_str()), 0);
   }
 
+
+  void testWriteException()
+  {
+    TS_ASSERT_THROWS(FileUtil::write("/foo/bar", "Hello"), Exception e);
+    TS_ASSERT_THROWS(FileUtil::append("/foo/bar", "Hello"), Exception e);
+  }
+
+  void testWriteAppend()
+  {
+    const std::string filename("./certainlythisdoesnotexist.txt");
+    FileUtil::write(filename, "foo");
+    TS_ASSERT_EQUALS(FileUtil::read(filename), "foo");
+    FileUtil::append(filename, "bar");
+    TS_ASSERT_EQUALS(FileUtil::read(filename), "foobar");
+    TS_ASSERT(FileUtil::remove(filename.c_str()));
+  }
+
 private:
 
   void writeFile(const std::string& text,

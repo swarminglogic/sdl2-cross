@@ -67,6 +67,11 @@ public:
   };
 
   CharMap();
+
+  /**
+   * The constant width/height character size (in pixels).
+   * Actual glyph dimensions are not relevant here.
+   */
   CharMap(const Size& charSize);
   virtual ~CharMap();
 
