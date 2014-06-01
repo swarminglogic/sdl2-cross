@@ -322,4 +322,4 @@ void LogUtil::logWindowEvent(Log& logger,
 LogUtil::~LogUtil()
 {
 }
-// LCOV_EXCL_END
+// LCOV_EXCL_STOP

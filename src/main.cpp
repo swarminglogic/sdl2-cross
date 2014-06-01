@@ -43,6 +43,11 @@ void quit(int exitCode) {
 int main(int argc, char *argv[]) {
   (void)argc; (void)argv;
 
+  // Initialize logger system
+  LogManager& lm = LogManager::instance();
+  lm.setStreamTarget(std::cout);
+  lm.setLogfilePath("runtime.log");
+  lm.logColumnHeaders();
   Log log("main");
 
   try {

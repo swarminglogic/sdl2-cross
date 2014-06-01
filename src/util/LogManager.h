@@ -10,6 +10,8 @@
  *
  * Manages settings regarding log-levels, and log file name.
  *
+ * TODO swarminglogic, 2014-05-29: Separate Android and Stream logging,
+ *                               common interface, virtualization for selection.
  * @author SwarmingLogic (Roald Fernandez)
  */
 class LogManager
@@ -39,6 +41,8 @@ public:
            const std::string& loggerName,
            const std::string& message) const;
 
+  void logColumnHeaders() const;
+
   virtual ~LogManager();
 
   LogLevel getFileLogLevel() const;
@@ -50,6 +54,8 @@ public:
 
   LogManager::ColorMode getStreamColorMode() const;
   void setStreamColorMode(LogManager::ColorMode streamColorMode);
+
+  void setStreamTarget(std::ostream& out);
 
   static LogManager& instance();
 
@@ -69,6 +75,7 @@ private:
 
   std::string logfilePath_;
   const std::string androidLoggerTag_;
+  mutable std::ostream* out_;
 
   // NonCopyable
   LogManager(const LogManager& c);

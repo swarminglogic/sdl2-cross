@@ -32,7 +32,18 @@ LogManager::LogManager(LogLevel fileLogLevel,
     streamLogLevel_(streamLogLevel),
     streamColorMode_(colorMode),
     logfilePath_(""),
-    androidLoggerTag_("SWL")
+    androidLoggerTag_("SWL"),
+    out_(nullptr)
+{
+}
+
+
+LogManager::~LogManager()
+{
+}
+
+
+void LogManager::logColumnHeaders() const
 {
   // Print columns for the rest of the log
   const std::string header =
@@ -43,11 +54,11 @@ LogManager::LogManager(LogLevel fileLogLevel,
   log2Stream(LEVEL_INFO, separator);
   log2Stream(LEVEL_INFO, header);
   log2Stream(LEVEL_INFO, separator);
-}
 
+  log2File(separator);
+  log2File(header);
+  log2File(separator);
 
-LogManager::~LogManager()
-{
 }
 
 
@@ -97,7 +108,8 @@ void LogManager::log2Stream(
 #ifdef __ANDROID__
   log2AndroidStream(level, formatted);
 #else
-  std::cout << formatted << std::endl;
+  if (out_)
+    *out_ << formatted << std::endl;
   (void)level;
 #endif
 #else
@@ -133,6 +145,7 @@ void LogManager::log2File(const std::string& formatted) const
   if (logfilePath_.empty())
     return;
   FileUtil::append(logfilePath_, formatted);
+  FileUtil::append(logfilePath_, "\n");
 #else
   (void)formatted;
 #endif
@@ -171,7 +184,6 @@ const std::string& LogManager::getLogfilePath() const
 
 void LogManager::setLogfilePath(std::string logfilePath)
 {
-  FileUtil::write(logfilePath, "");
   logfilePath_ = logfilePath;
 }
 
@@ -185,6 +197,12 @@ LogManager::ColorMode LogManager::getStreamColorMode() const
 void LogManager::setStreamColorMode(LogManager::ColorMode streamColorMode)
 {
   streamColorMode_ = streamColorMode;
+}
+
+
+void LogManager::setStreamTarget(std::ostream& out)
+{
+  out_ = &out;
 }
 
 
@@ -204,10 +222,8 @@ std::string LogManager::logLevelAsString(LogLevel level)
     return std::string("ERROR   ");
     break;
   case LEVEL_NONE:
-    assert(false && "Should never be queried");
-    return "";
-    break;
   default:
+    assert(false && "Should never be queried"); // LCOV_EXCL_LINE
     return "";
   }
 }
