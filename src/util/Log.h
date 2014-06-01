@@ -57,7 +57,12 @@ public:
   const Log& e() const;
   const Log& level(LogManager::LogLevel logLevel) const;
 
-  static void end(){}
+  // Special static function that is uses as a global instance to pass to the
+  // logger to mark the end of the line to log.
+  // It allows: logger << "Hello" << Log::end;
+  // The function itself is never actually executed.
+  static void end(){} // LCOV_EXCL_LINE
+
   friend const Log& operator<<(const Log& lhs,
                                void(*pf)() ) {
     if (pf == end) {
