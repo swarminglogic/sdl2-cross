@@ -26,6 +26,17 @@ env_test.Replace(LIBPATH             = c.libpaths)
 env_test.Replace(CXX                 = env['CXX'])
 env_test.Replace(LINKFLAGS           = c.linkflags)
 
+
+######################
+# EXTERNAL LIBRARY TESTS
+#######################
+externFiles = [Glob('extern/Test*.h') +
+               Glob('extern/*/Test*.h')]
+testExtern = env_test.CxxTest('#/bin/tests/TestExtern',
+                              externFiles,
+                              LIBS = ['swl-extern'])
+Default(testExtern)
+
 ######################
 # MATH LIBRARY TESTS
 #######################
@@ -35,6 +46,7 @@ testMath = env_test.CxxTest('#/bin/tests/TestMath',
                             mathFiles,
                             LIBS = ['swl-math'])
 Default(testMath)
+
 
 ######################
 # UTIL LIBRARY TESTS
