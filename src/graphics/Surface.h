@@ -85,7 +85,7 @@ private:
   void releaseResources();
 
   Log log_;
-  SdlSurfacePtr surface_;
+  sdl::SurfacePtr surface_;
   GLuint textureId_;
   Rect imageRect_;
   bool isMaxFiltering_;

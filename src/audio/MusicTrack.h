@@ -21,13 +21,12 @@ public:
 private:
   friend class MusicPlayer;
 
-  SdlMusicPtr music_;
+  sdl::MusicPtr music_;
 
   // NonCopyable
   MusicTrack(const MusicTrack& c);
   MusicTrack& operator=(const MusicTrack& c);
 };
-
 typedef std::shared_ptr<MusicTrack> MusicTrackShPtr;
 
 #endif

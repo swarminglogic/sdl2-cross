@@ -19,7 +19,7 @@ namespace fs = boost::filesystem;
 
 std::string FileUtil::read(const std::string& filename)
 {
-  SdlRWopsPtr file(SDL_RWFromFile(filename.c_str(),"rb"));
+  sdl::RWopsPtr file(SDL_RWFromFile(filename.c_str(),"rb"));
   if (file) {
     std::string text;
     // Go to end and report get size
@@ -50,7 +50,7 @@ void FileUtil::write(const std::string& filename,
 
 bool FileUtil::exists(const std::string& filename)
 {
-  SdlRWopsPtr file(SDL_RWFromFile(filename.c_str(),"rb"));
+  sdl::RWopsPtr file(SDL_RWFromFile(filename.c_str(),"rb"));
   return file.get() != nullptr;
 }
 

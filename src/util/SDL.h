@@ -14,14 +14,16 @@
  * SDL header wrapper
  * @author SwarmingLogic (Roald Fernandez)
  */
+namespace sdl {
+  CREATE_RAII_UP(SDL_Surface,  SDL_FreeSurface)     SurfacePtr;
+  CREATE_RAII_UP(SDL_Texture,  SDL_DestroyTexture)  TexturePtr;
+  CREATE_RAII_UP(SDL_Renderer, SDL_DestroyRenderer) RendererPtr;
+  CREATE_RAII_UP(SDL_Window,   SDL_DestroyWindow)   WindowPtr;
+  CREATE_RAII_UP(SDL_RWops,    SDL_RWclose)         RWopsPtr;
+  CREATE_RAII2_UP(SDL_GLContext,   SDL_GL_DeleteContext)   GLContextPtr;
+}
 
-CREATE_RAII_UP(SDL_Surface,  SDL_FreeSurface)     SdlSurfacePtr;
-CREATE_RAII_UP(SDL_Texture,  SDL_DestroyTexture)  SdlTexturePtr;
-CREATE_RAII_UP(SDL_Renderer, SDL_DestroyRenderer) SdlRendererPtr;
-CREATE_RAII_UP(SDL_Window,   SDL_DestroyWindow)   SdlWindowPtr;
 
-CREATE_RAII_UP(SDL_RWops,    SDL_RWclose)         SdlRWopsPtr;
 
-CREATE_RAII2_UP(SDL_GLContext,   SDL_GL_DeleteContext)   SdlGLContextPtr;
 
 #endif

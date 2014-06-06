@@ -131,9 +131,9 @@ void Surface::prepareForGl()
   Uint32 Rmask, Gmask, Bmask, Amask = 0;
   SDL_PixelFormatEnumToMasks(SDL_PIXELFORMAT_ABGR8888, &bpp,
                              &Rmask, &Gmask, &Bmask, &Amask);
-  SdlSurfacePtr tempSurface(SDL_CreateRGBSurface(0, width, height,
-                                              bpp,
-                                              Rmask, Gmask, Bmask, Amask));
+  sdl::SurfacePtr tempSurface(SDL_CreateRGBSurface(0, width, height,
+                                                   bpp,
+                                                   Rmask, Gmask, Bmask, Amask));
 
   SDL_SetSurfaceAlphaMod( surface_.get(), 0xFF );
   SDL_SetSurfaceBlendMode( surface_.get(), SDL_BLENDMODE_NONE );

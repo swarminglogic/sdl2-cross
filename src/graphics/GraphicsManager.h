@@ -34,9 +34,9 @@ private:
   void logStaticOpenGLInfo() const;
 
   Log log_;
-  SdlWindowPtr window_;
+  sdl::WindowPtr window_;
   Size screenSize_;
-  SdlGLContextPtr context_;
+  sdl::GLContextPtr context_;
   bool isFullScreen_;
   bool isVSync_;
   bool isOpenGlDebugEnabled_;

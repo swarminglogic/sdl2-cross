@@ -27,7 +27,7 @@ public:
 
 private:
   friend class SoundPlayer;
-  SdlSoundPtr sound_;
+  sdl::SoundPtr sound_;
   float volumeFactor_;
 
 

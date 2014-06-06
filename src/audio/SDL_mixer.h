@@ -15,7 +15,9 @@
  * SDL mixer header wrapper
  * @author SwarmingLogic (Roald Fernandez)
  */
-CREATE_RAII_UP(Mix_Music, Mix_FreeMusic)  SdlMusicPtr;
-CREATE_RAII_UP(Mix_Chunk, Mix_FreeChunk)  SdlSoundPtr;
+namespace sdl {
+  CREATE_RAII_UP(Mix_Music, Mix_FreeMusic)  MusicPtr;
+  CREATE_RAII_UP(Mix_Chunk, Mix_FreeChunk)  SoundPtr;
+}
 
 #endif
