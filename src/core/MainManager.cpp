@@ -6,7 +6,10 @@
 #include <audio/AudioPlayback.h>
 #include <audio/AudioResourceManager.h>
 #include <audio/SDL_mixer.h>
+#include <graphics/GlState.h>
 #include <graphics/GraphicsManager.h>
+#include <graphics/ImageResourceManager.h>
+#include <graphics/Renderer2dImage.h>
 #include <graphics/SDL_image.h>
 #include <graphics/SDL_opengl.h>
 #include <graphics/SDL_ttf.h>
@@ -20,8 +23,11 @@ MainManager::MainManager()
   : log_("MainManager"),
     audioResources_(new AudioResourceManager),
     graphics_(nullptr),
+    imageRenderer_(nullptr),
+    imageResources_(new ImageResourceManager),
     runtime_(new Timer),
-    isRunning_(true)
+    isRunning_(true),
+    testImage_(nullptr)
 {
   initSDL();
   initSDLimg();
@@ -45,6 +51,16 @@ void MainManager::initialize()
 {
   log_.i("Initializing resources.");
   graphics_.reset(new GraphicsManager);
+  imageRenderer_.reset(new Renderer2dImage);
+  imageRenderer_->initialize();
+  testImage_ = imageResources_->loadImage("uv_colorgrid.png");
+  testImage_->setIsMaxFiltering(true);
+  assert(testImage_);
+  testImage_->prepareForGl();
+  imageRenderer_->setSurface(testImage_);
+  imageRenderer_->handleResize(graphics_->getScreenSize().w(),
+                               graphics_->getScreenSize().h());
+
   sound_ = audioResources_->loadSound("audio.ogg");
   runtime_->start();
 }
@@ -90,9 +106,18 @@ void MainManager::run() {
       handleEvent(event);
     }
 
+    imageRenderer_->update();
+
     currentTimeDelta_ = runtime_->getSeconds() - previousTime;
     previousTime = runtime_->getSeconds();
+
+    GlState::clearColor( 0.1f, 0.2f, 0.3f, 1.0f );
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    imageRenderer_->render(Point(0,0), 0);
+
     graphics_->swapBuffers();
+
+    SDL_Delay(50);
   }
 }
 
@@ -100,7 +125,7 @@ void MainManager::run() {
 void MainManager::handleEvent(const SDL_Event& event)
 {
 #ifdef LOG_SDL_EVENTS_VERBOSELY
-  LogUtil::log(event);
+  // LogUtil::log(event);
 #endif
 
   if (event.type == SDL_WINDOWEVENT) {
@@ -249,6 +274,8 @@ void MainManager::logSDLVersion(const std::string& what,
   log_.d(ss.str());
 
   log_.d() << what << " Version (Runtime):  "
-           << linked.major << "." << linked.minor << "." << linked.patch
+           << (int)linked.major << "."
+           << (int)linked.minor << "."
+           << (int)linked.patch
            << Log::end;
 }

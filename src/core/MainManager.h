@@ -4,6 +4,7 @@
 #include <memory>
 
 #include <audio/SoundChunk.h>
+#include <graphics/Surface.h>
 #include <util/Log.h>
 #include <util/SDL.h>
 #include <util/SDL_Event_fwd.h>
@@ -11,6 +12,8 @@
 
 class AudioResourceManager;
 class GraphicsManager;
+class ImageResourceManager;
+class Renderer2dImage;
 class Timer;
 
 /**
@@ -75,10 +78,14 @@ private:
   Log log_;
   std::unique_ptr<AudioResourceManager> audioResources_;
   std::unique_ptr<GraphicsManager> graphics_;
+  std::unique_ptr<Renderer2dImage> imageRenderer_;
+  std::unique_ptr<ImageResourceManager> imageResources_;
   std::unique_ptr<Timer> runtime_;
   float currentTimeDelta_;
   bool isRunning_;
   SoundChunkShPtr sound_;
+
+  SurfaceShPtr testImage_;
 };
 
 #endif
