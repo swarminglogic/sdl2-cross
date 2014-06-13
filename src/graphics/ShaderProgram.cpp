@@ -32,7 +32,7 @@ ShaderProgram::~ShaderProgram()
 
 
 
-GLuint ShaderProgram::get() const
+GLuint ShaderProgram::getGlId() const
 {
   return programId_;
 }

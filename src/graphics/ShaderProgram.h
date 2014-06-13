@@ -37,7 +37,7 @@ public:
 
   virtual ~ShaderProgram();
 
-  GLuint get() const;
+  GLuint getGlId() const;
 
   void clear();
   void setShader(ShaderType type, const AssetShader& shaderfile);
