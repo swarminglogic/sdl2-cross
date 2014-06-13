@@ -2,7 +2,6 @@
 
 #include <cassert>
 
-#include <graphics/SDL_opengl.h>
 #include <graphics/ViewConfig.h>
 
 
@@ -17,7 +16,8 @@ GraphicsManager::GraphicsManager()
     context_(nullptr),
     isFullScreen_(false),
     isVSync_(true),
-    isOpenGlDebugEnabled_(true)
+    isOpenGlDebugEnabled_(true),
+    vertexArrayObject_(0u)
 {
 
   // TODO swarminglogic, 2014-04-16: Move this out somehow.
@@ -29,6 +29,10 @@ GraphicsManager::GraphicsManager()
 
   isFullScreen_ = viewConfig.isFullScreen();
   initalizeOpenGL(viewConfig);
+
+  // Create required OpenGL state configurations
+  glGenVertexArrays(1, &vertexArrayObject_);
+  glBindVertexArray(vertexArrayObject_);
 }
 
 

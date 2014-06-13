@@ -1,6 +1,7 @@
 #ifndef GRAPHICS_GRAPHICSMANAGER_H
 #define GRAPHICS_GRAPHICSMANAGER_H
 
+#include <graphics/SDL_opengl.h>
 #include <math/Size.h>
 #include <util/Log.h>
 #include <util/SDL.h>
@@ -40,6 +41,8 @@ private:
   bool isFullScreen_;
   bool isVSync_;
   bool isOpenGlDebugEnabled_;
+
+  GLuint vertexArrayObject_;
 
   // NonCopyable
   GraphicsManager(const GraphicsManager& c);
