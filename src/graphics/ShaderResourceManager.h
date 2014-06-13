@@ -14,7 +14,7 @@
 /**
  * ShaderResourceManager class.
  *
- * Manages audio resource files, making sure that only one
+ * Manages shader resource files, making sure that only one
  * file is loaded to memory at one point.
  *
  * Future:
@@ -41,6 +41,16 @@ public:
 
   ShaderProgramShPtr load(const ShaderKey& shaders);
   ShaderProgramShPtr loadShader(const ShaderfileKey& shaders);
+
+  /**
+   * Singleton construct. Used here, because the resource managers map fairly
+   * well to a unified collection of loaded resources that are globally
+   * accessible.
+   *
+   * If it is necessary to detatch this, it should be fairly easy to do so.
+   * Adding thread safety should also be easy.
+   */
+  static ShaderResourceManager& instance();
 
 private:
   Log log_;
