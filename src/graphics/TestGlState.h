@@ -5,6 +5,8 @@
 
 #include <cxxtest/TestSuite.h>
 
+// TODO swarminglogic, 2014-06-12: Update tester to reflect that GlState calls
+// no longer returns boolan values on whether or not they change the state.
 
 /**
  * Test for the GlState class.
@@ -33,48 +35,49 @@ public:
 
   void testGlState()
   {
+#ifndef GL_STATE_GUARD_DISABLED
     GlState::Capability cap = GlState::BLEND;
     // Checking that default is false
     TS_ASSERT(!GlState::isEnabled(cap));
-    // Checking that setting it false is redundant.
-    TS_ASSERT(!GlState::disable(cap));
-    // Checking that setting it true is not redundant
-    TS_ASSERT(GlState::enable(cap));
+    GlState::enable(cap);
     TS_ASSERT(GlState::isEnabled(cap));
-    // Checking that setting it true is now redundant.
-    TS_ASSERT(!GlState::enable(cap));
-    TS_ASSERT(GlState::isEnabled(cap));
+    GlState::disable(cap);
+    TS_ASSERT(!GlState::isEnabled(cap));
 
     // // Same for depth test
     cap = GlState::DEPTH_TEST;
     TS_ASSERT(!GlState::isEnabled(cap));
-    TS_ASSERT(!GlState::disable(cap));
-    TS_ASSERT(GlState::enable(cap));
-    TS_ASSERT(GlState::isEnabled(cap));
-    TS_ASSERT(!GlState::enable(cap));
+    GlState::disable(cap);
+    TS_ASSERT(!GlState::isEnabled(cap));
+    GlState::enable(cap);
     TS_ASSERT(GlState::isEnabled(cap));
 
     // Viewport
     // Checking that default is false
     TS_ASSERT_EQUALS(GlState::getViewport(), Rect(0,0,0,0));
-    TS_ASSERT(!GlState::viewport(Rect(0,0,0,0)));
-    TS_ASSERT(GlState::viewport(Rect(0,0,800,600)));
+    GlState::viewport(Rect(0,0,0,0));
+    TS_ASSERT_EQUALS(GlState::getViewport(), Rect(0,0,0,0));
+    GlState::viewport(Rect(0,0,800,600));
     TS_ASSERT_EQUALS(GlState::getViewport(), Rect(0,0,800,600));
-    TS_ASSERT(!GlState::viewport(Rect(0,0,800,600)));
 
     // Active texture
     TS_ASSERT_EQUALS(GlState::getActiveTexture(), GL_TEXTURE0);
-    TS_ASSERT(!GlState::activeTexture(GL_TEXTURE0));
-    TS_ASSERT(GlState::activeTexture(GL_TEXTURE1));
+    GlState::activeTexture(GL_TEXTURE0);
+    TS_ASSERT_EQUALS(GlState::getActiveTexture(), GL_TEXTURE0);
+    GlState::activeTexture(GL_TEXTURE1);
     TS_ASSERT_EQUALS(GlState::getActiveTexture(), GL_TEXTURE1);
-    TS_ASSERT(!GlState::activeTexture(GL_TEXTURE1));
 
     // Program
     TS_ASSERT_EQUALS(GlState::getProgram(), 0);
-    TS_ASSERT(!GlState::useProgram(0));
-    TS_ASSERT(GlState::useProgram(42));
+    GlState::useProgram(0);
+    TS_ASSERT_EQUALS(GlState::getProgram(), 0);
+    GlState::useProgram(42);
     TS_ASSERT_EQUALS(GlState::getProgram(), 42);
-    TS_ASSERT(!GlState::useProgram(42));
+    GlState::useProgram(42);
+    TS_ASSERT_EQUALS(GlState::getProgram(), 42);
+// TODO swarminglogic, 2014-06-13: #else: create gl context and test values?
+// #else
+#endif
   }
 
 private:

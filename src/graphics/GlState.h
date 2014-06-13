@@ -8,6 +8,9 @@
 #include <util/Log.h>
 
 
+// Uncomment this define to use GL-passthrough
+#define GL_STATE_GUARD_DISABLED
+
 /**
  * GlState class.
  *
@@ -87,22 +90,24 @@ public:
    * All functions return true if they actually change the state, false if
    * NO-OP.
    */
-  static bool enable(Capability cap);
-  static bool disable(Capability cap);
+  static void enable(Capability cap);
+  static void disable(Capability cap);
 
-  static bool viewport(const Rect& viewport);
-  static bool activeTexture(GLenum activeTexture);
-  static bool useProgram(GLuint program);
-  static bool blendFunc(GLenum sfactor, GLenum dfactor);
-  static bool bindBuffer(BufferTarget target, GLuint buffer);
-  static bool bindTexture(GLenum target, GLuint buffer);
-  static bool bindFramebuffer(GLenum target, GLuint buffer);
-  static bool bindRenderbuffer(GLuint buffer);
+  static void viewport(const Rect& viewport);
+  static void activeTexture(GLenum activeTexture);
+  static void useProgram(GLuint program);
+  static void blendFunc(GLenum sfactor, GLenum dfactor);
+  static void bindBuffer(BufferTarget target, GLuint buffer);
+  static void bindTexture(GLenum target, GLuint buffer);
+  static void bindFramebuffer(GLenum target, GLuint buffer);
+  static void bindRenderbuffer(GLuint buffer);
+  static void clearColor(float r, float g, float b, float a);
 
   static bool isEnabled(Capability cap);
   static Rect getViewport();
-  static GLenum getActiveTexture();
+  static GLint getActiveTexture();
   static GLuint getProgram();
+
 
   /**
    * Queries and mirrors OpenGL state.
@@ -124,23 +129,24 @@ private:
   static GlState& instance();
   void f_syncronize();
 
-  bool f_enable(Capability cap);
-  bool f_disable(Capability cap);
-  bool f_viewport(const Rect& viewport);
-  bool f_activeTexture(GLenum activeTexture);
-  bool f_useProgram(GLuint program);
-  bool f_blendFunc(GLenum sfactor, GLenum dfactor);
-  bool f_bindBuffer(BufferTarget target, GLuint buffer);
-  bool f_bindTexture(GLenum target, GLuint buffer);
-  bool f_bindFramebuffer(GLenum target, GLuint buffer);
-  bool f_bindRenderbuffer(GLuint buffer);
+  void f_enable(Capability cap);
+  void f_disable(Capability cap);
+  void f_viewport(const Rect& viewport);
+  void f_activeTexture(GLenum activeTexture);
+  void f_useProgram(GLuint program);
+  void f_blendFunc(GLenum sfactor, GLenum dfactor);
+  void f_bindBuffer(BufferTarget target, GLuint buffer);
+  void f_bindTexture(GLenum target, GLuint buffer);
+  void f_bindFramebuffer(GLenum target, GLuint buffer);
+  void f_bindRenderbuffer(GLuint buffer);
+  void f_clearColor(float r, float g, float b, float a);
 
   /**
    * Functions to get state information.
    */
   bool f_isEnabled(Capability cap) const;
   Rect f_getViewport() const;
-  GLenum f_getActiveTexture() const;
+  GLint f_getActiveTexture() const;
   GLuint f_getProgram() const;
 
 
@@ -157,6 +163,8 @@ private:
   GLuint program_;
   GLenum blendSFactor_;
   GLenum blendDFactor_;
+
+  float clearColor_[4];
 
   std::pair<GLenum, GLuint> framebufferBinding_;
   std::pair<GLenum, GLuint> textureBinding_;
