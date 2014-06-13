@@ -1,19 +1,33 @@
 ![Swarming Logic cross-platform framework](/swl_logo.png)
 
-SDL2, C++11, OpenGL 4, OpenGL ES 3, Android/Desktop Project.
+SDL2, C++11, OpenGL 3.3, OpenGL ES 3, Android/Desktop Project.
 
 A WIP project to work to do game development targetting Android/Linux,
 with the intention to be easily extended to OSX, iOS, Win7.
+
+
+### Features:
+* Scripts for simplifying initial build configuration for locating external libraries and creating necessary symbolic links. See the list of external libraries below.
+* Scripts for common development tasks such as building android/linux, android logcat, unit testing.
+* `CxxTest` based unit-testing (linux only)
+* Script for generating html code coverage report.
+* ... todo
+
+### Future Features:
+* Deferred rendering
+* AngelScript based scripting language
+* Add external library SDL_net
+* A complete future list ^_^
 
 ### External Libraries:
 The framework will rely on the following libraries
 
 | Library    | Tested Version         | Description                                             |
 | :--------- | :--------------------- | :------------------------------------------------------ |
-| SDL2       | `2.0.3 (94af945dbb57)` | OpenGL glue, touch/gesture and keyboard input, and more |
-| SDL_image  | `2.0.0 (d78c7298eb3a)` | png/jpg loading                                         |
-| SDL_mixer  | `2.0.0 (f2811021d074)` | ogg loading, sound playback                             |
-| SDL_ttf    | `2.0.12 (2769b02e33c3)`| ttf loading                                             |
+| SDL2       | `2.0.3 (6ec57a81e5d6)` | OpenGL glue, touch/gesture and keyboard input, and more |
+| SDL_image  | `2.0.0 (175c0200df0a)` | png/jpg loading                                         |
+| SDL_mixer  | `2.0.0 (74441a1c867d)` | ogg loading, sound playback                             |
+| SDL_ttf    | `2.0.12 (997babb2f547)`| ttf loading                                             |
 | bullet     | `2.82-r2704`           | physics                                                 |
 | GLM        | `0.9.5.2`              | math library similar to GLSL (headers only)             |
 | boost      | `1.55`                 | boost (headers only)                                    |
@@ -45,6 +59,12 @@ The framework will rely on the following libraries
 │           └── libsdl
 │               └── app             { JNI Java wrapper stuff }
 ├── assets                          { All resources used by the application }
+│   ├── fonts
+│   ├── images
+│   ├── meshes
+│   ├── music
+│   ├── shaders
+│   └── sounds
 └── src                             { All code source files used by the application, excl. shaders }
     ├── audio                       { linked w/SDL, SDL_mixer}
     ├── core                        { linked w/All }
@@ -114,7 +134,7 @@ desktop build, but will soon also be used for android.
 
 | File    | Description |
 | :--------------------------------- | :-------------------------------------------------------- |
-| `./initialize_project.sh`          | Check all dependancies and sets up symbolic links         |
+| `./initialize_project.sh`          | Check all dependencies and sets up symbolic links         |
 | `./compile.sh`                     | Utility for simplifying build commands                    |
 | `./devtools.sh`                    | Another utility for simplifying development commands      |
 | `./src/util/gitrev.h`              | Automatically generated file for accessing current git id |
@@ -125,7 +145,7 @@ desktop build, but will soon also be used for android.
 
    Note that it is `. ./initialize_project.sh` and not `./initialize_project.sh`
 
-   It is recommended that you define the detected enviroment variable paths, so that this script isn't necessary.
+   It is recommended that you define the detected enviroment variable paths, so that this script isn't a required step.
 
 1. `./devtools.sh ball` (builds android and linux)
 
@@ -151,7 +171,7 @@ android/jni/bullet-src
 src/util/gitrev.h
 html/
 coveragehistory/
-.coverage
+.coverage*
 ```
 
 ### Troubleshooting
