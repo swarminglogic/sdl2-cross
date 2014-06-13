@@ -46,7 +46,9 @@ int main(int argc, char *argv[]) {
   // Initialize logger system
   LogManager& lm = LogManager::instance();
   lm.setStreamTarget(std::cout);
+#ifdef __ANDROID__
   lm.setLogfilePath("runtime.log");
+#endif
   lm.logColumnHeaders();
   Log log("main");
 
