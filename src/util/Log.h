@@ -5,9 +5,11 @@
 #include <memory>
 #include <sstream>
 #include <string>
+#include <vector>
 
 #include <math/Pointf.h>
 #include <math/Rectf.h>
+#include <math/Size.h>
 #include <util/Exception.h>
 #include <util/LogManager.h>
 
@@ -72,24 +74,31 @@ public:
     return lhs;
   }
 
-  friend const Log& operator<<(const Log& lhs, const char* c)
-  { lhs.streamLog_ << c; return lhs; }
-  friend const Log& operator<<(const Log& lhs, const std::string& str)
-  { lhs.streamLog_ << str; return lhs; }
-  friend const Log& operator<<(const Log& lhs, const int i)
-  { lhs.streamLog_ << i; return lhs; }
-  friend const Log& operator<<(const Log& lhs, const unsigned int i)
-  { lhs.streamLog_ << i; return lhs; }
-  friend const Log& operator<<(const Log& lhs, const float f)
-  { lhs.streamLog_ << f; return lhs; }
-  friend const Log& operator<<(const Log& lhs, const double d)
-  { lhs.streamLog_ << d; return lhs; }
+  template<class T>
+  friend const Log& operator<<(const Log& lhs, const T& t)
+  { lhs.streamLog_ << t; return lhs; }
+
   friend const Log& operator<<(const Log& lhs, const Pointf& p)
   { lhs.streamLog_ << "(" << p.x() << ", " << p.y() << ") [Pointf]";
+    return lhs; }
+  friend const Log& operator<<(const Log& lhs, const Size& p)
+  { lhs.streamLog_ << "(" << p.w() << ", " << p.h() << ") [Size]";
     return lhs; }
   friend const Log& operator<<(const Log& lhs, const Rectf& p)
   { lhs.streamLog_ << "(" << p.x() << ", " << p.y() << ", "
                    << p.w() << ", " << p.h() << ") [Rectf]"; return lhs; }
+
+  template<class T>
+  friend const Log& operator<<(const Log& lhs, const std::vector<T>& data)
+  {
+    if (!data.empty()) {
+      lhs.streamLog_ << "std::vector<" <<  typeid(data[0]).name() << ">"
+                     << "  #elements: " << data.size();
+      for (size_t i = 0 ; i < data.size() ; ++i)
+        lhs.streamLog_ << "\n\t[" << i << "]: " << data[i];
+    }
+    return lhs;
+  }
 
 
 private:
