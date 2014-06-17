@@ -3,6 +3,7 @@
 #include <functional>
 
 #include <util/File.h>
+#include <util/StringUtil.h>
 
 
 ShaderProgram::ShaderProgram()
@@ -167,8 +168,16 @@ void ShaderProgram::deleteProgram()
 GLuint ShaderProgram::prepareShader(ShaderType type,
                                     const std::string& source) const
 {
+#ifdef USE_OPENGLES
+  std::string preprocessed = "#version 300 es\n";
+  preprocessed.append(StringUtil::processIfEndif(source, "ES"));
+#else
+  std::string preprocessed = "#version 430 core\n";
+  preprocessed.append(StringUtil::processIfEndif(source, "GL"));
+#endif
+
   GLenum glShaderType = shaderType2GLEnum(type);
-  const GLchar* shader_source = source.c_str();
+  const GLchar* shader_source = preprocessed.c_str();
   GLuint shaderId = glCreateShader(glShaderType);
   glShaderSource(shaderId, 1, &shader_source, NULL);
   glCompileShader(shaderId);
