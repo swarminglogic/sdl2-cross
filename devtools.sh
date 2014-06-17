@@ -3,23 +3,26 @@
 function showHelp() {
     echo "devtools - Shorthand commandline aliases
 Possible targets:
-    h,help       Shows this message.
-    b            General build
-    ba           Builds android
-    bap          Builds android, pushes .apk on completion
-    bl           Builds linux
-    bu           Builds utils
-    bal,bla,ball Builds android and linux
-    p            Pushes android APK to device
-    wa           Auto-rebuild android on changes.
-    wl           Auto-rebuild linux on changes.
-    testl        compile and run unit tests on linux
-    lg,log       adb logcat with SWL filter
-    lga,loga     adb logcat with SWL, SDL, SDL/* filter
-    lgall,logall adb logcat with no filter
-    clean        removal of all build directories (use with caution)
-    cleanl       removal of all linux build directories (use with caution)
-    cleana       removal of all android build directories (use with caution)
+    h,help                 Shows this message.
+    b                      General build
+    ba                     Builds android
+    bap                    Builds android, pushes .apk on completion
+    bl                     Builds linux
+    bu                     Builds utils
+    bal,bla,ball           Builds android and linux
+    p                      Pushes android APK to device
+    wa                     Auto-rebuild android on changes.
+    wl                     Auto-rebuild linux on changes.
+    testl                  compile and run unit tests on linux
+    lg,log                 adb logcat with SWL filter
+    lga,loga               adb logcat with SWL, SDL, SDL/* filter
+    lgall,logall           adb logcat with no filter
+    clean                  removal of all build directories (use with caution)
+    cleanl                 removal of all linux build directories (use with caution)
+    cleana                 removal of all android build directories (use with caution)
+    validate-gl-shaders    validates shaders for used OpenGL 4.3
+    validate-es-shaders    validates shaders for used OpenGL 3.0 ES
+    validate-shaders       validates shaders for used OpenGL 4.3 and OpenGL 3.0 ES
 "
     exit
 }
@@ -162,6 +165,22 @@ while test $# -gt 0; do
                     * ) echo "Please answer yes or no.";;
                 esac
             done
+            exit
+            ;;
+        validate-gl-shaders)
+            shift
+            ./validateshaders.sh GL 430 core
+            exit
+            ;;
+        validate-es-shaders)
+            shift
+            ./validateshaders.sh ES 300 es
+            exit
+            ;;
+        validate-shaders)
+            shift
+            ./devtools.sh validate-gl-shaders && \
+            ./devtools.sh validate-es-shaders
             exit
             ;;
         *)
