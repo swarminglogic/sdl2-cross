@@ -3,6 +3,10 @@
 
 #include <sstream>
 
+#include <math/Pointf.h>
+#include <math/Rect.h>
+#include <math/Rectf.h>
+#include <math/Size.h>
 #include <util/Exception.h>
 #include <util/Log.h>
 #include <util/LogManager.h>
@@ -127,6 +131,38 @@ public:
       log_.i() << myFloat<< Log::end;
       const std::string retFloat = getLogAndClear();
       TS_ASSERT(isSubstring(retFloat, "42.42"));
+    }
+
+    {
+      // Pointf
+      const Pointf myPoint(3.42f, 9.23f);
+      log_.i() << myPoint << Log::end;
+      const std::string retPoint = getLogAndClear();
+      TS_ASSERT(isSubstring(retPoint, "(3.42, 9.23) [Pointf]"));
+    }
+
+    {
+      // Size
+      const Size mySize(22, 95);
+      log_.i() << mySize << Log::end;
+      const std::string retSize = getLogAndClear();
+      TS_ASSERT(isSubstring(retSize, "(22, 95) [Size]"));
+    }
+
+    {
+      // Rect
+      const Rect myRect(42, 23, 85, 11);
+      log_.i() << myRect << Log::end;
+      const std::string retRect = getLogAndClear();
+      TS_ASSERT(isSubstring(retRect, "(42, 23, 85, 11) [Rect]"));
+    }
+
+    {
+      // Rectf
+      const Rectf myRect(42.23f, 23.85f, 85.11f, 11.24f);
+      log_.i() << myRect << Log::end;
+      const std::string retRect = getLogAndClear();
+      TS_ASSERT(isSubstring(retRect, "(42.23, 23.85, 85.11, 11.24) [Rectf]"));
     }
 
     {

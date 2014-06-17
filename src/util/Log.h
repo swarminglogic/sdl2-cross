@@ -8,6 +8,7 @@
 #include <vector>
 
 #include <math/Pointf.h>
+#include <math/Rect.h>
 #include <math/Rectf.h>
 #include <math/Size.h>
 #include <util/Exception.h>
@@ -84,6 +85,9 @@ public:
   friend const Log& operator<<(const Log& lhs, const Size& p)
   { lhs.streamLog_ << "(" << p.w() << ", " << p.h() << ") [Size]";
     return lhs; }
+  friend const Log& operator<<(const Log& lhs, const Rect& p)
+  { lhs.streamLog_ << "(" << p.x() << ", " << p.y() << ", "
+                   << p.w() << ", " << p.h() << ") [Rect]"; return lhs; }
   friend const Log& operator<<(const Log& lhs, const Rectf& p)
   { lhs.streamLog_ << "(" << p.x() << ", " << p.y() << ", "
                    << p.w() << ", " << p.h() << ") [Rectf]"; return lhs; }
