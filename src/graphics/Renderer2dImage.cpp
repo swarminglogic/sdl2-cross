@@ -120,7 +120,8 @@ void Renderer2dImage::updateShader()
 void Renderer2dImage::updateQuad()
 {
   assert(surface_);
-  log_.d("Updating quad");
+  log_.d() << "Updating quad. target: " << targetRect_
+           << "   Viewport: " << viewport_ << Log::end;
 
   // TODO swarminglogic, 2014-06-11: replace w/memembers
   const unsigned char zoomFactor_ = 1;
@@ -143,7 +144,6 @@ void Renderer2dImage::updateQuad()
                 B[0], B[1], B[2],
                 C[0], C[1], C[2],
                 D[0], D[1], D[2] };
-  log_.w() << "vertices_: " << vertices_ << Log::end;
   GlState::bindBuffer(GlState::ARRAY_BUFFER, vertexBuffer_);
   GlUtil::fillVertexBuffer(vertices_);
 }
@@ -162,7 +162,6 @@ void Renderer2dImage::updateTexcoords()
                 xmin , ymin,
                 xmax , ymin};
 
-  log_.w() << "texcoords_: " << texcoords_ << Log::end;
   GlState::bindBuffer(GlState::ARRAY_BUFFER, textureBuffer_);
   GlUtil::fillVertexBuffer(texcoords_);
 }
