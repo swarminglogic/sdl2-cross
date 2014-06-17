@@ -5,6 +5,7 @@ function showHelp() {
 Possible targets:
     a, android
     l, linux
+    utils
     all          (build each of the above, if possible)
 
 Options
@@ -87,10 +88,15 @@ while test $# -gt 0; do
             shift
             linux=yes
             ;;
+        utils)
+            shift
+            utils=yes
+            ;;
         all)
             shift
             android=yes
             linux=yes
+            utils=yes
             ;;
         *)
             echoerr "Error: Invalid parameter: $1\n"
@@ -139,6 +145,25 @@ if [[ $linux ]] ; then
             nice scons $serial --tests
         else
             nice scons $serial
+        fi
+    fi
+fi
+
+if [[ $utils ]]; then
+    # Build each utility (currently there is only one)
+    sconsfile="utils/simpletextpreprocess/SConstruct"
+    if [[ $cleanTarget ]] ; then
+        echo "Cleaning utils/simpletextpreprocess build ..."
+        scons -f $sconsfile -c;
+    else
+        nice scons -f $sconsfile $serial
+        # preliminary cleanup
+        if [[ -x ./bin/simpletextpreprocess ]] ; then
+            mv ./bin/simpletextpreprocess{,-tmp}
+        fi
+        ./compile.sh utils -c
+        if [[ -x ./bin/simpletextpreprocess-tmp ]] ; then
+            mv ./bin/simpletextpreprocess{-tmp,}
         fi
     fi
 fi

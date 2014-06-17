@@ -8,6 +8,7 @@ Possible targets:
     ba           Builds android
     bap          Builds android, pushes .apk on completion
     bl           Builds linux
+    bu           Builds utils
     bal,bla,ball Builds android and linux
     p            Pushes android APK to device
     wa           Auto-rebuild android on changes.
@@ -59,6 +60,11 @@ while test $# -gt 0; do
         bl)
             shift
             ./compile.sh l $@
+            exit
+            ;;
+        bu)
+            shift
+            ./compile.sh utils $@
             exit
             ;;
         bal|bla|ball)
