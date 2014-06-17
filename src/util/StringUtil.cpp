@@ -26,16 +26,30 @@ StringVector StringUtil::split(const std::string &text,
   return elements;
 }
 
-std::string StringUtil::suffix(const std::string& text, size_t length)
+std::string StringUtil::suffix(const std::string& text, int length)
 {
-  if (length >= text.size())
-    return text;
-  return text.substr(text.size() - length, length);
+  if (length >= 0) {
+    if (length >= static_cast<int>(text.size()))
+      return text;
+    return text.substr(text.size() - length, length);
+  } else {
+    if (-length >= static_cast<int>(text.size()))
+      return "";
+    else
+      return text.substr(-length, text.size());
+  }
 }
 
-std::string StringUtil::prefix(const std::string& text, size_t length)
+std::string StringUtil::prefix(const std::string& text, int length)
 {
-  return text.substr(0, length);
+  if (length >= 0)
+    return text.substr(0, length);
+  else {
+    if (-length >= static_cast<int>(text.size()))
+      return "";
+    else
+      return text.substr(0, text.size() + length);
+  }
 }
 
 
@@ -52,3 +66,87 @@ void StringUtil::rtrim(std::string& text)
 {boost::trim_right(text);}
 void StringUtil::trim(std::string& text)
 {boost::trim(text);}
+
+
+void StringUtil::prepend(const std::string& pre,
+                         std::string& text)
+{
+  text.insert(0, pre);
+}
+
+
+std::string StringUtil::prependc(const std::string& pre,
+                                 const std::string& text)
+{
+  std::string ret {pre};
+  ret.append(text);
+  return ret;
+}
+
+
+
+std::string StringUtil::processIfEndif(const std::string& text,
+                                       const std::string& keyword)
+{
+  enum State {
+    ADD_UNTIL_IF,
+    ADD_UNTIL_ENDIF,
+    ADD_UNTIL_ELSE_ENDIF,
+    SKIP_UNTIL_ENDIF,
+    SKIP_UNTIL_ELSE_ENDIF
+  };
+
+  State state = ADD_UNTIL_IF;
+  std::string ret;
+  ret.reserve(text.size());
+
+  StringVector lines = split(text, '\n');
+  for (auto& line : lines) {
+    switch (state) {
+    case ADD_UNTIL_IF:
+      if (prefix(trimc(line), 3) == "#if") {
+        if (suffix(trimc(line), -4) == keyword)
+          state = ADD_UNTIL_ELSE_ENDIF;
+        else
+          state = SKIP_UNTIL_ELSE_ENDIF;
+        continue;
+      }
+      break;
+
+    case ADD_UNTIL_ELSE_ENDIF:
+      if (prefix(trimc(line), 5) == "#else") {
+        state = SKIP_UNTIL_ENDIF;
+        continue;
+      } else if (prefix(trimc(line), 6) == "#endif") {
+        state = ADD_UNTIL_IF;
+        continue;
+      }
+      break;
+
+    case SKIP_UNTIL_ENDIF:
+      if (prefix(trimc(line), 6) == "#endif") {
+        state = ADD_UNTIL_IF;
+      }
+      continue;
+
+    case SKIP_UNTIL_ELSE_ENDIF:
+      if (prefix(trimc(line), 5) == "#else") {
+        state = ADD_UNTIL_ENDIF;
+      } else if (prefix(trimc(line), 6) == "#endif") {
+        state = ADD_UNTIL_IF;
+      }
+      continue;
+
+    case ADD_UNTIL_ENDIF:
+      if (prefix(trimc(line), 6) == "#endif") {
+        state = ADD_UNTIL_IF;
+        continue;
+      }
+      break;
+    }
+    ret.append(line);
+    ret.append("\n");
+  }
+
+  return ret;
+}
