@@ -2,17 +2,17 @@
 
 #include <fstream>
 
-#include <extern/CObjUtil.h>
 #include <glm/glm.hpp>
 #include <graphics/GlState.h>
 #include <graphics/GlUtil.h>
+#include <util/ObjUtil.h>
 #include <util/FileUtil.h>
 #include <util/StringUtil.h>
 
 
 Mesh::Mesh(const AssetMesh& meshfile)
   : log_("Mesh"),
-    filename_(meshfile.path()),
+    filename_(meshfile),
     shapes_(),
     bufferIds_(),
     // fileMonitor_(meshfile.path()),
@@ -103,35 +103,32 @@ bool Mesh::hasNormalData(size_t shapeIndex) const
 
 bool Mesh::load()
 {
-  log_.i() << "Loading OBJ file: " << filename_ << Log::end;
-  if (!FileUtil::exists(filename_))
+  log_.i() << "Loading OBJ file: " << filename_.path() << Log::end;
+  if (!FileUtil::exists(filename_.path())) {
+    log_.e() << "Could not find OBJ file " << filename_.path() << Log::end;
     return false;
+  }
 
   timer_.start();
-  std::vector<tinyobj::shape_t> tempShapes;
-  bool isCondensed = (StringUtil::suffix(filename_, 5) == ".cobj");
-  std::string emsg = "";
-
-  if (isCondensed) {
-    // TODO swarminglogic, 2013-10-08: Add error detection
-    std::ifstream file(filename_, std::ios::binary);
-    tempShapes = CObjUtil::read(file);
-  } else {
-    emsg = tinyobj::LoadObj(tempShapes, filename_.c_str(),
-                            "./assets/meshes/");
-  }
+  std::vector<tinyobj::shape_t> tempShapes = ObjUtil::read(filename_);
 
   // TODO swarminglogic, 2014-04-28: PORT
   // fileMonitor_.resetTimeStamp();
   unsigned int time = timer_.reset();
   log_.i() << "Finished loading. Spent " << (int)time << " ms." << Log::end;
 
-  bool loadOk = emsg.empty();
-  if (loadOk) {
+  log_.d() << "Number of mesh objects: " << tempShapes.size() << Log::end;
+  if (!tempShapes.empty()) {
     shapes_ = tempShapes;
     clear();
     bufferIds_.resize(shapes_.size(), {0, 0, 0, 0});
     for (size_t i = 0 ; i < shapes_.size() ; ++i) {
+      log_.d() << "Mesh [" << i << "]: "
+               << "I:" << shapes_[i].mesh.indices.size() << "  "
+               << "V:" << shapes_[i].mesh.positions.size() << "  "
+               << "T:" << shapes_[i].mesh.texcoords.size() << "  "
+               << "N:" << shapes_[i].mesh.normals.size()
+               << Log::end;
       // Indices
       bufferIds_[i].index =
         GlUtil::prepareVertexBuffer(shapes_[i].mesh.indices,
@@ -151,12 +148,12 @@ bool Mesh::load()
         bufferIds_[i].normal =
           GlUtil::prepareVertexBuffer(shapes_[i].mesh.normals);
     }
+
   } else {
-    log_.e() << "Failed to load mesh: " << filename_ << Log::end;
-    log_.e() << "Error: " << StringUtil::trimc(emsg) << Log::end;
+    log_.w() << "Failed to load mesh: " << filename_.path() << Log::end;
   }
 
-  return loadOk;
+  return !tempShapes.empty();
 }
 
 

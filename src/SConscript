@@ -44,7 +44,7 @@ utilFiles = [list(set(Glob('util/*.cpp') +
                       Glob('util/*/*.cpp')) - unitTests)]
 utilLib = env.SharedLibrary('#/lib/swl-util',
                             utilFiles,
-                            LIBS = mathLib + c.lSDL);
+                            LIBS = mathLib + externLib + c.lSDL);
 Default(utilLib)
 
 

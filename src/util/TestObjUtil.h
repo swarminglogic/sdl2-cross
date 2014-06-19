@@ -1,20 +1,20 @@
-#ifndef EXTERN_TESTCOBJUTIL_H
-#define EXTERN_TESTCOBJUTIL_H
+#ifndef UTIL_TESTOBJUTIL_H
+#define UTIL_TESTOBJUTIL_H
 
 #include <sstream>
 
-#include <extern/CObjUtil.h>
 #include <extern/tiny_obj_loader.h>
+#include <util/ObjUtil.h>
 
 #include <cxxtest/TestSuite.h>
 
 
 /**
- * Test for the CObjUtil class.
+ * Test for the ObjUtil class.
  *
  * @author SwarmingLogic
  */
-class TestCObjUtil : public CxxTest::TestSuite
+class TestObjUtil : public CxxTest::TestSuite
 {
 public:
 
@@ -43,11 +43,72 @@ public:
       TS_ASSERT_LESS_THAN_EQUALS(-1.0, x + delta);
     }
 
-    // const std::vector<tinyobj::shape_t> cube = CObjUtil::read(ss);
-
     TS_ASSERT(std::remove(tmpObjFile.c_str()) == 0);
   }
 
+  void testObjReadFileSystemAgnostic() {
+    std::string tmpObjFile("tmpobjfile.obj");
+    {
+      std::ofstream outfile(tmpObjFile);
+      outfile << makeCubeObjFile();
+    }
+    std::vector<tinyobj::shape_t> cube;
+    LoadObj(cube, tmpObjFile.c_str());
+
+    AssetMesh tmpCObjAsset("tmpcobjfile.cobj");
+    {
+      std::ofstream ssCObjData(tmpCObjAsset.path());
+      ObjUtil::writeCompressedObj(ssCObjData, cube);
+    }
+
+    const std::vector<tinyobj::shape_t> cubeFromCObj =
+      ObjUtil::read(tmpCObjAsset);
+
+    TS_ASSERT_EQUALS(cube.size(), cubeFromCObj.size());
+    TS_ASSERT_EQUALS(cubeFromCObj.size(), 1u);
+
+    TS_ASSERT(!cube.empty());
+    TS_ASSERT(!cubeFromCObj.empty());
+    if (!cube.empty() && !cubeFromCObj.empty()) {
+      const float delta = 0.000001f;
+      TS_ASSERT_EQUALS(cube[0].mesh.positions.size(),
+                       cubeFromCObj[0].mesh.positions.size());
+      for (size_t i = 0 ; i < cube[0].mesh.positions.size() ; ++i) {
+        TS_ASSERT_DELTA(cube[0].mesh.positions[i],
+                        cubeFromCObj[0].mesh.positions[i],
+                        delta);
+      }
+
+      TS_ASSERT_EQUALS(cube[0].mesh.normals.size(),
+                       cubeFromCObj[0].mesh.normals.size());
+      for (size_t i = 0 ; i < cube[0].mesh.normals.size() ; ++i) {
+        TS_ASSERT_DELTA(cube[0].mesh.normals[i],
+                        cubeFromCObj[0].mesh.normals[i],
+                        delta);
+      }
+
+      TS_ASSERT_EQUALS(cube[0].mesh.texcoords.size(),
+                       cubeFromCObj[0].mesh.texcoords.size());
+      for (size_t i = 0 ; i < cube[0].mesh.texcoords.size() ; ++i) {
+        TS_ASSERT_DELTA(cube[0].mesh.texcoords[i],
+                        cubeFromCObj[0].mesh.texcoords[i],
+                        delta);
+      }
+
+      TS_ASSERT_EQUALS(cube[0].mesh.indices.size(),
+                       cubeFromCObj[0].mesh.indices.size());
+      for (size_t i = 0 ; i < cube[0].mesh.indices.size() ; ++i) {
+        TS_ASSERT_EQUALS(cube[0].mesh.indices[i],
+                         cubeFromCObj[0].mesh.indices[i]);
+      }
+
+      TS_ASSERT_SAME_DATA(cube[0].material.ambient,
+                          cubeFromCObj[0].material.ambient, 3);
+    }
+
+    TS_ASSERT(std::remove(tmpObjFile.c_str()) == 0);
+    TS_ASSERT(std::remove(tmpCObjAsset.path().c_str()) == 0);
+  }
 
   void testCobjReadWrite()
   {
@@ -68,10 +129,10 @@ public:
     cube[0].material.ambient[2] = amb2;
 
     std::stringstream ssCObjData;
-    CObjUtil::write(ssCObjData, cube);
+    ObjUtil::writeCompressedObj(ssCObjData, cube);
 
     const std::vector<tinyobj::shape_t> cubeFromCObj =
-      CObjUtil::read(ssCObjData);
+      ObjUtil::readCompressedObj(ssCObjData);
 
     TS_ASSERT_EQUALS(cube.size(), cubeFromCObj.size());
     TS_ASSERT_EQUALS(cubeFromCObj.size(), 1u);

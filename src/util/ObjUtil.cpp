@@ -1,8 +1,13 @@
-#include <extern/CObjUtil.h>
+#include <util/ObjUtil.h>
+
+#include <sstream>
+
+#include <util/FileUtil.h>
+#include <util/StringUtil.h>
 
 
-void CObjUtil::write(std::ostream& stream,
-                     const std::vector<tinyobj::shape_t>& shapes)
+void ObjUtil::writeCompressedObj(std::ostream& stream,
+                                 const std::vector<tinyobj::shape_t>& shapes)
 {
   assert(sizeof(float) == sizeof(uint32_t));
   const auto sz = sizeof(uint32_t);
@@ -37,8 +42,22 @@ void CObjUtil::write(std::ostream& stream,
   }
 }
 
+std::vector<tinyobj::shape_t> ObjUtil::read(AssetMesh meshfile)
+{
+  // check if file is compressed, and if so, use ObjUtil::readCompressedObj()
+  bool isCompressed = (StringUtil::suffix(meshfile.path(), 5) == ".cobj");
+  if (isCompressed) {
+    std::string data = FileUtil::read(meshfile.path());
+    std::stringstream ss(data);
+    return readCompressedObj(ss);
+  } else {
+    assert(false && "Unsupported ATM");
+    std::vector<tinyobj::shape_t> tempShapes;  // LCOV_EXCL_LINE
+    return tempShapes;  // LCOV_EXCL_LINE
+  }
+}
 
-std::vector<tinyobj::shape_t> CObjUtil::read(std::istream& stream)
+std::vector<tinyobj::shape_t> ObjUtil::readCompressedObj(std::istream& stream)
 {
   assert(sizeof(float) == sizeof(uint32_t));
   const auto sz = sizeof(uint32_t);

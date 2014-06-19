@@ -47,7 +47,7 @@ private:
 
   Log log_;
 
-  std::string filename_;
+  AssetMesh filename_;
 
   std::vector<tinyobj::shape_t> shapes_;
 
