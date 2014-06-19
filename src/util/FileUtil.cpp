@@ -21,18 +21,18 @@ std::string FileUtil::read(const std::string& filename)
 {
   sdl::RWopsPtr file(SDL_RWFromFile(filename.c_str(),"rb"));
   if (file) {
-    std::string text;
+    std::string data;
     // Go to end and report get size
     SDL_RWseek(file.get(), 0, SEEK_END);
-    text.resize(SDL_RWtell(file.get()));
+    data.resize(SDL_RWtell(file.get()));
 
     // Go to beginning
     SDL_RWseek(file.get(), 0, SEEK_SET);
 
     // Read content to string
-    SDL_RWread(file.get(), &text[0], text.size(), sizeof(text[0]));
+    SDL_RWread(file.get(), &data[0], data.size(), sizeof(data[0]));
 
-    return(text);
+    return(data);
   }
   throw Exception(std::string("Failed to open file: ") + filename);
 }

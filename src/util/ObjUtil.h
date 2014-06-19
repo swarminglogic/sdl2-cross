@@ -1,9 +1,6 @@
 #ifndef UTIL_OBJUTIL_H
 #define UTIL_OBJUTIL_H
 
-#include <cassert>
-#include <fstream>
-#include <string>
 #include <vector>
 
 #include <extern/tiny_obj_loader.h>
@@ -24,15 +21,11 @@ class ObjUtil
 public:
   static std::vector<tinyobj::shape_t> read(AssetMesh meshfile);
 
-  static void writeCompressedObj(std::ostream& stream,
-                                 const std::vector<tinyobj::shape_t>& shapes);
-  static std::vector<tinyobj::shape_t> readCompressedObj(std::istream& stream);
 
 private:
-
-
   ObjUtil();
   virtual ~ObjUtil();
+
   // NonCopyable
   ObjUtil(const ObjUtil& c);
   ObjUtil& operator=(const ObjUtil& c);

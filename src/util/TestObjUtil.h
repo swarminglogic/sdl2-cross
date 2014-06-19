@@ -4,6 +4,7 @@
 #include <sstream>
 
 #include <extern/tiny_obj_loader.h>
+#include <util/CObjUtil.h>
 #include <util/ObjUtil.h>
 
 #include <cxxtest/TestSuite.h>
@@ -17,7 +18,6 @@
 class TestObjUtil : public CxxTest::TestSuite
 {
 public:
-
   void testObjRead()
   {
     std::string tmpObjFile("tmpobjfile.obj");
@@ -58,7 +58,7 @@ public:
     AssetMesh tmpCObjAsset("tmpcobjfile.cobj");
     {
       std::ofstream ssCObjData(tmpCObjAsset.path());
-      ObjUtil::writeCompressedObj(ssCObjData, cube);
+      CObjUtil::writeCompressedObj(ssCObjData, cube);
     }
 
     const std::vector<tinyobj::shape_t> cubeFromCObj =
@@ -110,72 +110,7 @@ public:
     TS_ASSERT(std::remove(tmpCObjAsset.path().c_str()) == 0);
   }
 
-  void testCobjReadWrite()
-  {
-    std::string tmpObjFile("tmpobjfile.obj");
-    {
-      std::ofstream outfile(tmpObjFile);
-      outfile << makeCubeObjFile();
-    }
-    std::vector<tinyobj::shape_t> cube;
-    LoadObj(cube, tmpObjFile.c_str());
 
-    // Manipulating ambient material property
-    const float amb0 =  0.123f;
-    const float amb1 =  1.234f;
-    const float amb2 =  2.345f;
-    cube[0].material.ambient[0] = amb0;
-    cube[0].material.ambient[1] = amb1;
-    cube[0].material.ambient[2] = amb2;
-
-    std::stringstream ssCObjData;
-    ObjUtil::writeCompressedObj(ssCObjData, cube);
-
-    const std::vector<tinyobj::shape_t> cubeFromCObj =
-      ObjUtil::readCompressedObj(ssCObjData);
-
-    TS_ASSERT_EQUALS(cube.size(), cubeFromCObj.size());
-    TS_ASSERT_EQUALS(cubeFromCObj.size(), 1u);
-
-    const float delta = 0.000001f;
-    TS_ASSERT_EQUALS(cube[0].mesh.positions.size(),
-                     cubeFromCObj[0].mesh.positions.size());
-    for (size_t i = 0 ; i < cube[0].mesh.positions.size() ; ++i) {
-      TS_ASSERT_DELTA(cube[0].mesh.positions[i],
-                      cubeFromCObj[0].mesh.positions[i],
-                      delta);
-    }
-
-    TS_ASSERT_EQUALS(cube[0].mesh.normals.size(),
-                     cubeFromCObj[0].mesh.normals.size());
-    for (size_t i = 0 ; i < cube[0].mesh.normals.size() ; ++i) {
-      TS_ASSERT_DELTA(cube[0].mesh.normals[i],
-                      cubeFromCObj[0].mesh.normals[i],
-                      delta);
-    }
-
-    TS_ASSERT_EQUALS(cube[0].mesh.texcoords.size(),
-                     cubeFromCObj[0].mesh.texcoords.size());
-    for (size_t i = 0 ; i < cube[0].mesh.texcoords.size() ; ++i) {
-      TS_ASSERT_DELTA(cube[0].mesh.texcoords[i],
-                      cubeFromCObj[0].mesh.texcoords[i],
-                      delta);
-    }
-
-    TS_ASSERT_EQUALS(cube[0].mesh.indices.size(),
-                     cubeFromCObj[0].mesh.indices.size());
-    for (size_t i = 0 ; i < cube[0].mesh.indices.size() ; ++i) {
-      TS_ASSERT_EQUALS(cube[0].mesh.indices[i],
-                       cubeFromCObj[0].mesh.indices[i]);
-    }
-
-    TS_ASSERT_SAME_DATA(cube[0].material.ambient,
-                        cubeFromCObj[0].material.ambient, 3);
-    TS_ASSERT_DELTA(cubeFromCObj[0].material.ambient[0], amb0, delta);
-    TS_ASSERT_DELTA(cubeFromCObj[0].material.ambient[1], amb1, delta);
-    TS_ASSERT_DELTA(cubeFromCObj[0].material.ambient[2], amb2, delta);
-    TS_ASSERT(std::remove(tmpObjFile.c_str()) == 0);
-  }
 
 private:
   std::string makeCubeObjFile() {
