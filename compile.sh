@@ -173,4 +173,5 @@ function buildUtil {
 if [[ $utils ]]; then
     buildUtil simpletextpreprocess
     buildUtil obj2cobj
+    buildUtil obj2info
 fi
