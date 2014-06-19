@@ -149,21 +149,28 @@ if [[ $linux ]] ; then
     fi
 fi
 
-if [[ $utils ]]; then
-    # Build each utility (currently there is only one)
-    sconsfile="utils/simpletextpreprocess/SConstruct"
+function buildUtil {
+    target=$1
+    echo -e "\nBuilding utils/$target"
+    echo "--------------------"
+    sconsfile="utils/${target}/SConstruct"
     if [[ $cleanTarget ]] ; then
-        echo "Cleaning utils/simpletextpreprocess build ..."
+        echo "Cleaning utils/${target} build ..."
         scons -f $sconsfile -c;
     else
         nice scons -f $sconsfile $serial
         # preliminary cleanup
-        if [[ -x ./bin/simpletextpreprocess ]] ; then
-            mv ./bin/simpletextpreprocess{,-tmp}
+        if [[ -x ./bin/${target} ]] ; then
+            mv ./bin/${target}{,-tmp}
         fi
-        ./compile.sh utils -c
-        if [[ -x ./bin/simpletextpreprocess-tmp ]] ; then
-            mv ./bin/simpletextpreprocess{-tmp,}
+        scons -f $sconsfile -c
+        if [[ -x ./bin/${target}-tmp ]] ; then
+            mv ./bin/${target}{-tmp,}
         fi
     fi
+}
+
+if [[ $utils ]]; then
+    buildUtil simpletextpreprocess
+    buildUtil obj2cobj
 fi
