@@ -13,6 +13,7 @@ Possible targets:
     p                      Pushes android APK to device
     wa                     Auto-rebuild android on changes.
     wl                     Auto-rebuild linux on changes.
+    ws                     Auto-validate shaders on changes.
     testl                  compile and run unit tests on linux
     lg,log                 adb logcat with SWL filter
     lga,loga               adb logcat with SWL, SDL, SDL/* filter
@@ -99,6 +100,14 @@ while test $# -gt 0; do
                 -name 'SConscript*' -or \
                 -name 'SConstruct' \
                | xargs cat | md5sum" -e ./compile.sh l $@
+             exit
+             ;;
+        ws)
+            shift
+            watchfile -s "find ./assets/shaders \
+                -name '[!\.]*.frag' -or \
+                -name '[!\.]*.vert' \
+               | xargs cat | md5sum" -e ./devtools.sh validate-shaders
              exit
              ;;
         testl)
