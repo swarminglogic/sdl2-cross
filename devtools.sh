@@ -11,6 +11,8 @@ Possible targets:
     bu                     Builds utils
     bal,bla,ball           Builds android and linux
     p                      Pushes android APK to device
+    ra                     Runs android app on device
+    sa                     Stops android app if running on device
     wa                     Auto-rebuild android on changes.
     wl                     Auto-rebuild linux on changes.
     ws                     Auto-validate shaders on changes.
@@ -79,6 +81,15 @@ while test $# -gt 0; do
         p)
             shift
             (cd android && ant debug install)
+            exit
+            ;;
+        ra)
+            shift
+            (cd android && adb shell am start -n com.swarminglogic.swldev/.SWLdev)
+            exit
+            ;;
+        sa) shift
+            (cd android && adb shell am force-stop com.swarminglogic.swldev)
             exit
             ;;
         wa)
