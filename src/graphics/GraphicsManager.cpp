@@ -16,7 +16,7 @@ GraphicsManager::GraphicsManager()
     context_(nullptr),
     isFullScreen_(false),
     isVSync_(true),
-    isOpenGlDebugEnabled_(true),
+    isOpenGlDebugEnabled_(false),
     vertexArrayObject_(0u)
 {
 

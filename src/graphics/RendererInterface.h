@@ -29,7 +29,7 @@ public:
 
 
   // Pure virtuals
-  virtual void update() = 0;
+  virtual void update(float time) = 0;
   virtual bool handleEvent(const SDL_Event&) = 0;
 
 private:

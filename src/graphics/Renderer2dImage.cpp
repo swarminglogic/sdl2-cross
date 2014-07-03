@@ -29,7 +29,7 @@ Renderer2dImage::~Renderer2dImage()
 {
 }
 
-void Renderer2dImage::update()
+void Renderer2dImage::update(float)
 {
   if(shader_->isModified())
     updateShader();

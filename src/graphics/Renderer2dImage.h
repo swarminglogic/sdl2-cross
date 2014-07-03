@@ -22,7 +22,7 @@ public:
   Renderer2dImage();
   virtual ~Renderer2dImage();
 
-  virtual void update() override;
+  virtual void update(float time) override;
   virtual bool handleEvent(const SDL_Event&) override;
 
   virtual void setSurface(SurfaceShPtr surface);

@@ -106,7 +106,7 @@ void MainManager::run() {
       handleEvent(event);
     }
 
-    imageRenderer_->update();
+    imageRenderer_->update(runtime_->getSeconds());
 
     currentTimeDelta_ = runtime_->getSeconds() - previousTime;
     previousTime = runtime_->getSeconds();
