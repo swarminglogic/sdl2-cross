@@ -5,6 +5,7 @@
 
 #include <audio/SoundChunk.h>
 #include <graphics/Surface.h>
+#include <util/FpsCounter.h>
 #include <util/Log.h>
 #include <util/SDL.h>
 #include <util/SDL_Event_fwd.h>
@@ -14,6 +15,7 @@ class AudioResourceManager;
 class GraphicsManager;
 class ImageResourceManager;
 class Renderer2dImage;
+class Renderer2dText;
 class Timer;
 
 /**
@@ -79,6 +81,7 @@ private:
   std::unique_ptr<AudioResourceManager> audioResources_;
   std::unique_ptr<GraphicsManager> graphics_;
   std::unique_ptr<Renderer2dImage> imageRenderer_;
+  std::unique_ptr<Renderer2dText> textRenderer_;
   std::unique_ptr<ImageResourceManager> imageResources_;
   std::unique_ptr<Timer> runtime_;
   float currentTimeDelta_;
@@ -86,6 +89,7 @@ private:
   SoundChunkShPtr sound_;
 
   SurfaceShPtr testImage_;
+  FpsCounter fpsCounter_;
 };
 
 #endif

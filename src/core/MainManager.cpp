@@ -10,12 +10,15 @@
 #include <graphics/GraphicsManager.h>
 #include <graphics/ImageResourceManager.h>
 #include <graphics/Renderer2dImage.h>
+#include <graphics/Renderer2dText.h>
 #include <graphics/SDL_image.h>
 #include <graphics/SDL_opengl.h>
 #include <graphics/SDL_ttf.h>
+#include <util/CharMap.h>
 #include <util/Log.h>
 #include <util/LogUtil.h>
 #include <util/SDL.h>
+#include <util/TextBoxText.h>
 #include <util/Timer.h>
 
 
@@ -27,7 +30,8 @@ MainManager::MainManager()
     imageResources_(new ImageResourceManager),
     runtime_(new Timer),
     isRunning_(true),
-    testImage_(nullptr)
+    testImage_(nullptr),
+    fpsCounter_(30)
 {
   initSDL();
   initSDLimg();
@@ -51,15 +55,48 @@ void MainManager::initialize()
 {
   log_.i("Initializing resources.");
   graphics_.reset(new GraphicsManager);
-  imageRenderer_.reset(new Renderer2dImage);
-  imageRenderer_->initialize();
+
   testImage_ = imageResources_->loadImage("uv_colorgrid.png");
   testImage_->setIsMaxFiltering(true);
   assert(testImage_);
   testImage_->prepareForGl();
+
+  imageRenderer_.reset(new Renderer2dImage);
+  imageRenderer_->initialize();
   imageRenderer_->setSurface(testImage_);
   imageRenderer_->handleResize(graphics_->getScreenSize().w(),
                                graphics_->getScreenSize().h());
+
+
+  TextBoxText tbt;
+  tbt.setHeight(12u);
+  tbt.setWidthFixed(5u);
+  CharMap cm(Size(5, 12));
+  std::vector<CharMap::Trait> traits = {
+    CharMap::C_GOLDEN,
+    CharMap::C_CYAN,
+    CharMap::C_RED,
+    CharMap::C_MAGENTA,
+    CharMap::C_GREY,
+    CharMap::C_WHITE,
+    CharMap::C_GREEN,
+    CharMap::C_BLUE,
+    CharMap::C_OLIVE };
+  cm.setTraits(traits);
+  SurfaceShPtr charmapImage = imageResources_->loadImage("gnsh-bitmapfont.png");
+  assert(charmapImage);
+  charmapImage->setIsMaxFiltering(false);
+  charmapImage->prepareForGl();
+
+  textRenderer_.reset(new Renderer2dText);
+  textRenderer_->setTextDataObjects(tbt, cm, charmapImage);
+  textRenderer_->setZoomFactor(3);
+  textRenderer_->setPosition(Point(40, 40));
+
+  textRenderer_->handleResize(graphics_->getScreenSize().w(),
+                              graphics_->getScreenSize().h());
+  textRenderer_->postConfigureInitialize();
+  textRenderer_->setText("FPS: 60");
 
   sound_ = audioResources_->loadSound("audio.ogg");
   runtime_->start();
@@ -92,6 +129,7 @@ void MainManager::run() {
   SDL_Event event;
 
   float previousTime = runtime_->getSeconds();
+  unsigned long frameNumber = 0u;
 
   while (isRunning_) {
 #ifndef NDEBUG
@@ -107,17 +145,28 @@ void MainManager::run() {
     }
 
     imageRenderer_->update(runtime_->getSeconds());
+    textRenderer_->update(runtime_->getSeconds());
 
     currentTimeDelta_ = runtime_->getSeconds() - previousTime;
     previousTime = runtime_->getSeconds();
 
     GlState::clearColor( 0.1f, 0.2f, 0.3f, 1.0f );
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    imageRenderer_->render(Point(0,0), 0);
+    textRenderer_->render(runtime_->getSeconds());
+    // imageRenderer_->render(Point(0, 0), 0);
 
     graphics_->swapBuffers();
+    ++frameNumber;
 
-    SDL_Delay(50);
+    // SDL_Delay(40);
+
+    fpsCounter_.tic();
+    if (frameNumber % 30 == 0) {
+       std::stringstream ss;
+       ss.precision(2);
+       ss << std::fixed <<  "FPS: " << fpsCounter_.getFps();
+       textRenderer_->setText(ss.str());
+    }
   }
 }
 
@@ -135,8 +184,10 @@ void MainManager::handleEvent(const SDL_Event& event)
       const int height = event.window.data2;
       log_.i() << "Window resized to " << width << " x " << height << Log::end;
       graphics_->setScreenSize(Size(width, height));
+      textRenderer_->handleResize(width, height);
     }
   }
+
   else if (event.type == SDL_MOUSEBUTTONDOWN) {
     // TODO swarminglogic, 2014-04-21: Remove sound test
     const int gWidth = graphics_->getScreenSize().w();
@@ -153,7 +204,6 @@ void MainManager::handleEvent(const SDL_Event& event)
     isRunning_ = false;
   }
 }
-
 
 
 void MainManager::initSDL()
@@ -207,7 +257,7 @@ void MainManager::initSDLmixer()
   if ((mixFlagsInit & mixFlags) != mixFlags)
     throw log_.exception("Failed to initialize SDL_mixer", Mix_GetError);
   if( Mix_OpenAudio( 22050, MIX_DEFAULT_FORMAT, 2, 1024 ) == -1 )
-    throw log_.exception("Failed to aquire sound device", Mix_GetError);
+    throw log_.exception("Failed to acquire sound device", Mix_GetError);
   atexit(Mix_CloseAudio);
   atexit(Mix_Quit);
 
