@@ -33,33 +33,45 @@ public:
   GLuint getVertexBuffer(size_t shapeIndex) const;
   GLuint getUVBuffer(size_t shapeIndex) const;
   GLuint getNormalBuffer(size_t shapeIndex) const;
-  const tinyobj::material_t& getMaterial(size_t shapeIndex) const;
-  tinyobj::shape_t& getShape(size_t shapeIndex) const;
+  GLuint getTangentBuffer(size_t shapeIndex) const;
+  GLuint getBitangentBuffer(size_t shapeIndex) const;
 
   bool load();
   bool isUpdated();
 
   bool hasUVdata(size_t shapeIndex) const;
   bool hasNormalData(size_t shapeIndex) const;
+  bool hasTangentSpace(size_t shapeIndex) const;
 
 private:
-  void clear();
-
-  Log log_;
-
-  AssetMesh filename_;
-
-  std::vector<tinyobj::shape_t> shapes_;
-
   struct BufferGroup
   {
     GLuint index;
     GLuint vertex;
     GLuint uv;
     GLuint normal;
+    GLuint tangent;
+    GLuint bitangent;
   };
 
-  // size_t shapeIndex_;
+  struct MeshData
+  {
+    // nVertices = nTriangles * 3
+    std::vector<unsigned int> indices; // nTriangles * 3
+    std::vector<float> positions;      // nVertices * 3
+    std::vector<float> texcoords;      // nVertices * 2
+    std::vector<float> normals;        // nVertices * 3
+    std::vector<float> tangents;       // nVertices * 3
+    std::vector<float> bitangents;     // nVertices * 3
+  };
+
+  void clear();
+  static void computeTangentBasis(MeshData& shape);
+
+  Log log_;
+  AssetMesh filename_;
+
+  std::vector<MeshData> shapes_;
   std::vector<BufferGroup> bufferIds_;
 
   // TODO swarminglogic, 2014-04-28: PORT
