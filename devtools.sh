@@ -12,6 +12,7 @@ Possible targets:
     bal,bla,ball           Builds android and linux
     p                      Pushes android APK to device
     ra                     Runs android app on device
+    ua                     Updates android assets only
     sa                     Stops android app if running on device
     wa                     Auto-rebuild android on changes.
     wl                     Auto-rebuild linux on changes.
@@ -81,6 +82,28 @@ while test $# -gt 0; do
         p)
             shift
             (cd android && ant debug install)
+            exit
+            ;;
+        ua) shift
+            apk=android/bin/SDLActivity-debug.apk
+            if [ ! -e $apk ] ; then
+                echo "APK not found. Building first once with ./devtools p"
+                ./devtools.sh p
+            fi
+            assetsToUpdate=$(find assets/ -newer $apk -type f)
+            if [[ $assetsToUpdate ]] ; then
+                echo zip $apk $assetsToUpdate
+                zip $apk $assetsToUpdate
+                echo zip -d $apk META-INF/*
+                zip -d $apk META-INF/*
+                jarsigner -verbose -storepass android -sigalg \
+                    SHA1withRSA -digestalg SHA1 -keystore \
+                    ~/.android/debug.keystore $apk \
+                    androiddebugkey
+                adb install -r $apk
+            else
+                echo "All assets up to date. Nothing to do."
+            fi
             exit
             ;;
         ra)
