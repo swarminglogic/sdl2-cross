@@ -10,6 +10,8 @@ class GlCheck
 public:
   static const char* glStatusString(GLenum error);
   static bool checkGlFramebuffer();
+  static void debugGlFramebuffer();
+  static const char* glEnumString(GLenum e);
 private:
   GlCheck(){}
   virtual ~GlCheck(){}
