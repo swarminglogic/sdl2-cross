@@ -1,12 +1,15 @@
-Import('env')
+import os
+common_env = Environment(ENV = {'PATH' : os.environ['PATH'],
+                                'HOME' : os.environ['HOME'],
+                                'TERM' : 'xterm'})
 
-env.Append(CPPPATH = ['#/external/flite/include/'])
+common_env.Append(CPPPATH = ['#/external/flite/include/'])
 
-env.VariantDir('#/build/flite/src', 'src')
-env.SConscript('#/build/flite/src/SConscript', {'env': env})
+common_env.VariantDir('#/build/flite/src', 'src')
+common_env.SConscript('#/build/flite/src/SConscript', {'env': common_env})
 
-env.VariantDir('#/build/flite/lang', 'lang')
-env.SConscript('#/build/flite/lang/SConscript', {'env': env})
+common_env.VariantDir('#/build/flite/lang', 'lang')
+common_env.SConscript('#/build/flite/lang/SConscript', {'env': common_env})
 
-env.VariantDir('#/build/flite/main', 'main')
-env.SConscript('#/build/flite/main/SConscript', {'env': env})
+common_env.VariantDir('#/build/flite/main', 'main')
+common_env.SConscript('#/build/flite/main/SConscript', {'env': common_env})

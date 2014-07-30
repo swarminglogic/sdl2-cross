@@ -15,10 +15,16 @@ lSDLmixer = ['SDL2_mixer']
 lSDLttf   = ['SDL2_ttf']
 lBullet   = ['BulletCollision', 'BulletDynamics', 'LinearMath']
 lGL       = ['GL', 'GLU']
+lFlite    = ['flite_voice_list',
+             'flite_cmu_us_awb',
+             'flite_usenglish',
+             'flite_cmulex',
+             'flite']
 lOther    = ['m', 'dl', 'rt']
-lAll  = lSDL + lSDLimage + lSDLmixer + lSDLttf + lBullet + lGL + lOther
+lAll  = lSDL + lSDLimage + lSDLmixer + lSDLttf + lBullet + lGL + lFlite + lOther
 
-libpaths = [pathSdl    + '/lib',
+libpaths = ['#/lib/',
+            pathSdl    + '/lib',
             pathBullet + '/lib']
 
 # Macros definitions
@@ -73,6 +79,7 @@ if 'LDFLAGS' in os.environ:
 
 sourcepaths = [
    base,
+   '../external/',
    pathBoost  + '/include',
    pathGlm,
    pathBullet + '/include/bullet/',
