@@ -29,6 +29,7 @@ The framework will rely on the following libraries
 | SDL_mixer  | `2.0.0 (74441a1c867d)` | ogg loading, sound playback                             |
 | SDL_ttf    | `2.0.12 (997babb2f547)`| ttf loading                                             |
 | bullet     | `2.82-r2704`           | physics                                                 |
+| flite      | `1.4`                  | text to speech synthesization engine                    |
 | GLM        | `0.9.5.2`              | math library similar to GLSL (headers only)             |
 | boost      | `1.55`                 | boost (headers only)                                    |
 
@@ -57,7 +58,7 @@ The framework will rely on the following libraries
 │   └── src
 │       └── org
 │           └── libsdl
-│               └── app             { JNI Java wrapper stuff }
+│               └── app            { JNI Java wrapper stuff }
 ├── assets                          { All resources used by the application }
 │   ├── fonts
 │   ├── images
@@ -65,6 +66,9 @@ The framework will rely on the following libraries
 │   ├── music
 │   ├── shaders
 │   └── sounds
+├── coveragehistory                 { Unit test coverage history }
+├── external                        { External Libraries }
+│   └── flite                      { Flite, TTS synthesis engine }
 └── src                             { All code source files used by the application, excl. shaders }
     ├── audio                       { linked w/SDL, SDL_mixer}
     ├── core                        { linked w/All }
@@ -175,6 +179,13 @@ html/
 coveragehistory/
 .coverage*
 ```
+
+### Flite license and changelog
+
+In compliance with the `flite` license, modifications and changes are explained in
+
+`./external/flite/sdl2-cross-changes.md`
+
 
 ### Troubleshooting
 
