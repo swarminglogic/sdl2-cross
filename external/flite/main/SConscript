@@ -1,0 +1,3 @@
+Import('env')
+
+env.Library('#/lib/flite_voice_list', 'flite_voice_list.c')

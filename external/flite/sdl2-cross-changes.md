@@ -10,7 +10,7 @@ Compete source code was retrieved through
 
 No changes to original flite source files have been made.
 
-Many files have been stripped away, and only th1e following have been retained:
+Many files have been stripped away, and only the following have been retained:
 ```
   include/*
   lang/*
@@ -29,3 +29,5 @@ Two files generated from removed tools have been added:
 The tool to generate `flite_voice_list.c` has been moved from `tools/` to `main/`
 
 Aditionally, all Makefiles and Visual Studio related files are removed.
+
+`SCons` based build files have been added. This are all files named `SConscript`.

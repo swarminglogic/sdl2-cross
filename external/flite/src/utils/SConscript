@@ -1,0 +1,9 @@
+Import('env')
+
+objs = []
+for obj in list(set(Glob('*.c')) -  set(Glob('cst_file_palmos.c')) -
+                                    set(Glob('cst_file_wince.c')) -
+                                    set(Glob('cst_mmap*.c')))  :
+    objs.append(env.Object(obj))
+
+Return('objs')

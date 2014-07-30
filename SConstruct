@@ -10,6 +10,9 @@ env = Environment(ENV = {'PATH' : os.environ['PATH'],
                   # CXX='clang',
                   CXX='g++',
                   tools=['default'], toolpath=[''])
+Export('env')
+SConscript('external/flite/SConscript')
+
 
 AddOption('--tests',
           action='store_true',
@@ -17,8 +20,6 @@ AddOption('--tests',
           default=False)
 
 VariantDir('build', 'src')
-Export('env')
-
 SConscript('build/SConscript')
 if GetOption('tests'):
     SConscript('build/SConscript_tests')

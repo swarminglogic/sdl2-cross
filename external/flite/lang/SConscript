@@ -1,0 +1,6 @@
+Import('env')
+
+for subdir in ['usenglish', 'cmulex', 'cmu_us_awb']:
+    objs = []
+    objs.extend(env.SConscript('%s/SConscript' % subdir, {'env': env}))
+    env.Library('#/lib/flite_'+subdir, objs)

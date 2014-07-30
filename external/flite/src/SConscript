@@ -1,0 +1,16 @@
+Import('env')
+
+objs = []
+for subdir in ['cg', 'synth', 'wavesynth', 'utils', 'stats', 'speech'
+               ,'regex', 'lexicon', 'hrg', 'audio']:
+    objs.extend(env.SConscript('%s/SConscript' % subdir, {'env': env}))
+
+env.Library('#/lib/flite', objs)
+
+# for i in objs:
+#     print i[0].str_for_display()
+
+
+# print "="*10
+# print objs
+# print "="*10
