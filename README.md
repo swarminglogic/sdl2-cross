@@ -174,10 +174,12 @@ android/jni/SDL_mixer
 android/jni/SDL_ttf
 android/jni/SDL
 android/jni/bullet-src
+android/jni/flite
 src/util/gitrev.h
 html/
 coveragehistory/
 .coverage*
+runtime.log
 ```
 
 ### Flite license and changelog
