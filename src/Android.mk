@@ -9,8 +9,10 @@ SDL_PATH        := $(JNI_PATH)/SDL
 SDL_IMAGE_PATH  := $(JNI_PATH)/SDL_image
 SDL_MIXER_PATH  := $(JNI_PATH)/SDL_mixer
 SDL_TTF_PATH    := $(JNI_PATH)/SDL_ttf
+EXTERNAL_LIB_PATH := ../external
 
 LOCAL_C_INCLUDES := $(LOCAL_PATH)/$(SDL_PATH)/include \
+  $(EXTERNAL_LIB_PATH) \
   $(LOCAL_PATH)/$(SDL_IMAGE_PATH) \
   $(LOCAL_PATH)/$(SDL_MIXER_PATH) \
   $(LOCAL_PATH)/$(SDL_TTF_PATH) \
@@ -38,7 +40,8 @@ LOCAL_SRC_FILES := $(SDL_PATH)/src/main/android/SDL_android_main.c \
 # To view variables use:
 #$(warning $(LOCAL_SRC_FILES))
 
-LOCAL_SHARED_LIBRARIES := SDL2 SDL2_image SDL2_mixer SDL2_ttf
+LOCAL_SHARED_LIBRARIES := SDL2 SDL2_image SDL2_mixer SDL2_ttf \
+	                        flite_cmu_us_awb flite_voice_list flite_cmulex flite_usenglish flite
 # bullet
 LOCAL_STATIC_LIBRARIES := cpufeatures
 
