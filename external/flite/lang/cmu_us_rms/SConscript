@@ -1,0 +1,8 @@
+Import('env')
+
+cppath = env['CPPPATH'] + ['../usenglish', '../cmulex']
+objs = []
+for obj in Glob('*.c'):
+    objs.append(env.Object(obj, CPPPATH = cppath))
+
+Return('objs')

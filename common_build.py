@@ -17,6 +17,7 @@ lBullet   = ['BulletCollision', 'BulletDynamics', 'LinearMath']
 lGL       = ['GL', 'GLU']
 lFlite    = ['flite_voice_list',
              'flite_cmu_us_awb',
+             'flite_cmu_us_rms',
              'flite_usenglish',
              'flite_cmulex',
              'flite']

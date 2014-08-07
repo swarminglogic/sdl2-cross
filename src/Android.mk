@@ -41,7 +41,9 @@ LOCAL_SRC_FILES := $(SDL_PATH)/src/main/android/SDL_android_main.c \
 #$(warning $(LOCAL_SRC_FILES))
 
 LOCAL_SHARED_LIBRARIES := SDL2 SDL2_image SDL2_mixer SDL2_ttf \
-	                        flite_cmu_us_awb flite_voice_list flite_cmulex flite_usenglish flite
+	                        flite_cmu_us_awb flite_cmu_us_rms \
+	                        flite_voice_list flite_cmulex flite_usenglish flite
+
 # bullet
 LOCAL_STATIC_LIBRARIES := cpufeatures
 
