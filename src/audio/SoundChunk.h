@@ -16,6 +16,7 @@ class SoundChunk
 {
 public:
   SoundChunk(const AssetSound& soundfile);
+  SoundChunk(sdl::SoundPtr sound);
   virtual ~SoundChunk();
 
   /**

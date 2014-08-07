@@ -1,3 +1,4 @@
+
 #include <audio/SoundChunk.h>
 
 #include <math/MathUtil.h>
@@ -6,6 +7,12 @@
 SoundChunk::SoundChunk(const AssetSound& soundfile)
   : sound_(Mix_LoadWAV(soundfile.path().c_str()))
 {
+}
+
+
+SoundChunk::SoundChunk(sdl::SoundPtr sound)
+{
+  sound_ = std::move(sound);
 }
 
 
