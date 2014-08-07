@@ -61,6 +61,7 @@ private:
   void initSDLimg();
   void initSDLttf();
   void initSDLmixer();
+  void initFlite();
 
 
   void logSDLVersion(const std::string& what,
@@ -90,6 +91,7 @@ private:
 
   SurfaceShPtr testImage_;
   FpsCounter fpsCounter_;
+
 };
 
 #endif

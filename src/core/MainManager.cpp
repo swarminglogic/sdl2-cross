@@ -6,6 +6,7 @@
 #include <audio/AudioPlayback.h>
 #include <audio/AudioResourceManager.h>
 #include <audio/SDL_mixer.h>
+#include <audio/flite.h>
 #include <graphics/GlState.h>
 #include <graphics/GraphicsManager.h>
 #include <graphics/ImageResourceManager.h>
@@ -37,6 +38,7 @@ MainManager::MainManager()
   initSDLimg();
   initSDLttf();
   initSDLmixer();
+  initFlite();
 }
 
 MainManager::~MainManager()
@@ -99,6 +101,7 @@ void MainManager::initialize()
   textRenderer_->setText("FPS: 60");
 
   sound_ = audioResources_->loadSound("audio.ogg");
+
   runtime_->start();
 }
 
@@ -299,6 +302,15 @@ void MainManager::initSDLmixer()
   // TODO swarminglogic, 2014-02-08: Move to audio configuration setting.
   // Setting 64 channels to be played simulatenously
   Mix_AllocateChannels(64);
+}
+
+
+void MainManager::initFlite()
+{
+  log_.i("Initializing flite TTS");
+  log_.d() << "flite Version (Compiled): " << FLITE_PROJECT_VERSION << Log::end;
+
+  flite_init();
 }
 
 
