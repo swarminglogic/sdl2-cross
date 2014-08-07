@@ -5,6 +5,7 @@
 
 #include <audio/AudioPlayback.h>
 #include <audio/AudioResourceManager.h>
+#include <audio/FliteUtil.h>
 #include <audio/SDL_mixer.h>
 #include <audio/flite.h>
 #include <graphics/GlState.h>
@@ -101,6 +102,7 @@ void MainManager::initialize()
   textRenderer_->setText("FPS: 60");
 
   sound_ = audioResources_->loadSound("audio.ogg");
+  voice_.reset(new SoundChunk(FliteUtil::textToSpeech(R"(Test Voice)"))) ;
 
   runtime_->start();
 }
@@ -195,7 +197,8 @@ void MainManager::handleEvent(const SDL_Event& event)
     // TODO swarminglogic, 2014-04-21: Remove sound test
     const int gWidth = graphics_->getScreenSize().w();
     float mSpan = (float)(event.button.x - gWidth/2) / (float)gWidth;
-    AudioPlayback::sound().play(sound_, mSpan, 0.7f);
+    // AudioPlayback::sound().play(sound_, mSpan, 0.7f);
+    AudioPlayback::sound().play(voice_, mSpan, 0.7f);
   }
   else if (event.type == SDL_KEYDOWN) {
     if (event.key.keysym.scancode == SDL_SCANCODE_ESCAPE ||

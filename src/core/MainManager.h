@@ -88,6 +88,7 @@ private:
   float currentTimeDelta_;
   bool isRunning_;
   SoundChunkShPtr sound_;
+  SoundChunkShPtr voice_;
 
   SurfaceShPtr testImage_;
   FpsCounter fpsCounter_;
