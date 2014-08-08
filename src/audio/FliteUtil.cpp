@@ -39,6 +39,7 @@ sdl::SoundPtr FliteUtil::textToSpeech(const std::string& text)
   // SDL Pointer To Memory
   SDL_RWops *rw = SDL_RWFromMem(waveData.get(), waveDataByteSize);
   bool isOk = writeWaveData(wave, rw);
+  delete_utterance(u);
   if (!isOk) {
     log.e("Failed to write WAV data");
   }
