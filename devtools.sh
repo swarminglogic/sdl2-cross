@@ -13,6 +13,7 @@ Possible targets:
     p                      Pushes android APK to device
     ra                     Runs android app on device
     ua                     Updates android assets only
+    ia                     Takes screenshot of android
     sa                     Stops android app if running on device
     wa                     Auto-rebuild android on changes.
     wl                     Auto-rebuild linux on changes.
@@ -84,6 +85,13 @@ while test $# -gt 0; do
             (cd android && ant debug install)
             exit
             ;;
+        ia) shift
+            screencapfilename="sdl2-android-screencapture-"$(date +'%Y_%m_%d__%H_%M_%S.png')
+            adb shell screencap -p | perl -pe 's/\x0D\x0A/\x0A/g' > $screencapfilename
+            convert $screencapfilename -rotate -90  $screencapfilename
+            echo "Screenshot saved to: "$screencapfilename
+            exit
+            ;;
         ua) shift
             apk=android/bin/SDLActivity-debug.apk
             if [ ! -e $apk ] ; then
@@ -103,12 +111,14 @@ while test $# -gt 0; do
                 adb install -r $apk
             else
                 echo "All assets up to date. Nothing to do."
+                adb shell input keyevent 80
             fi
             exit
             ;;
         ra)
             shift
             (cd android && adb shell am start -n com.swarminglogic.swldev/.SWLdev)
+            adb shell input keyevent 80
             exit
             ;;
         sa) shift
