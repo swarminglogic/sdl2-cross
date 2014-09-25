@@ -1,4 +1,4 @@
-![Swarming Logic cross-platform framework](/swl_logo.png)
+![Swarming Logic cross-platform framework](https://raw.githubusercontent.com/swarminglogic/sdl2-cross/master/swl_logo.png)
 
 SDL2, C++11, OpenGL 3.3, OpenGL ES 3, Android/Desktop Project.
 
