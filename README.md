@@ -32,6 +32,7 @@ The framework will rely on the following libraries
 | flite      | `1.4`                  | text to speech synthesization engine                    |
 | GLM        | `0.9.5.2`              | math library similar to GLSL (headers only)             |
 | boost      | `1.55`                 | boost (headers only)                                    |
+| libnoise   | `1.0.0`                | noise generation library                                |
 
 
 ### Project Structure
@@ -101,7 +102,7 @@ desktop build, but will soon also be used for android.
     |              +–––––+––––––+                          |
     |              |   util     |                          |
     |              |            |                          |
-    |              | SDL        |                          |
+    |              | SDL, noise |                          |
     |              +––––––––––––+                          |
     |                                                      |
     |                                                      |
@@ -113,8 +114,9 @@ desktop build, but will soon also be used for android.
     |   |     audio      |   |     graphics        |       |
     |   |                |   |                     |       |
     |   | SDL, SDL_Mixer |   | SDL, SDL_image, GL  |       |
-    |   +––––––––––––––––+   | SDL_ttf             |       |
-    |                        +–––––––––––––––––––––+       |
+    |   | flite          |   | SDL_ttf             |       |
+    |   +––––––––––––––––+   +–––––––––––––––––––––+       |
+    |                                                      |
     |   +––––––––––––––––+   +–––––––––+                   |
     |   |      model     |   |    io   |                   |
     |   |                |   |         |                   |
@@ -175,6 +177,7 @@ android/jni/SDL_ttf
 android/jni/SDL
 android/jni/bullet-src
 android/jni/flite
+android/jni/noise
 src/util/gitrev.h
 html/
 coveragehistory/

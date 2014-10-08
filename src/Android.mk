@@ -41,6 +41,7 @@ LOCAL_SRC_FILES := $(SDL_PATH)/src/main/android/SDL_android_main.c \
 #$(warning $(LOCAL_SRC_FILES))
 
 LOCAL_SHARED_LIBRARIES := SDL2 SDL2_image SDL2_mixer SDL2_ttf \
+	                        noise \
 	                        flite_cmu_us_awb flite_cmu_us_rms \
 	                        flite_voice_list flite_cmulex flite_usenglish flite
 
@@ -49,6 +50,7 @@ LOCAL_STATIC_LIBRARIES := cpufeatures
 
 LOCAL_LDLIBS := -llog -lGLESv3 -lEGL
 LOCAL_CFLAGS := -fno-strict-aliasing -D_REENTRANT -DGLM_FORCE_RADIANS
+LOCAL_CFLAGS += -isystem $(JNI_PATH)/src/../external
 LOCAL_CFLAGS += -isystem $(GLM_DIR)
 LOCAL_CFLAGS += -isystem $(BOOST_DIR)/include
 LOCAL_CFLAGS += -isystem $(LOCAL_PATH)/$(SDL_PATH)/include

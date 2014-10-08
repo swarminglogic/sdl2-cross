@@ -21,8 +21,9 @@ lFlite    = ['flite_voice_list',
              'flite_usenglish',
              'flite_cmulex',
              'flite']
+lNoise    = ['noise']
 lOther    = ['m', 'dl', 'rt']
-lAll  = lSDL + lSDLimage + lSDLmixer + lSDLttf + lBullet + lGL + lFlite + lOther
+lAll  = lSDL + lSDLimage + lSDLmixer + lSDLttf + lBullet + lGL + lFlite + lNoise + lOther
 
 libpaths = ['#/lib/',
             pathSdl    + '/lib',
@@ -39,7 +40,6 @@ macroDefinitions = [
 
 gccWarningLevel = [
    '-Wall', '-Wextra', '-Wcast-align', '-Wcast-qual',
-   '-fpermissive',
    '-Wconversion', '-Wdisabled-optimization', #'-Weffc++',
    '-Wfloat-equal', '-Wformat=2', '-Wimport', '-Winit-self',
    '-Winline', '-Winvalid-pch', '-Wlong-long',
@@ -47,10 +47,13 @@ gccWarningLevel = [
    '-Wmissing-noreturn', '-Wpacked', '-Wpointer-arith',
    '-Wredundant-decls', '-Wshadow', '-Wstack-protector',
    '-Wstrict-aliasing=2', '-Wunreachable-code',
-   '-Wunsafe-loop-optimizations', '-Wunused',
+   '-Wunused',
    '-Wvariadic-macros', '-Wwrite-strings', '-pedantic',
    '-pedantic-errors', '-Woverloaded-virtual',
    '-Wswitch-enum', '-Werror'
+   ## Clang unsupported flags.
+   # '-fpermissive',
+   # -Wunsafe-loop-optimizations'
 ]
 
 # CPPFLAGS
@@ -64,6 +67,7 @@ cppflags.extend(['-fno-strict-aliasing',
 cppflags.extend(['-isystem', pathBoost  + '/include',
                  '-isystem', pathSdl    + '/include/',
                  '-isystem', pathGlm,
+                 '-isystem', 'external/',
                  '-isystem', pathBullet + '/include/bullet'])
 cppflags.extend(gccWarningLevel)
 for macro in macroDefinitions:

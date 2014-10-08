@@ -1,0 +1,9 @@
+import os
+common_env = Environment(ENV = {'PATH' : os.environ['PATH'],
+                                'HOME' : os.environ['HOME'],
+                                'TERM' : 'xterm'})
+
+common_env.Append(CPPPATH = ['#/external/noise/include/'])
+
+common_env.VariantDir('#/build/noise/src', 'src')
+common_env.SConscript('#/build/noise/src/SConscript', {'env': common_env})

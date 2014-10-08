@@ -19,6 +19,9 @@ AddOption('--tests',
 # Build flite external library
 SConscript('external/flite/SConscript')
 
+# Build libnoise external library
+SConscript('external/noise/SConscript')
+
 Export('env')
 VariantDir('build', 'src')
 SConscript('build/SConscript')

@@ -1,0 +1,15 @@
+Import('env')
+
+env['CXXFLAGS'].append('-fPIC')
+env['CXXFLAGS'].append('-fomit-frame-pointer')
+
+objs = []
+for obj in Glob('*.cpp'):
+    objs.append(env.Object(obj))
+for obj in Glob('model/*.cpp'):
+    objs.append(env.Object(obj))
+for obj in Glob('module/*.cpp'):
+    objs.append(env.Object(obj))
+
+noiseLib = env.StaticLibrary('#/lib/noise', objs)
+Default(noiseLib)
