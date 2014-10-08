@@ -70,6 +70,7 @@ The framework will rely on the following libraries
 ├── coveragehistory                 { Unit test coverage history }
 ├── external                        { External Libraries }
 │   └── flite                      { Flite, TTS synthesis engine }
+│   └── noise                      { libnoise, noise generation library }
 └── src                             { All code source files used by the application, excl. shaders }
     ├── audio                       { linked w/SDL, SDL_mixer}
     ├── core                        { linked w/All }
