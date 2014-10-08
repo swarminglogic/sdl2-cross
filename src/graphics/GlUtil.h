@@ -17,7 +17,7 @@
  */
 class GlUtil
 {
-public:
+ public:
   /**
    * Creates a vertex buffer, fills buffer w/data, returns name of buffer.
    */
@@ -80,13 +80,13 @@ public:
                            &data[0]);
   }
 
-private:
+ private:
   GlUtil();
- ~GlUtil();
+  ~GlUtil();
 
   // NonCopyable
   GlUtil(const GlUtil& c);
   GlUtil& operator=(const GlUtil& c);
 };
 
-#endif
+#endif  // GRAPHICS_GLUTIL_H

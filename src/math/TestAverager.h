@@ -2,7 +2,6 @@
 #define MATH_TESTAVERAGER_H
 
 #include <cstdlib>
-#include <iostream>
 
 #include <math/Averager.h>
 
@@ -16,8 +15,8 @@
  */
 class TestAverager : public CxxTest::TestSuite
 {
-public:
-  void testSingleValue( void )
+ public:
+  void testSingleValue()
   {
     const float delta = 0.00001f;
     Averager averager(1);
@@ -34,7 +33,7 @@ public:
     }
   }
 
-  void testNonFull( void )
+  void testNonFull()
   {
     const float delta = 0.00001f;
     Averager averager(10);
@@ -45,11 +44,12 @@ public:
     averager.insertValue(7.0f);
     TS_ASSERT_DELTA(averager.getAverage(), (1.0f + 2.0f + 7.0f) / 3.0f, delta);
     averager.insertValue(14.0f);
-    TS_ASSERT_DELTA(averager.getAverage(), (1.0f + 2.0f + 7.0f + 14.0f) / 4.0f, delta);
+    TS_ASSERT_DELTA(averager.getAverage(), (1.0f + 2.0f + 7.0f + 14.0f) / 4.0f,
+                    delta);
   }
 
 
-  void testIncrementFull( void )
+  void testIncrementFull()
   {
     const float delta = 0.00001f;
     Averager averager(3);
@@ -62,10 +62,11 @@ public:
     averager.insertValue(14.0f);
     TS_ASSERT_DELTA(averager.getAverage(), (2.0f + 7.0f + 14.0f) / 3.0f, delta);
     averager.insertValue(24.0f);
-    TS_ASSERT_DELTA(averager.getAverage(), (7.0f + 14.0f + 24.0f) / 3.0f, delta);
+    TS_ASSERT_DELTA(averager.getAverage(), (7.0f + 14.0f + 24.0f) / 3.0f,
+                    delta);
   }
 
-  void testIncrementMany( void )
+  void testIncrementMany()
   {
     const float delta = 0.00001f;
     Averager averager(100000);
@@ -75,12 +76,14 @@ public:
       const float val = static_cast<float>(rand()/RAND_MAX);
       averager.insertValue(val);
       sum += val;
-      TS_ASSERT_DELTA(averager.getAverage(), sum / (float)(i + 1), delta);
+      TS_ASSERT_DELTA(averager.getAverage(),
+                      sum / static_cast<float>(i + 1),
+                      delta);
     }
   }
 
 
-  void testCopy( void )
+  void testCopy()
   {
     const float delta = 0.00001f;
     Averager averager(3);
@@ -98,7 +101,7 @@ public:
     TS_ASSERT_DELTA(copy.getAverage(), (1.0f + 2.0f + 7.0f) / 3.0f, delta);
   }
 
-private:
+ private:
 };
 
-#endif
+#endif  // MATH_TESTAVERAGER_H

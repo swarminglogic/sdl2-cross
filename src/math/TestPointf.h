@@ -14,7 +14,7 @@
  */
 class TestPointf : public CxxTest::TestSuite
 {
-public:
+ public:
   void testBasic()
   {
     const float delta = 0.00001f;
@@ -75,11 +75,11 @@ public:
     Pointf opB(5, 7);
     opB += opA;
     TS_ASSERT_EQUALS(opB, Pointf(7, 10));
-    opA -= Pointf(1,1);
+    opA -= Pointf(1, 1);
     TS_ASSERT_EQUALS(opA, Pointf(1, 2));
     opB -= opB;
     TS_ASSERT_EQUALS(opB, Pointf(0, 0));
-    Pointf opC(5,-3);
+    Pointf opC(5, -3);
     opC *= 3.0;
     TS_ASSERT_EQUALS(opC, Pointf(15, -9));
 
@@ -191,7 +191,7 @@ public:
     TS_ASSERT_DELTA(point.y(), 42.0f, delta);
   }
 
-private:
+ private:
 };
 
-#endif
+#endif  // MATH_TESTPOINTF_H

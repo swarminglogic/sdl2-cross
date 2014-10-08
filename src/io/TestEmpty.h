@@ -13,12 +13,12 @@
  */
 class TestEmpty : public CxxTest::TestSuite
 {
-public:
+ public:
   void testEmpty()
   {
     TS_ASSERT(true);
   }
-private:
+ private:
 };
 
-#endif
+#endif  // IO_TESTEMPTY_H

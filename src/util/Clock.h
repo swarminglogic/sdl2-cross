@@ -14,7 +14,7 @@
  */
 class Clock
 {
-public:
+ public:
   /**
    * Generates a timestamp with the following format "YYYY-MM-DD HH:MM:SS'
    * using a 24 hour.
@@ -38,8 +38,7 @@ public:
   Clock();
   virtual ~Clock();
 
-private:
-
+ private:
   std::tm time_;
 
   // NonCopyable
@@ -47,4 +46,4 @@ private:
   Clock& operator=(const Clock& c);
 };
 
-#endif
+#endif  // UTIL_CLOCK_H

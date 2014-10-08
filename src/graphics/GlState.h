@@ -24,7 +24,7 @@
  */
 class GlState
 {
-public:
+ public:
   // Uncomment as needed.
   enum Capability{
     BLEND = 0,
@@ -125,7 +125,7 @@ public:
   static GLenum toGLenum(Capability cap);
   static GLenum toGLenum(BufferTarget target);
 
-private:
+ private:
   static GlState& instance();
   void f_syncronize();
 
@@ -178,4 +178,4 @@ private:
   GlState& operator=(const GlState& c);
 };
 
-#endif
+#endif  // GRAPHICS_GLSTATE_H

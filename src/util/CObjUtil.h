@@ -13,12 +13,12 @@
  */
 class CObjUtil
 {
-public:
+ public:
   static void writeCompressedObj(std::ostream& stream,
                                  const std::vector<tinyobj::shape_t>& shapes);
   static std::vector<tinyobj::shape_t> readCompressedObj(std::istream& stream);
 
-private:
+ private:
   CObjUtil();
   virtual ~CObjUtil();
 
@@ -27,4 +27,4 @@ private:
   CObjUtil& operator=(const CObjUtil& c);
 };
 
-#endif
+#endif  // UTIL_COBJUTIL_H

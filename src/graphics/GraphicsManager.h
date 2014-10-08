@@ -16,7 +16,7 @@ class ViewConfig;
  */
 class GraphicsManager
 {
-public:
+ public:
   GraphicsManager();
   virtual ~GraphicsManager();
 
@@ -25,7 +25,7 @@ public:
   Size getScreenSize() const;
   void setScreenSize(Size windowSize);
 
-private:
+ private:
   void initalizeOpenGL(const ViewConfig& viewConfig);
 
   // Debug function for logging graphics driver information
@@ -49,4 +49,4 @@ private:
   GraphicsManager& operator=(const GraphicsManager& c);
 };
 
-#endif
+#endif  // GRAPHICS_GRAPHICSMANAGER_H

@@ -13,7 +13,7 @@
  */
 class ViewConfig
 {
-public:
+ public:
   ViewConfig();
   ViewConfig(Size screenSize,
              const std::string& windowTitle);
@@ -37,7 +37,7 @@ public:
   bool isVSync() const;
   void setIsVSync(bool isVSync);
 
-private:
+ private:
   Size screenSize_;
   std::string windowTitle_;
   bool isFullScreen_;
@@ -45,4 +45,4 @@ private:
   bool isVSync_;
 };
 
-#endif
+#endif  // GRAPHICS_VIEWCONFIG_H

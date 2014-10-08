@@ -1,17 +1,19 @@
-#include "Timer.h"
+#include <util/Timer.h>
 
 // USE SDL TIMING FUNCTIONS
 #if defined USING_SDL
 #include <util/SDL.h>
 struct Timer::Timer_impl
-{ unsigned int getTicksSinceStart() const { return SDL_GetTicks(); }};
+{ unsigned int getTicksSinceStart() const {
+  return SDL_GetTicks();
+}};
 #else
 
-//USE C++11 CHRONO FALLBACK
+//  USE C++11 CHRONO FALLBACK
 #include <chrono>
 class Timer::Timer_impl
 {
-public:
+ public:
   Timer_impl() : start_(std::chrono::high_resolution_clock::now()) {}
   unsigned int getTicksSinceStart() const {
     using std::chrono::high_resolution_clock;
@@ -22,7 +24,7 @@ public:
       duration_cast<std::chrono::milliseconds>(now - start_).count();
     return elapsedtics;
   }
-private:
+ private:
   std::chrono::time_point<std::chrono::high_resolution_clock> start_;
 };
 #endif
@@ -52,7 +54,7 @@ void Timer::eventTriggered(Event event)
   }
 
   // State dependent events
-  switch(state_) {
+  switch (state_) {
   case STOPPED:
     if (event == STARTING) {
       ticksWhenStarted_ = impl_->getTicksSinceStart();
@@ -63,8 +65,7 @@ void Timer::eventTriggered(Event event)
   case RUNNING:
     if (event == STOPPING) {
       state_ = STOPPED;
-    }
-    else if (event == PAUSING) {
+    } else if (event == PAUSING) {
       ticksAccum_ += (impl_->getTicksSinceStart() - ticksWhenStarted_);
       state_ = PAUSED;
     }

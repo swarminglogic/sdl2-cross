@@ -16,7 +16,7 @@
  */
 class TestClock : public CxxTest::TestSuite
 {
-public:
+ public:
   void testClock()
   {
     Clock clock;
@@ -37,7 +37,7 @@ public:
     TS_ASSERT_EQUALS(clock.getSeconds(), time.tm_sec);
   }
 
-private:
+ private:
 };
 
-#endif
+#endif  // UTIL_TESTCLOCK_H

@@ -15,7 +15,7 @@
  */
 class Point
 {
-public:
+ public:
   Point();
   Point(int x, int y);
   ~Point();
@@ -61,7 +61,7 @@ public:
   int* getData();
 
 
-private:
+ private:
   int d_[2];
 };
 
@@ -89,4 +89,4 @@ inline bool operator==(const Point& lhs, const Point& rhs)
 inline bool operator!=(const Point& lhs, const Point& rhs)
 {return (lhs.d_[0] != rhs.d_[0]) || (lhs.d_[1] != rhs.d_[1]);}
 
-#endif
+#endif  // MATH_POINT_H

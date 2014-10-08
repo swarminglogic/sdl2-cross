@@ -19,12 +19,12 @@
  */
 class TestFileMonitor : public CxxTest::TestSuite
 {
-private:
+ private:
   void msleep(unsigned milliseconds) {
     std::this_thread::sleep_for(std::chrono::milliseconds(milliseconds));
   }
 
-public:
+ public:
   void testBasics()
   {
     const std::string filename("./certainlythisdoesnotexist.txt");
@@ -75,4 +75,4 @@ public:
   }
 };
 
-#endif
+#endif  // UTIL_TESTFILEMONITOR_H

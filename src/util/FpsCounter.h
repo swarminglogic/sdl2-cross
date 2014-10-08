@@ -12,18 +12,18 @@
  */
 class FpsCounter
 {
-public:
+ public:
   /**
    * @param N How many frames to average (makes for easier readout).
    */
-  FpsCounter(int n = 3);
+  explicit FpsCounter(int n = 3);
   virtual ~FpsCounter();
 
   double getFps() const;
   double getSpf() const;
   void tic();
 
-private:
+ private:
   Timer timer_;
   Averager averageSpf_;
   double lastTime_;
@@ -33,4 +33,4 @@ private:
   FpsCounter& operator=(const FpsCounter& c);
 };
 
-#endif
+#endif  // UTIL_FPSCOUNTER_H

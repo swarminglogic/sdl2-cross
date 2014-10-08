@@ -1,5 +1,5 @@
-#ifndef AVERAGER_H
-#define AVERAGER_H
+#ifndef MATH_AVERAGER_H
+#define MATH_AVERAGER_H
 
 #include <cassert>
 #include <list>
@@ -37,15 +37,15 @@
  */
 class Averager
 {
-public:
-  Averager(unsigned int N)
+ public:
+  explicit Averager(unsigned int N)
     : isFull_(false),
       maxN_(N),
       N_(0),
       MX_n_(0.0),
       x_()
   {
-    assert(N > 0 && "Cannot average 0 elements."); // LCOV_EXCL_LINE
+    assert(N > 0 && "Cannot average 0 elements.");  // LCOV_EXCL_LINE
   }
   ~Averager() {}
 
@@ -56,10 +56,8 @@ public:
       const double X_oldest = x_.front();
       x_.pop_front();
       MX_n_ += x_n - X_oldest;
-    }
-
+    } else {
     // ---------- IS INCREMENTING ----------
-    else {
       MX_n_ += x_n;
       ++N_;
       isFull_ = (N_ == maxN_);
@@ -70,12 +68,12 @@ public:
 
   double getAverage() const
   {
-    assert(N_ != 0); // LCOV_EXCL_LINE
+    assert(N_ != 0);  // LCOV_EXCL_LINE
     return MX_n_ / static_cast<double>(N_);
   }
 
 
-private:
+ private:
   bool isFull_;
   const int maxN_;
   int N_;
@@ -83,4 +81,4 @@ private:
   std::list<double> x_;
 };
 
-#endif
+#endif  // MATH_AVERAGER_H

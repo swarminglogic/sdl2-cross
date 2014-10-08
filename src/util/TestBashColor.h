@@ -13,8 +13,7 @@
  */
 class TestBashColor : public CxxTest::TestSuite
 {
-public:
-
+ public:
   void testFunctionName()
   {
     const std::string txt("Hello");
@@ -33,7 +32,7 @@ public:
                      BashColor::setColor(txt, LogManager::LEVEL_ERROR));
   }
 
-private:
+ private:
 };
 
-#endif
+#endif  // UTIL_TESTBASHCOLOR_H

@@ -17,7 +17,7 @@
  */
 class TestLogManager : public CxxTest::TestSuite
 {
-public:
+ public:
   void testGettersSetters()
   {
     LogManager lmb;
@@ -251,11 +251,11 @@ public:
     TS_ASSERT(&lm == &lm2);
   }
 
-private:
+ private:
   bool isSusbtring(const std::string& hay,
                    const std::string& needle) {
     return hay.find(needle) != std::string::npos;
   }
 };
 
-#endif
+#endif  // UTIL_TESTLOGMANAGER_H

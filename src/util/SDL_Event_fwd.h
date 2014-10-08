@@ -3,4 +3,4 @@
 
 typedef union SDL_Event SDL_Event;
 
-#endif
+#endif  // UTIL_SDL_EVENT_FWD_H

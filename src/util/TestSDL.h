@@ -11,12 +11,12 @@
  */
 class TestSDL : public CxxTest::TestSuite
 {
-public:
+ public:
   void testAllSDLRAII()
   {
     sdl::WindowPtr window;
     TS_ASSERT(!window);
-    window.reset(SDL_CreateWindow("n/a", 0,0, 100, 100, 0));
+    window.reset(SDL_CreateWindow("n/a", 0, 0, 100, 100, 0));
     TS_ASSERT(window);
 
     sdl::RendererPtr renderer;
@@ -41,10 +41,9 @@ public:
     TS_ASSERT(!glContext);
     glContext.reset(new SDL_GLContext(SDL_GL_CreateContext(window.get())));
     TS_ASSERT(glContext);
-
   }
 
-private:
+ private:
 };
 
-#endif
+#endif  // UTIL_TESTSDL_H

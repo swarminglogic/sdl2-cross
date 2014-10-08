@@ -13,11 +13,11 @@
  */
 class AudioPlayback
 {
-public:
+ public:
   static MusicPlayer& music();
   static SoundPlayer& sound();
 
-private:
+ private:
   AudioPlayback();
   virtual ~AudioPlayback();
 
@@ -28,4 +28,4 @@ private:
   AudioPlayback& operator=(const AudioPlayback& c);
 };
 
-#endif
+#endif  // AUDIO_AUDIOPLAYBACK_H

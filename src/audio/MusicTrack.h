@@ -14,11 +14,11 @@
  */
 class MusicTrack
 {
-public:
-  MusicTrack(const AssetMusic& musicfile);
+ public:
+  explicit MusicTrack(const AssetMusic& musicfile);
   virtual ~MusicTrack();
 
-private:
+ private:
   friend class MusicPlayer;
 
   sdl::MusicPtr music_;
@@ -29,4 +29,4 @@ private:
 };
 typedef std::shared_ptr<MusicTrack> MusicTrackShPtr;
 
-#endif
+#endif  // AUDIO_MUSICTRACK_H

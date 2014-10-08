@@ -16,7 +16,7 @@ class Pointf;
  */
 class Sizef
 {
-public:
+ public:
   Sizef();
   Sizef(float width, float height);
   ~Sizef();
@@ -69,7 +69,7 @@ public:
 
   explicit operator Pointf() const;
 
-private:
+ private:
   float d_[2];
 };
 
@@ -98,4 +98,4 @@ inline bool operator==(const Sizef& lhs, const Sizef& rhs)
 inline bool operator!=(const Sizef& lhs, const Sizef& rhs)
 {return !(lhs == rhs);}
 
-#endif
+#endif  // MATH_SIZEF_H

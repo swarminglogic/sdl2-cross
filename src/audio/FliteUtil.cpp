@@ -29,9 +29,9 @@ sdl::SoundPtr FliteUtil::textToSpeech(const std::string& text)
   // Number of bytes in WAV RIFF header, plus space for samples
   const int waveDataByteSize = (4 + 4 + 4 + 4 + 4 + 2 + 2 +
                                 4 + 4 + 2 + 2 + 4 + 4 +
-                                (int)(sizeof(short) *
-                                      cst_wave_num_channels(wave) *
-                                      cst_wave_num_samples(wave)));
+                                static_cast<int>(2 *
+                                                 cst_wave_num_channels(wave) *
+                                                 cst_wave_num_samples(wave)));
 
   // Allocating data for the SDL_RWops to write to
   std::unique_ptr<Uint8[]> waveData(new Uint8[waveDataByteSize]);
@@ -62,8 +62,7 @@ bool FliteUtil::writeWaveData(const cst_wave *w, SDL_RWops* out)
     const char* info = "RIFF";
     SDL_RWwrite(out, (const void*)info, 4, 1);
     int num_bytes = ((cst_wave_num_samples(w) *
-                      cst_wave_num_channels(w) *
-                      (int)sizeof(short))) + (8 + 16 + 12);
+                      cst_wave_num_channels(w) * 2)) + (8 + 16 + 12);
 
     // num bytes in whole file
     SDL_RWwrite(out, &num_bytes, 4, 1);
@@ -77,11 +76,11 @@ bool FliteUtil::writeWaveData(const cst_wave *w, SDL_RWops* out)
     num_bytes = 16;
     SDL_RWwrite(out, &num_bytes, 4, 1);
 
-    short d_short = RIFF_FORMAT_PCM;
+    int16_t d_short = RIFF_FORMAT_PCM;
     SDL_RWwrite(out, &d_short, 2, 1);
 
     // number of channels
-    d_short = (short)cst_wave_num_channels(w);
+    d_short = static_cast<int16_t>(cst_wave_num_channels(w));
     SDL_RWwrite(out, &d_short, 2, 1);
 
     // sample rate
@@ -91,11 +90,11 @@ bool FliteUtil::writeWaveData(const cst_wave *w, SDL_RWops* out)
     // average bytes per second
     d_int = (cst_wave_sample_rate(w) *
              cst_wave_num_channels(w) *
-             (int)sizeof(short));
+             2);
     SDL_RWwrite(out, &d_int, 4, 1);
 
     // block align
-    d_short = (short)(cst_wave_num_channels(w) * sizeof(short));
+    d_short = static_cast<int16_t>(cst_wave_num_channels(w) * 2);
     SDL_RWwrite(out, &d_short, 2, 1);
 
     // bits per sample
@@ -106,12 +105,10 @@ bool FliteUtil::writeWaveData(const cst_wave *w, SDL_RWops* out)
     SDL_RWwrite(out, info, 1, 4);
 
     // bytes in data
-    d_int = (cst_wave_num_channels(w) *
-             cst_wave_num_samples(w) *
-             (int)sizeof(short));
+    d_int = (cst_wave_num_channels(w) * cst_wave_num_samples(w) * 2);
     SDL_RWwrite(out, &d_int, 4, 1);
 
-    int n = SDL_RWwrite(out, cst_wave_samples(w), sizeof(short),
+    int n = SDL_RWwrite(out, cst_wave_samples(w), 2,
                         cst_wave_num_channels(w) * cst_wave_num_samples(w));
 
     SDL_RWseek(out, 0, RW_SEEK_SET);

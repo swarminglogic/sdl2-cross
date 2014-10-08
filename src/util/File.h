@@ -19,8 +19,8 @@
  */
 class File
 {
-public:
-  File(const std::string& filename);
+ public:
+  explicit File(const std::string& filename);
 
   File();
 
@@ -76,7 +76,7 @@ public:
   const std::string& getFilename() const;
   void setFilename(const std::string& filename);
 
-private:
+ private:
   std::time_t getLastModifiedTime() const;
 
   std::string filename_;
@@ -87,4 +87,4 @@ private:
   std::size_t localCopyHash_;
 };
 
-#endif
+#endif  // UTIL_FILE_H

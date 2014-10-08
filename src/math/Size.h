@@ -14,7 +14,7 @@
  */
 class Size
 {
-public:
+ public:
   Size();
   Size(int width, int height);
   ~Size();
@@ -66,7 +66,7 @@ public:
   int* getData();
 
 
-private:
+ private:
   int d_[2];
 };
 
@@ -94,4 +94,4 @@ inline bool operator==(const Size& lhs, const Size& rhs)
 inline bool operator!=(const Size& lhs, const Size& rhs)
 {return (lhs.d_[0] != rhs.d_[0]) || (lhs.d_[1] != rhs.d_[1]);}
 
-#endif
+#endif  // MATH_SIZE_H

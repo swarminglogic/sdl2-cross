@@ -18,11 +18,11 @@
  */
 class ObjUtil
 {
-public:
+ public:
   static std::vector<tinyobj::shape_t> read(AssetMesh meshfile);
 
 
-private:
+ private:
   ObjUtil();
   virtual ~ObjUtil();
 
@@ -31,4 +31,4 @@ private:
   ObjUtil& operator=(const ObjUtil& c);
 };
 
-#endif
+#endif  // UTIL_OBJUTIL_H

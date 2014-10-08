@@ -4,7 +4,7 @@
 #define STATUS_CASE(val) case val: return #val
 const char* GlCheck::glStatusString(GLenum error)
 {
-  switch(error) {
+  switch (error) {
     STATUS_CASE(GL_NO_ERROR);
     STATUS_CASE(GL_INVALID_ENUM);
     STATUS_CASE(GL_INVALID_VALUE);
@@ -24,7 +24,7 @@ const char* GlCheck::glStatusString(GLenum error)
 bool GlCheck::checkGlFramebuffer()
 {
   Log log("CheckGL");
-  if(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
+  if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
     const GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
     if (status == GL_FRAMEBUFFER_UNDEFINED)
       log.e() << "Framebuffer Status: Undefined. No window?" << Log::end;
@@ -74,17 +74,19 @@ void GlCheck::debugGlFramebuffer() {
       GLenum colorAttach = GL_COLOR_ATTACHMENT0 + i;
 
       int type;
-      glGetFramebufferAttachmentParameteriv(GL_FRAMEBUFFER,
-                                            colorAttach,
-                                            GL_FRAMEBUFFER_ATTACHMENT_OBJECT_TYPE,
-                                            &type);
+      glGetFramebufferAttachmentParameteriv(
+          GL_FRAMEBUFFER,
+          colorAttach,
+          GL_FRAMEBUFFER_ATTACHMENT_OBJECT_TYPE,
+          &type);
+
       if (type == GL_NONE)
         continue;
       log.e() << "Color attachment " << i << " "
                << GlCheck::glEnumString(type) << Log::end;
 
       if (type == GL_TEXTURE) {
-        int rsize, gsize, bsize, asize;//, dsize, ssize;
+        int rsize, gsize, bsize, asize;  //  , dsize, ssize;
         glGetFramebufferAttachmentParameteriv(
               GL_FRAMEBUFFER, colorAttach,
               GL_FRAMEBUFFER_ATTACHMENT_RED_SIZE,
@@ -108,10 +110,11 @@ void GlCheck::debugGlFramebuffer() {
                  << Log::end;
 
         GLint textureId;
-        glGetFramebufferAttachmentParameteriv(GL_FRAMEBUFFER,
-                                              colorAttach,
-                                              GL_FRAMEBUFFER_ATTACHMENT_OBJECT_NAME,
-                                              &textureId);
+        glGetFramebufferAttachmentParameteriv(
+            GL_FRAMEBUFFER,
+            colorAttach,
+            GL_FRAMEBUFFER_ATTACHMENT_OBJECT_NAME,
+            &textureId);
         log.w() << "Texture id: " << textureId << Log::end;
       }
     }
@@ -128,17 +131,20 @@ void GlCheck::debugGlFramebuffer() {
     log.w() << "DEPTH depth: " << dsize << Log::end;
 
 
-    // TODO swarminglogic, 2014-07-24: This crashes android, why?
+    // // TODO swarminglogic, 2014-07-24: This crashes android, why?
     // type = 0;
-    // glGetFramebufferAttachmentParameteriv(GL_FRAMEBUFFER,
-    //                                       GL_STENCIL_ATTACHMENT,
-    //                                       GL_FRAMEBUFFER_ATTACHMENT_OBJECT_TYPE,
-    //                                       &type);
-    // log.e() << "Stencil attachment " << GlCheck::glEnumString(type) << Log::end;
+    // glGetFramebufferAttachmentParameteriv(
+    //     GL_FRAMEBUFFER,
+    //     GL_STENCIL_ATTACHMENT,
+    //     GL_FRAMEBUFFER_ATTACHMENT_OBJECT_TYPE,
+    //     &type);
+    // log.e() << "Stencil attachment "
+    //         << GlCheck::glEnumString(type) << Log::end;
     // int ssize;
-    // glGetFramebufferAttachmentParameteriv(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT,
-    //                                       GL_FRAMEBUFFER_ATTACHMENT_STENCIL_SIZE,
-    //                                       &ssize);
+    // glGetFramebufferAttachmentParameteriv(
+    //     GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT,
+    //     GL_FRAMEBUFFER_ATTACHMENT_STENCIL_SIZE,
+    //     &ssize);
     // log.w() << "Stencil depth: " << ssize << Log::end;
 }
 
@@ -146,7 +152,7 @@ void GlCheck::debugGlFramebuffer() {
 #define STATUS_CASE(val) case val: return #val
 const char* GlCheck::glEnumString(GLenum e)
 {
-  switch(e) {
+  switch (e) {
     STATUS_CASE(GL_ACTIVE_ATTRIBUTES);
     STATUS_CASE(GL_ACTIVE_ATTRIBUTE_MAX_LENGTH);
     STATUS_CASE(GL_ACTIVE_TEXTURE);

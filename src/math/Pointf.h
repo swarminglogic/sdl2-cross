@@ -17,7 +17,7 @@ class Sizef;
  */
 class Pointf
 {
-public:
+ public:
   Pointf();
   Pointf(float x, float y);
   ~Pointf();
@@ -67,7 +67,7 @@ public:
   const float* getData() const;
   float* getData();
 
-private:
+ private:
   float d_[2];
 };
 
@@ -96,4 +96,4 @@ inline bool operator==(const Pointf& lhs, const Pointf& rhs)
 inline bool operator!=(const Pointf& lhs, const Pointf& rhs)
 {return !(lhs == rhs);}
 
-#endif
+#endif  // MATH_POINTF_H

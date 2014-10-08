@@ -34,7 +34,7 @@ echo "#ifndef UTIL_GITREV_H
 
 #define CURRENT_GIT_REV \"$1\"
 
-#endif" > src/util/gitrev.h
+#endif  // UTIL_GITREV_H" > src/util/gitrev.h
 }
 
 function prepareGitRevHeader() {

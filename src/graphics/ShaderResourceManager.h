@@ -32,7 +32,7 @@
  */
 class ShaderResourceManager
 {
-public:
+ public:
   typedef std::map<ShaderProgram::ShaderType, AssetShader> ShaderKey;
   typedef std::map<ShaderProgram::ShaderType, std::string> ShaderfileKey;
 
@@ -52,7 +52,7 @@ public:
    */
   static ShaderResourceManager& instance();
 
-private:
+ private:
   Log log_;
   std::map<ShaderKey,  ShaderProgramShPtr> loadedShaders_;
 
@@ -61,4 +61,4 @@ private:
   ShaderResourceManager& operator=(const ShaderResourceManager& c);
 };
 
-#endif
+#endif  // GRAPHICS_SHADERRESOURCEMANAGER_H

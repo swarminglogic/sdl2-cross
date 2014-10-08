@@ -17,9 +17,8 @@
  */
 class TestFileUtil : public CxxTest::TestSuite
 {
-public:
-
-  void testReadFile( void )
+ public:
+  void testReadFile()
   {
     const std::string text("This is the file content");
     const std::string fileName("./temporary_testfile.txt");
@@ -49,8 +48,7 @@ public:
     TS_ASSERT(FileUtil::remove(filename.c_str()));
   }
 
-private:
-
+ private:
   void writeFile(const std::string& text,
                  const std::string& fileName) {
     std::ofstream file(fileName);
@@ -59,4 +57,4 @@ private:
   }
 };
 
-#endif
+#endif  // UTIL_TESTFILEUTIL_H

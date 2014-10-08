@@ -53,7 +53,7 @@ typedef struct
 
 class MaterialReader
 {
-public:
+ public:
   MaterialReader(){}
   virtual ~MaterialReader(){}
 
@@ -64,7 +64,7 @@ public:
 class MaterialFileReader:
   public MaterialReader
 {
-public:
+ public:
   MaterialFileReader(const std::string& mtl_basepath)
     : m_mtlBasePath(mtl_basepath) {}
   virtual ~MaterialFileReader() {}
@@ -72,7 +72,7 @@ public:
                                   const std::string& matId,
                                   std::map<std::string, material_t>& matMap);
 
-private:
+ private:
   std::string m_mtlBasePath;
 };
 

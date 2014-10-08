@@ -22,8 +22,8 @@
  */
 class Mesh
 {
-public:
-  Mesh(const AssetMesh& meshfile);
+ public:
+  explicit Mesh(const AssetMesh& meshfile);
   virtual ~Mesh();
 
   bool isEmpty() const;
@@ -43,7 +43,7 @@ public:
   bool hasNormalData(size_t shapeIndex) const;
   bool hasTangentSpace(size_t shapeIndex) const;
 
-private:
+ private:
   struct BufferGroup
   {
     GLuint index;
@@ -57,12 +57,12 @@ private:
   struct MeshData
   {
     // nVertices = nTriangles * 3
-    std::vector<unsigned int> indices; // nTriangles * 3
-    std::vector<float> positions;      // nVertices * 3
-    std::vector<float> texcoords;      // nVertices * 2
-    std::vector<float> normals;        // nVertices * 3
-    std::vector<float> tangents;       // nVertices * 3
-    std::vector<float> bitangents;     // nVertices * 3
+    std::vector<unsigned int> indices;  //  nTriangles * 3
+    std::vector<float> positions;       //  nVertices * 3
+    std::vector<float> texcoords;       //  nVertices * 2
+    std::vector<float> normals;         //  nVertices * 3
+    std::vector<float> tangents;        //  nVertices * 3
+    std::vector<float> bitangents;      //  nVertices * 3
   };
 
   void clear();
@@ -94,4 +94,4 @@ private:
 
 typedef std::shared_ptr<Mesh> MeshShPtr;
 
-#endif
+#endif  // GRAPHICS_MESH_H

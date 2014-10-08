@@ -17,7 +17,7 @@ class Log;
  */
 class LogUtil
 {
-public:
+ public:
   /**
    * This is an extremely verbose SDL_Event output.
    *
@@ -32,7 +32,7 @@ public:
   static void log(const SDL_Event& event);
 
 
-private:
+ private:
 
   static void logFingerEvent          (Log& logger, const SDL_Event& event);
   static void logKeyEvent             (Log& logger, const SDL_Event& event);
@@ -51,4 +51,4 @@ private:
   LogUtil& operator=(const LogUtil& c);
 };
 
-#endif
+#endif  // UTIL_LOGUTIL_H

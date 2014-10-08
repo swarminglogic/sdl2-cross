@@ -14,7 +14,7 @@
  */
 class Timer
 {
-public:
+ public:
   Timer();
 
   virtual ~Timer();
@@ -33,7 +33,7 @@ public:
   bool isStopped() const;
   bool isRunning() const;
 
-private:
+ private:
   enum Event{
     STOPPING = 0,
     STARTING,
@@ -64,4 +64,4 @@ private:
   Timer& operator=(const Timer& c);
 };
 
-#endif
+#endif  // UTIL_TIMER_H

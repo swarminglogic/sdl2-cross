@@ -13,7 +13,7 @@
  */
 class TestPoint : public CxxTest::TestSuite
 {
-public:
+ public:
   void testBasic()
   {
     Point point;
@@ -22,7 +22,7 @@ public:
     TS_ASSERT_EQUALS(point.x(),    0);
     TS_ASSERT_EQUALS(point.y(),    0);
 
-    Point point2(5,123);
+    Point point2(5, 123);
     TS_ASSERT_EQUALS(point2.getX(),  5);
     TS_ASSERT_EQUALS(point2.getY(), 123);
     TS_ASSERT_EQUALS(point2.x(),  5);
@@ -55,11 +55,11 @@ public:
     Point opB(5, 7);
     opB += opA;
     TS_ASSERT_EQUALS(opB, Point(7, 10));
-    opA -= Point(1,1);
+    opA -= Point(1, 1);
     TS_ASSERT_EQUALS(opA, Point(1, 2));
     opB -= opB;
     TS_ASSERT_EQUALS(opB, Point(0, 0));
-    Point opC(5,-3);
+    Point opC(5, -3);
     opC *= 3.0;
     TS_ASSERT_EQUALS(opC, Point(15, -9));
 
@@ -114,7 +114,7 @@ public:
   void testTranspose() {
     Point opA(2, 3);
     opA.transpose();
-    TS_ASSERT_EQUALS(opA, Point(3,2));
+    TS_ASSERT_EQUALS(opA, Point(3, 2));
   }
 
 
@@ -131,7 +131,7 @@ public:
     TS_ASSERT_EQUALS(point.y(), 42);
   }
 
-private:
+ private:
 };
 
-#endif
+#endif  // MATH_TESTPOINT_H

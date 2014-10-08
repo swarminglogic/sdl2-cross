@@ -11,4 +11,4 @@
 #include <SDL2/SDL_ttf.h>
 #endif
 
-#endif
+#endif  // GRAPHICS_SDL_TTF_H

@@ -26,4 +26,4 @@
 
 #endif
 
-#endif
+#endif  // GRAPHICS_SDL_OPENGL_H

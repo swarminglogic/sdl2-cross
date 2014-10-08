@@ -31,9 +31,9 @@
  */
 class Log
 {
-public:
+ public:
   virtual ~Log();
-  Log(const std::string& loggerName);
+  explicit Log(const std::string& loggerName);
 
   // Log functions for the various log levels
   void d(const std::string& message) const;
@@ -64,7 +64,7 @@ public:
   // logger to mark the end of the line to log.
   // It allows: logger << "Hello" << Log::end;
   // The function itself is never actually executed.
-  static void end(){} // LCOV_EXCL_LINE
+  static void end(){}  // LCOV_EXCL_LINE
 
   friend const Log& operator<<(const Log& lhs,
                                void(*pf)() ) {
@@ -77,7 +77,8 @@ public:
 
   template<class T>
   friend const Log& operator<<(const Log& lhs, const T& t)
-  { lhs.streamLog_ << t; return lhs; }
+  { lhs.streamLog_ << t;
+    return lhs; }
 
   friend const Log& operator<<(const Log& lhs, const Pointf& p)
   { lhs.streamLog_ << "(" << p.x() << ", " << p.y() << ") [Pointf]";
@@ -87,10 +88,12 @@ public:
     return lhs; }
   friend const Log& operator<<(const Log& lhs, const Rect& p)
   { lhs.streamLog_ << "(" << p.x() << ", " << p.y() << ", "
-                   << p.w() << ", " << p.h() << ") [Rect]"; return lhs; }
+                   << p.w() << ", " << p.h() << ") [Rect]";
+    return lhs; }
   friend const Log& operator<<(const Log& lhs, const Rectf& p)
   { lhs.streamLog_ << "(" << p.x() << ", " << p.y() << ", "
-                   << p.w() << ", " << p.h() << ") [Rectf]"; return lhs; }
+                   << p.w() << ", " << p.h() << ") [Rectf]";
+    return lhs; }
 
   template<class T>
   friend const Log& operator<<(const Log& lhs, const std::vector<T>& data)
@@ -105,7 +108,7 @@ public:
   }
 
 
-private:
+ private:
   // Can only be instantiated through non-default constructor
   Log();
 
@@ -123,4 +126,4 @@ private:
   Log& operator=(const Log& c);
 };
 
-#endif
+#endif  // UTIL_LOG_H

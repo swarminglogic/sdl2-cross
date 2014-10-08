@@ -26,4 +26,4 @@ namespace sdl {
 
 
 
-#endif
+#endif  // UTIL_SDL_H

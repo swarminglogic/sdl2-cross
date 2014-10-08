@@ -16,7 +16,7 @@
  */
 class TestStringUtil : public CxxTest::TestSuite
 {
-public:
+ public:
   void testSplit()
   {
     std::string txt {"Hello my \n   sweet world!"};
@@ -244,7 +244,7 @@ take it, to try
 
 
 
-private:
+ private:
 };
 
-#endif
+#endif  // UTIL_TESTSTRINGUTIL_H

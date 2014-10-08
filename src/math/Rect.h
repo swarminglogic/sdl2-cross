@@ -13,9 +13,9 @@
  */
 class Rect
 {
-public:
+ public:
   Rect(const Point& position, const Size& size);
-  Rect(const Size& size);
+  explicit Rect(const Size& size);
   Rect(int x, int y, int w, int h);
   ~Rect();
 
@@ -46,7 +46,7 @@ public:
   const int* getData() const;
   int* getData();
 
-private:
+ private:
   Point pos_;
   Size size_;
 };
@@ -56,4 +56,4 @@ inline bool operator==(const Rect& lhs, const Rect& rhs)
 inline bool operator!=(const Rect& lhs, const Rect& rhs)
 {return !(lhs == rhs);}
 
-#endif
+#endif  // MATH_RECT_H

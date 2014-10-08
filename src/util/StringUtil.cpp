@@ -42,9 +42,9 @@ std::string StringUtil::suffix(const std::string& text, int length)
 
 std::string StringUtil::prefix(const std::string& text, int length)
 {
-  if (length >= 0)
+  if (length >= 0) {
     return text.substr(0, length);
-  else {
+  } else {
     if (-length >= static_cast<int>(text.size()))
       return "";
     else

@@ -1,5 +1,3 @@
-#include <cassert>
-#include <iostream>
 #include <util/FileUtil.h>
 
 #include <cassert>
@@ -8,6 +6,7 @@
 
 #include <util/Exception.h>
 #include <util/SDL.h>
+
 
 #ifdef USE_BOOST_FS
 #include <boost/filesystem.hpp>
@@ -19,7 +18,7 @@ namespace fs = boost::filesystem;
 
 std::string FileUtil::read(const std::string& filename)
 {
-  sdl::RWopsPtr file(SDL_RWFromFile(filename.c_str(),"rb"));
+  sdl::RWopsPtr file(SDL_RWFromFile(filename.c_str(), "rb"));
   if (file) {
     std::string data;
     // Go to end and report get size
@@ -50,7 +49,7 @@ void FileUtil::write(const std::string& filename,
 
 bool FileUtil::exists(const std::string& filename)
 {
-  sdl::RWopsPtr file(SDL_RWFromFile(filename.c_str(),"rb"));
+  sdl::RWopsPtr file(SDL_RWFromFile(filename.c_str(), "rb"));
   return file.get() != nullptr;
 }
 

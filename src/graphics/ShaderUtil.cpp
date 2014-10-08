@@ -1,7 +1,6 @@
 #include <graphics/ShaderUtil.h>
 
 #include <array>
-#include <fstream>
 #include <memory>
 #include <sstream>
 

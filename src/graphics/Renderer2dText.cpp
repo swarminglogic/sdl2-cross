@@ -35,8 +35,9 @@ Renderer2dText::~Renderer2dText()
 
 
 
-void Renderer2dText::render(float) const
+void Renderer2dText::render(float time) const
 {
+  (void)time;
   assert(charmap_ && charmapImage_ && textBoxText_);
   assert(!vertices_.empty());
 
@@ -55,12 +56,12 @@ void Renderer2dText::render(float) const
   // Uniform quadVertices
   glEnableVertexAttribArray(0);
   GlState::bindBuffer(GlState::ARRAY_BUFFER, vertexBuffer_);
-  glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
+  glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
 
   glUniform2fv(paramId_charBoxDimensions_, 1, charTextDim_.getData());
 
   // Render instanced quads in batches of 512
-  int remaining = (int)textData_.size();
+  int remaining = static_cast<int>(textData_.size());
   int rendered = 0;
   while (remaining > 0) {
     int toRender = std::min(remaining, 64);
@@ -75,14 +76,15 @@ void Renderer2dText::render(float) const
     remaining -= toRender;
   }
 
-  assert(rendered == (int)textData_.size());
+  assert(rendered == static_cast<int>(textData_.size()));
   glDisableVertexAttribArray(0);
 }
 
 
-void Renderer2dText::update(float)
+void Renderer2dText::update(float time)
 {
-  if(shader_->isModified())
+  (void)time;
+  if (shader_->isModified())
     updateShader();
   if (isDirty_)
     prepareTextData();
@@ -96,7 +98,7 @@ void Renderer2dText::handleResize(int width, int height)
     return;
 
   viewport_ = Size(width, height);
-  if(!vertices_.empty())
+  if (!vertices_.empty())
     updateQuad();
 }
 
@@ -169,9 +171,9 @@ void Renderer2dText::updateQuad()
   const GLfloat x = static_cast<float>(cw * 2 * zoomFactor_);
   const GLfloat y = static_cast<float>(ch * 2 * zoomFactor_);
 
-  const float xoff = (0.375f/(float)(zoomFactor_ + 1) +
+  const float xoff = (0.375f/static_cast<float>(zoomFactor_ + 1) +
                       static_cast<float>(position_.x() - viewport_.w()));
-  const float yoff = (0.375f/(float)(zoomFactor_ + 1) +
+  const float yoff = (0.375f/static_cast<float>(zoomFactor_ + 1) +
                       static_cast<float>(viewport_.h() - position_.y()));
 
   const GLfloat A[] = {0 + xoff, -y + yoff};
@@ -185,7 +187,7 @@ void Renderer2dText::updateQuad()
                 D[0], D[1] };
 
   log_.e() << "TextBoxTextRender::prepareVertices" << Log::end;
-  log_.w() << "zoomFactor_: " << (int)zoomFactor_ << Log::end;
+  log_.w() << "zoomFactor_: " << static_cast<int>(zoomFactor_) << Log::end;
   log_.w() << "cw:ch: " << cw << " : " << ch << Log::end;
   log_.w() << "x:y: " << x << " : " << y << Log::end;
   log_.w() << "xoff:yoff: " << xoff << " : " << yoff << Log::end;
@@ -200,10 +202,13 @@ void Renderer2dText::prepareTextData()
 {
   // Uniform Charbox dimensions
   const int charWidth     = charmap_->getCharSize().w();
-  const float charWidthf  = (float)charWidth / (float)charmapImage_->getWidth();
+  const float charWidthf  =
+      static_cast<float>(charWidth) /
+      static_cast<float>(charmapImage_->getWidth());
   const int charHeight    = charmap_->getCharSize().h();
   const float charHeightf =
-    (float)charHeight / (float)charmapImage_->getHeight();
+      static_cast<float>(charHeight) /
+      static_cast<float>(charmapImage_->getHeight());
 
   charTextDim_ = Pointf(charmapImage_->glTexCoordX(charWidthf),
                         charmapImage_->glTexCoordY(charHeightf));
@@ -217,19 +222,22 @@ void Renderer2dText::prepareTextData()
   const std::vector<std::string>& lines = textBoxText_->getFormatted();
   float xpos = 0.0f;
   float hpos = 0.0f;
-  for (const auto& line : lines) {
+  for (auto const & line : lines) {
     for (const auto& ch : line) {
       // TODO swarminglogic, 2013-10-02:
       // The variant should be provided by TextBoxText
       // TextBoxTextChar 'getChar', 'getVariant'
       const Point charIndexOffset =
         charmap_->getCharIndexOffset(CharMap::C_GOLDEN, ch);
-      const float tpos = (float)charIndexOffset.x() * charTextDim_.x();
-      const float upos = (float)charIndexOffset.y() * charTextDim_.y();
+      const float tpos =
+          static_cast<float>(charIndexOffset.x()) * charTextDim_.x();
+      const float upos =
+          static_cast<float>(charIndexOffset.y()) * charTextDim_.y();
       textData_[charIndex++] = glm::vec4(xpos, hpos, tpos, upos);
-      xpos += (float)cWidths[ch] * 2 * zoomFactor_;
+      xpos += static_cast<float>(cWidths[ch] * 2 * zoomFactor_);
     }
-    hpos -= (float)cHeight * 2 * zoomFactor_; // 3: line spacing
+    // 3: line spacing
+    hpos -= static_cast<float>(cHeight) * 2 * zoomFactor_;
     xpos = 0;
   }
 

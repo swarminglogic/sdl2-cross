@@ -14,9 +14,9 @@
  */
 class Rectf
 {
-public:
+ public:
   Rectf(const Pointf& position, const Sizef& size);
-  Rectf(const Sizef& size);
+  explicit Rectf(const Sizef& size);
   Rectf(float x, float y, float w, float h);
   ~Rectf();
 
@@ -48,7 +48,7 @@ public:
   const float* getData() const;
   float* getData();
 
-private:
+ private:
   Pointf pos_;
   Sizef size_;
 };
@@ -58,4 +58,4 @@ inline bool operator==(const Rectf& lhs, const Rectf& rhs)
 inline bool operator!=(const Rectf& lhs, const Rectf& rhs)
 {return !(lhs == rhs);}
 
-#endif
+#endif  // MATH_RECTF_H

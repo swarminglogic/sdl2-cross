@@ -21,7 +21,7 @@ class AssetImage;
  */
 class Renderer2dText : public RendererInterface
 {
-public:
+ public:
   Renderer2dText();
   virtual ~Renderer2dText();
 
@@ -43,7 +43,7 @@ public:
 
   void postConfigureInitialize();
 
-private:
+ private:
   void updateShader();
   void updateQuad();
   void prepareTextData();
@@ -80,4 +80,4 @@ private:
   Renderer2dText& operator=(const Renderer2dText& c);
 };
 
-#endif
+#endif  // GRAPHICS_RENDERER2DTEXT_H

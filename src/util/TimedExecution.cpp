@@ -3,7 +3,7 @@
 #include <cassert>
 
 
-TimedExecution::TimedExecution(std::function<void (void)> fun,
+TimedExecution::TimedExecution(std::function<void(void)> fun,
                                uint timeout,
                                int nExecutions)
   : fun_(fun),

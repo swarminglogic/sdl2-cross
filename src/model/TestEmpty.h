@@ -1,5 +1,5 @@
-#ifndef IO_TESTEMPTY_H
-#define IO_TESTEMPTY_H
+#ifndef MODEL_TESTEMPTY_H
+#define MODEL_TESTEMPTY_H
 
 #include <cxxtest/TestSuite.h>
 
@@ -13,12 +13,12 @@
  */
 class TestEmpty : public CxxTest::TestSuite
 {
-public:
+ public:
   void testEmpty()
   {
     TS_ASSERT(true);
   }
-private:
+ private:
 };
 
-#endif
+#endif  // MODEL_TESTEMPTY_H

@@ -29,7 +29,7 @@ class Timer;
  */
 class MainManager
 {
-public:
+ public:
   static MainManager& instance();
 
   virtual ~MainManager();
@@ -53,7 +53,7 @@ public:
   float getRuntimeSecs() const;
   float getCurrentTimeDelta() const;
 
-private:
+ private:
   MainManager();
   void handleEvent(const SDL_Event& event);
 
@@ -92,7 +92,6 @@ private:
 
   SurfaceShPtr testImage_;
   FpsCounter fpsCounter_;
-
 };
 
-#endif
+#endif  // CORE_MAINMANAGER_H

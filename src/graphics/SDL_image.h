@@ -11,4 +11,4 @@
 #include <SDL2/SDL_image.h>
 #endif
 
-#endif
+#endif  // GRAPHICS_SDL_IMAGE_H

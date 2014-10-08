@@ -16,4 +16,4 @@
 // TODO swarminglogic, 2014-05-28: add #ifdef for android, etc
 
 
-#endif
+#endif  // UTIL_ASSERT_H

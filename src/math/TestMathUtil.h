@@ -15,30 +15,30 @@
  */
 class TestMathUtil : public CxxTest::TestSuite
 {
-public:
+ public:
   void testClamp() {
     const float delta = 0.0001f;
-    TS_ASSERT_DELTA(MathUtil::clamp(1.0f, -1.0f, 1.0f), 1.0f,delta);
-    TS_ASSERT_DELTA(MathUtil::clamp(0.0f, -1.0f, 1.0f), 0.0f,delta);
-    TS_ASSERT_DELTA(MathUtil::clamp(1.2f, -1.0f, 1.0f), 1.0f,delta);
-    TS_ASSERT_DELTA(MathUtil::clamp(-1.2f, -1.0f, 1.0f), -1.0f,delta);
-    TS_ASSERT_DELTA(MathUtil::clamp(-0.2f, -1.0f, 1.0f), -0.2f,delta);
-    TS_ASSERT_DELTA(MathUtil::clamp(-1.2f, -10.0f, 1.0f), -1.2f,delta);
+    TS_ASSERT_DELTA(MathUtil::clamp(1.0f, -1.0f, 1.0f), 1.0f, delta);
+    TS_ASSERT_DELTA(MathUtil::clamp(0.0f, -1.0f, 1.0f), 0.0f, delta);
+    TS_ASSERT_DELTA(MathUtil::clamp(1.2f, -1.0f, 1.0f), 1.0f, delta);
+    TS_ASSERT_DELTA(MathUtil::clamp(-1.2f, -1.0f, 1.0f), -1.0f, delta);
+    TS_ASSERT_DELTA(MathUtil::clamp(-0.2f, -1.0f, 1.0f), -0.2f, delta);
+    TS_ASSERT_DELTA(MathUtil::clamp(-1.2f, -10.0f, 1.0f), -1.2f, delta);
 
     // Default ranges [0, 1]
-    TS_ASSERT_DELTA(MathUtil::clamp(1.0f), 1.0f,delta);
-    TS_ASSERT_DELTA(MathUtil::clamp(0.0f), 0.0f,delta);
-    TS_ASSERT_DELTA(MathUtil::clamp(1.2f), 1.0f,delta);
-    TS_ASSERT_DELTA(MathUtil::clamp(-1.2f), 0.0f,delta);
+    TS_ASSERT_DELTA(MathUtil::clamp(1.0f), 1.0f, delta);
+    TS_ASSERT_DELTA(MathUtil::clamp(0.0f), 0.0f, delta);
+    TS_ASSERT_DELTA(MathUtil::clamp(1.2f), 1.0f, delta);
+    TS_ASSERT_DELTA(MathUtil::clamp(-1.2f), 0.0f, delta);
   }
 
   void testLerp() {
     const float delta = 0.0001f;
-    TS_ASSERT_DELTA(MathUtil::lerp(2.0f, 4.0f, 0.0f), 2.0f, delta);
-    TS_ASSERT_DELTA(MathUtil::lerp(2.0f, 4.0f,-5.0f), 2.0f, delta);
-    TS_ASSERT_DELTA(MathUtil::lerp(2.0f, 4.0f, 1.0f), 4.0f, delta);
-    TS_ASSERT_DELTA(MathUtil::lerp(2.0f, 4.0f, 5.0f), 4.0f, delta);
-    TS_ASSERT_DELTA(MathUtil::lerp(2.0f, 4.0f, 0.5f), 3.0f, delta);
+    TS_ASSERT_DELTA(MathUtil::lerp(2.0f, 4.0f,  0.0f), 2.0f, delta);
+    TS_ASSERT_DELTA(MathUtil::lerp(2.0f, 4.0f, -5.0f), 2.0f, delta);
+    TS_ASSERT_DELTA(MathUtil::lerp(2.0f, 4.0f,  1.0f), 4.0f, delta);
+    TS_ASSERT_DELTA(MathUtil::lerp(2.0f, 4.0f,  5.0f), 4.0f, delta);
+    TS_ASSERT_DELTA(MathUtil::lerp(2.0f, 4.0f,  0.5f), 3.0f, delta);
     TS_ASSERT_DELTA(MathUtil::lerp(-2.0f, 4.0f, 0.0f), -2.0f, delta);
     TS_ASSERT_DELTA(MathUtil::lerp(-2.0f, 4.0f, 0.5f), 1.0f, delta);
     TS_ASSERT_DELTA(MathUtil::lerp(-2.0f, 4.0f, 1.0f), 4.0f, delta);
@@ -46,7 +46,7 @@ public:
 
   void testNextPow2A()
   {
-    TS_ASSERT_EQUALS(MathUtil::nextPow2(0), 0); // Invalid use in many cases.
+    TS_ASSERT_EQUALS(MathUtil::nextPow2(0), 0);  // Invalid use in many cases.
     TS_ASSERT_EQUALS(MathUtil::nextPow2(1), 1);
     TS_ASSERT_EQUALS(MathUtil::nextPow2(2), 2);
     TS_ASSERT_EQUALS(MathUtil::nextPow2(3), 4);
@@ -61,9 +61,9 @@ public:
     TS_ASSERT_EQUALS(MathUtil::nextPow2(129), 256);
     TS_ASSERT_EQUALS(MathUtil::nextPow2(131000), 131072);
 
-    unsigned int pof2 = 1;
-    for (size_t i = 1 ; i < 100000u ; ++i) {
-      TS_ASSERT_EQUALS(MathUtil::nextPow2((int)i), pof2);
+    int pof2 = 1;
+    for (int i = 1 ; i < 100000 ; ++i) {
+      TS_ASSERT_EQUALS(MathUtil::nextPow2(i), pof2);
       if (i == pof2) pof2 *= 2;
     }
   }
@@ -250,7 +250,7 @@ public:
     TS_ASSERT_EQUALS(254u - MathUtil::mapToU8special(0.0f) , 127u);
   }
 
-private:
+ private:
 };
 
-#endif
+#endif  // MATH_TESTMATHUTIL_H

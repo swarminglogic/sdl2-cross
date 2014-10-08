@@ -29,9 +29,10 @@ Renderer2dImage::~Renderer2dImage()
 {
 }
 
-void Renderer2dImage::update(float)
+void Renderer2dImage::update(float time)
 {
-  if(shader_->isModified())
+  (void)time;
+  if (shader_->isModified())
     updateShader();
 }
 
@@ -65,7 +66,7 @@ void Renderer2dImage::handleResize(int width, int height)
 void Renderer2dImage::render(Point position,
                              float)
 {
-  assert(viewport_ != Size(0,0));
+  assert(viewport_ != Size(0, 0));
   if (!surface_) {
     log_.e("Trying to render empty surface");
     return;
@@ -91,17 +92,16 @@ void Renderer2dImage::render(Point position,
   // vec3 vpos
   glEnableVertexAttribArray(0);
   GlState::bindBuffer(GlState::ARRAY_BUFFER, vertexBuffer_);
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
 
   // vec2 tpos
   glEnableVertexAttribArray(1);
   GlState::bindBuffer(GlState::ARRAY_BUFFER, textureBuffer_);
-  glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
+  glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
 
-  glDrawArrays(GL_TRIANGLE_STRIP, 0, 4); // Draw 0 vertices, starting from 0.
+  glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);  //  Draw 0 vertices, starting from 0.
   glDisableVertexAttribArray(0);
   glDisableVertexAttribArray(1);
-
 }
 
 
@@ -112,8 +112,8 @@ void Renderer2dImage::updateShader()
   shaderIdViewport_ = glGetUniformLocation(shader_->getGlId(), "Viewport");
   shaderIdTex_      = glGetUniformLocation(shader_->getGlId(), "Tex1");
 
-  if(shaderIdViewport_ < 0) log_.w("Viewport uniform not found");
-  if(shaderIdTex_      < 0) log_.w("Tex1 uniform not found");
+  if (shaderIdViewport_ < 0) log_.w("Viewport uniform not found");
+  if (shaderIdTex_      < 0) log_.w("Tex1 uniform not found");
 }
 
 

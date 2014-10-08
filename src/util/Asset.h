@@ -11,7 +11,7 @@
  */
 class Asset
 {
-public:
+ public:
   enum Type{
     SHADER,
     IMAGE,
@@ -48,17 +48,16 @@ public:
   friend inline bool operator!=(const Asset& lhs, const Asset& rhs);
 
 
-protected:
+ protected:
   Asset::Type type_;
   std::string subfolder_;
   std::string filename_;
 
-private:
+ private:
   static const std::string base_;
 
   // TODO swarminglogic, 2013-11-05: Remove
   static std::string typeToPath(Asset::Type type);
-
 };
 
 
@@ -80,42 +79,42 @@ inline bool operator!=(const Asset& lhs, const Asset& rhs) {
 
 class AssetShader : public Asset
 {
-public:
+ public:
   AssetShader();
-  AssetShader(const std::string& resource);
+  explicit AssetShader(const std::string& resource);
   virtual ~AssetShader();
 };
 
 class AssetImage : public Asset
 {
-public:
+ public:
   AssetImage();
-  AssetImage(const std::string& resource);
+  explicit AssetImage(const std::string& resource);
   virtual ~AssetImage();
 };
 
 class AssetFont : public Asset
 {
-public:
+ public:
   AssetFont();
-  AssetFont(const std::string& resource);
+  explicit AssetFont(const std::string& resource);
   virtual ~AssetFont();
 };
 
 class AssetMesh : public Asset
 {
-public:
+ public:
   AssetMesh();
-  AssetMesh(const std::string& resource);
+  explicit AssetMesh(const std::string& resource);
   virtual ~AssetMesh();
 };
 
 
 class AssetSound : public Asset
 {
-public:
+ public:
   AssetSound();
-  AssetSound(const std::string& resource);
+  explicit AssetSound(const std::string& resource);
   virtual ~AssetSound();
 };
 
@@ -123,13 +122,13 @@ public:
 
 class AssetMusic : public Asset
 {
-public:
+ public:
   AssetMusic();
-  AssetMusic(const std::string& resource);
+  explicit AssetMusic(const std::string& resource);
   virtual ~AssetMusic();
 };
 
 
 
 
-#endif
+#endif  // UTIL_ASSET_H

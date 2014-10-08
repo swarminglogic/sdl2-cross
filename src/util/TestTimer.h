@@ -11,13 +11,12 @@
 
 class TestTimer : public CxxTest::TestSuite
 {
-private:
+ private:
   void msleep(unsigned milliseconds) {
     std::this_thread::sleep_for(std::chrono::milliseconds(milliseconds));
   }
 
-public:
-
+ public:
   void testTimerInit()
   {
     Timer timer;
@@ -38,7 +37,7 @@ public:
     TS_ASSERT_LESS_THAN_EQUALS(milliseconds, timer.getTicks());
     TS_ASSERT_LESS_THAN(timer.getTicks(), milliseconds + 100u);
     TS_ASSERT_LESS_THAN(timer.getSeconds(),
-                        (float)(milliseconds + 100u)/1000.0f);
+                        static_cast<float>(milliseconds + 100u)/1000.0f);
 
     timer.pause();
     unsigned int timeWhenPaused = timer.getTicks();
@@ -166,4 +165,4 @@ public:
   }
 };
 
-#endif
+#endif  // UTIL_TESTTIMER_H

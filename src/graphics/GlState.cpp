@@ -16,12 +16,13 @@ GlState::GlState()
   : log_("GlState"),
     capStates_(),
     bufferBindings_{0},
-    viewport_(Rect(0,0, 0,0)),
+    viewport_(Rect(0, 0, 0, 0)),
     activeTexture_(GL_TEXTURE0),
     program_(0),
     blendSFactor_(0),
     blendDFactor_(0)
 {}
+
 
 GlState::~GlState()
 {}

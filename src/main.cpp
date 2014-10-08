@@ -1,7 +1,9 @@
 #include <cstdlib>
 #include <iostream>
 #include <memory>
+#include <string>
 
+#include <audio/AudioResourceManager.h>
 #include <audio/SDL_mixer.h>
 #include <core/MainManager.h>
 #include <graphics/SDL_image.h>
@@ -18,7 +20,7 @@ void quitSdl() {
   const int nOpenAudio = Mix_QuerySpec(nullptr, nullptr, nullptr);
   for (int i = 0 ; i < nOpenAudio ; ++i)
     Mix_CloseAudio();
-  while(Mix_Init(0))
+  while (Mix_Init(0))
     Mix_Quit();
 
   // SDL
@@ -41,7 +43,8 @@ void quit(int exitCode) {
 
 
 int main(int argc, char *argv[]) {
-  (void)argc; (void)argv;
+  (void)argc;
+  (void)argv;
 
   // Initialize logger system
   LogManager& lm = LogManager::instance();

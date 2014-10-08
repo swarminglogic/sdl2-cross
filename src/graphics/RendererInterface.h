@@ -16,7 +16,7 @@ class ShaderResourceManager;
  */
 class RendererInterface
 {
-public:
+ public:
   RendererInterface(){}
   virtual ~RendererInterface(){}
 
@@ -32,11 +32,11 @@ public:
   virtual void update(float time) = 0;
   virtual bool handleEvent(const SDL_Event&) = 0;
 
-private:
+ private:
   // NonCopyable
   RendererInterface(const RendererInterface& c);
   RendererInterface& operator=(const RendererInterface& c);
 };
 
 
-#endif
+#endif  // GRAPHICS_RENDERERINTERFACE_H

@@ -14,7 +14,7 @@
  */
 class TestRectf : public CxxTest::TestSuite
 {
-public:
+ public:
   void testBasic()
   {
     const float delta = 0.00001f;
@@ -39,14 +39,14 @@ public:
     // == !=, constructors
     TS_ASSERT_EQUALS(Rectf(2, 4, 6, 8), Rectf(2, 4, 6, 8));
     TS_ASSERT_DIFFERS(Rectf(2, 4, 6, 8), Rectf(2, 6, 4, 8));
-    TS_ASSERT_EQUALS(Rectf(Pointf(2, 6), Sizef(4,8)), Rectf(2, 6, 4, 8));
-    TS_ASSERT_EQUALS(Rectf(Sizef(4,8)), Rectf(0, 0, 4, 8));
+    TS_ASSERT_EQUALS(Rectf(Pointf(2, 6), Sizef(4, 8)), Rectf(2, 6, 4, 8));
+    TS_ASSERT_EQUALS(Rectf(Sizef(4, 8)), Rectf(0, 0, 4, 8));
 
     TS_ASSERT_EQUALS(Rectf(2.4f, 4, 6.1f, 8), Rectf(2.4f, 4.0f, 6.1f, 8));
     TS_ASSERT_DIFFERS(Rectf(2.5f, 4, 6.6f, 8.3f), Rectf(2, 6, 4, 8));
-    TS_ASSERT_EQUALS(Rectf(Pointf(2.0f, 6.2f), Sizef(4,8)),
+    TS_ASSERT_EQUALS(Rectf(Pointf(2.0f, 6.2f), Sizef(4, 8)),
                      Rectf(2.0f, 6.2f, 4, 8));
-    TS_ASSERT_EQUALS(Rectf(Sizef(4,8)), Rectf(0.0f, 0.0f, 4.0f, 8.0f));
+    TS_ASSERT_EQUALS(Rectf(Sizef(4, 8)), Rectf(0.0f, 0.0f, 4.0f, 8.0f));
 
     // Copy
     Pointf pos(10.5f, 20.7f);
@@ -109,7 +109,7 @@ public:
     TS_ASSERT_EQUALS(rect.h(), 104);
   }
 
-private:
+ private:
 };
 
-#endif
+#endif  // MATH_TESTRECTF_H

@@ -2,7 +2,6 @@
 
 #include <cassert>
 #include <iomanip>
-#include <iostream>
 #include <sstream>
 #include <string>
 
@@ -58,7 +57,6 @@ void LogManager::logColumnHeaders() const
   log2File(separator);
   log2File(header);
   log2File(separator);
-
 }
 
 
@@ -85,17 +83,18 @@ void LogManager::log(LogLevel level,
     log2File(formatted);
 
   if (level >= streamLogLevel_) {
-    if (streamColorMode_ == COLORMODE_BASH ) {
+    if (streamColorMode_ == COLORMODE_BASH) {
       const std::string bashFormatted =
         BashColor::setColor(formatted, level);
       log2Stream(level, bashFormatted);
-    }
-    else {
+    } else {
       log2Stream(level, formatted);
     }
   }
 #else
-  (void)level; (void)loggerName; (void)message;
+  (void)level;
+  (void)loggerName;
+  (void)message;
 #endif
 }
 
@@ -223,7 +222,7 @@ std::string LogManager::logLevelAsString(LogLevel level)
     break;
   case LEVEL_NONE:
   default:
-    assert(false && "Should never be queried"); // LCOV_EXCL_LINE
+    assert(false && "Should never be queried");  // LCOV_EXCL_LINE
     return "";
   }
 }

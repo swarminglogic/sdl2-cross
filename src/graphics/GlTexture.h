@@ -13,7 +13,7 @@
  */
 class GlTexture
 {
-public:
+ public:
   GlTexture();
 
   virtual ~GlTexture();
@@ -34,7 +34,7 @@ public:
   // void setIsMaxFiltering(bool isMaxFiltering);
   // bool isMaxFiltering() const;
 
-private:
+ private:
   void releaseResources();
 
   Log log_;
@@ -46,4 +46,4 @@ private:
   GlTexture& operator=(const GlTexture& c);
 };
 
-#endif
+#endif  // GRAPHICS_GLTEXTURE_H

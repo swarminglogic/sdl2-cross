@@ -18,7 +18,7 @@ typedef std::pair<GLenum, std::string> ShaderInfo;
  */
 class ShaderUtil
 {
-public:
+ public:
   /**
    * Creates a shader program using the provided.
    * Accepts pairs of shader types and corresponding source file paths.
@@ -53,7 +53,7 @@ public:
   static std::string checkProgramInfo(GLuint programId,
                                       GLenum statusType = GL_LINK_STATUS);
 
-private:
+ private:
   /**
    * Creates a OpenGL shader of specified type, with provided source file.
    *
@@ -69,4 +69,4 @@ private:
   ShaderUtil();
 };
 
-#endif
+#endif  // GRAPHICS_SHADERUTIL_H

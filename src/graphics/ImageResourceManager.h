@@ -20,7 +20,7 @@ class Surface;
  */
 class ImageResourceManager
 {
-public:
+ public:
   typedef std::shared_ptr<Surface> SurfaceShPtr;
 
   ImageResourceManager();
@@ -33,7 +33,7 @@ public:
   SurfaceShPtr load(const AssetImage& image);
   SurfaceShPtr loadImage(const std::string&  imagefile);
 
-private:
+ private:
   Log log_;
   std::map<AssetImage, SurfaceShPtr> loadedImages_;
 
@@ -42,4 +42,4 @@ private:
   ImageResourceManager& operator=(const ImageResourceManager& c);
 };
 
-#endif
+#endif  // GRAPHICS_IMAGERESOURCEMANAGER_H

@@ -9,7 +9,7 @@
 
 #include <cxxtest/TestSuite.h>
 
-//#define SLOW_TESTS
+//  #define SLOW_TESTS
 
 /**
  * Test for the File class.
@@ -18,12 +18,12 @@
  */
 class TestFile : public CxxTest::TestSuite
 {
-private:
+ private:
   void msleep(unsigned milliseconds) {
     std::this_thread::sleep_for(std::chrono::milliseconds(milliseconds));
   }
 
-public:
+ public:
   void testBasics()
   {
     const std::string filename("./certainlythisdoesnotexist.txt");
@@ -149,7 +149,6 @@ public:
 
     TS_ASSERT(FileUtil::remove(filename.c_str()));
   }
-
 };
 
-#endif
+#endif  // UTIL_TESTFILE_H

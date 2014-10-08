@@ -24,7 +24,7 @@
  */
 class TestLog : public CxxTest::TestSuite
 {
-public:
+ public:
   void setUp() {
     LogManager& lm = LogManager::instance();
     lm.setFileLogLevel(LogManager::LEVEL_NONE);
@@ -201,7 +201,7 @@ public:
     TS_ASSERT(requiredSwitch);
   }
 
-private:
+ private:
   static const char* fakeErrorFunction() {
     static const std::string err("potatoes");
     return err.c_str();
@@ -222,4 +222,4 @@ private:
   std::stringstream ss_;
 };
 
-#endif
+#endif  // UTIL_TESTLOG_H

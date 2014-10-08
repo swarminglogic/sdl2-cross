@@ -14,9 +14,9 @@
  */
 class SoundChunk
 {
-public:
-  SoundChunk(const AssetSound& soundfile);
-  SoundChunk(sdl::SoundPtr sound);
+ public:
+  explicit SoundChunk(const AssetSound& soundfile);
+  explicit SoundChunk(sdl::SoundPtr sound);
   virtual ~SoundChunk();
 
   /**
@@ -26,7 +26,7 @@ public:
   float getVolumeFactor() const;
   void setVolumeFactor(float volumeFactor);
 
-private:
+ private:
   friend class SoundPlayer;
   sdl::SoundPtr sound_;
   float volumeFactor_;
@@ -39,4 +39,4 @@ private:
 
 typedef std::shared_ptr<SoundChunk> SoundChunkShPtr;
 
-#endif
+#endif  // AUDIO_SOUNDCHUNK_H

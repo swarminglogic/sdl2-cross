@@ -12,14 +12,14 @@
  */
 class MusicPlayer
 {
-public:
+ public:
   MusicPlayer();
   virtual ~MusicPlayer();
 
   void play(MusicTrackShPtr music);
   bool isPlaying(MusicTrackShPtr music) const;
 
-private:
+ private:
   MusicTrackShPtr currentTrack_;
 
 
@@ -28,4 +28,4 @@ private:
   MusicPlayer& operator=(const MusicPlayer& c);
 };
 
-#endif
+#endif  // AUDIO_MUSICPLAYER_H

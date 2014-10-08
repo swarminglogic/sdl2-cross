@@ -34,31 +34,31 @@ void Log::e(const std::string& message) const
 }
 
 const Log& Log::d() const {
-  assert(!streamLog_.rdbuf()->in_avail()); // LCOV_EXCL_LINE
+  assert(!streamLog_.rdbuf()->in_avail());  // LCOV_EXCL_LINE
   this->streamLogLevel_ = LogManager::LEVEL_DEBUG;
   return *this;
 }
 
 const Log& Log::i() const {
-  assert(!streamLog_.rdbuf()->in_avail()); // LCOV_EXCL_LINE
+  assert(!streamLog_.rdbuf()->in_avail());  // LCOV_EXCL_LINE
   this->streamLogLevel_ = LogManager::LEVEL_INFO;
   return *this;
 }
 
 const Log& Log::w() const {
-  assert(!streamLog_.rdbuf()->in_avail()); // LCOV_EXCL_LINE
+  assert(!streamLog_.rdbuf()->in_avail());  // LCOV_EXCL_LINE
   this->streamLogLevel_ = LogManager::LEVEL_WARNING;
   return *this;
 }
 
 const Log& Log::e() const {
-  assert(!streamLog_.rdbuf()->in_avail()); // LCOV_EXCL_LINE
+  assert(!streamLog_.rdbuf()->in_avail());  // LCOV_EXCL_LINE
   this->streamLogLevel_ = LogManager::LEVEL_ERROR;
   return *this;
 }
 
 const Log& Log::level(LogManager::LogLevel logLevel) const {
-  assert(!streamLog_.rdbuf()->in_avail()); // LCOV_EXCL_LINE
+  assert(!streamLog_.rdbuf()->in_avail());  // LCOV_EXCL_LINE
   this->streamLogLevel_ = logLevel;
   return *this;
 }

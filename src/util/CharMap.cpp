@@ -75,7 +75,7 @@ void CharMap::setCharSize(const Size& charSize)
 Point CharMap::convertIndexToTBoxPosition(int index)
 {
   if (index == 0)
-    return Point(0,0);
+    return Point(0, 0);
 
   const int base = static_cast<int>(MathUtil::prevSquareBase(index));
   if (index + 1 == (base + 1) * (base + 1))

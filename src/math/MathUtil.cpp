@@ -15,7 +15,7 @@ float MathUtil::PIQUARTER = 0.78539816f;
 
 float MathUtil::lerp(float min, float max, float a)
 {
-  assert(min <= max); // LCOV_EXCL_LINE
+  assert(min <= max);  // LCOV_EXCL_LINE
   a = clamp(a);
   return min + (max - min) * a;
 }
@@ -35,8 +35,8 @@ float MathUtil::clamp(float value)
 
 uint8_t MathUtil::mapToU8(float value)
 {
-  assert(value >= 0.0f); // LCOV_EXCL_LINE
-  assert(value <= 1.0f); // LCOV_EXCL_LINE
+  assert(value >= 0.0f);  // LCOV_EXCL_LINE
+  assert(value <= 1.0f);  // LCOV_EXCL_LINE
   static const float offset = 1.0f / 255.0f;
   return static_cast<uint8_t>(255u * value + offset);
 }
@@ -44,7 +44,7 @@ uint8_t MathUtil::mapToU8(float value)
 
 uint8_t MathUtil::mapToU8special(float value)
 {
-  assert(value >= -1.0f); // LCOV_EXCL_LINE
+  assert(value >= -1.0f);  // LCOV_EXCL_LINE
   assert(value <= 1.0f);  // LCOV_EXCL_LINE
   static const float red = 254.0f / 255.0f;
   return mapToU8(red *0.5f * (value + 1.0f));

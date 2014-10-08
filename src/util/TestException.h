@@ -15,8 +15,8 @@
  */
 class TestException : public CxxTest::TestSuite
 {
-public:
-  void testExceptionBasic( void )
+ public:
+  void testExceptionBasic()
   {
     const std::string& msg = "mymessage";
     Exception exc(msg);
@@ -39,7 +39,7 @@ public:
     TS_ASSERT_EQUALS(msg, msgCopy);
   }
 
-  void testExceptionThrowCatch( void )
+  void testExceptionThrowCatch()
   {
     const std::string& msg = "mymessage";
     bool exceptionCought = false;
@@ -59,7 +59,7 @@ public:
     const std::string& msg = "mymessage";
     bool exceptionCought = true;
 
-   // Raise
+    // Raise
     Exception exception(msg);
     TS_ASSERT_THROWS(exception.raise(), Exception);
     try {
@@ -72,10 +72,10 @@ public:
     TS_ASSERT(exceptionCought);
   }
 
-private:
+ private:
   void throwException(const std::string& msg) {
     throw Exception(msg);
   }
 };
 
-#endif
+#endif  // UTIL_TESTEXCEPTION_H

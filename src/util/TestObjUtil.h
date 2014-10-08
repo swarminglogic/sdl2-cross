@@ -17,7 +17,7 @@
  */
 class TestObjUtil : public CxxTest::TestSuite
 {
-public:
+ public:
   void testObjRead()
   {
     std::string tmpObjFile("tmpobjfile.obj");
@@ -112,7 +112,7 @@ public:
 
 
 
-private:
+ private:
   std::string makeCubeObjFile() {
     return R"(# Blender v2.70 (sub 5) OBJ File: ''
 # www.blender.org
@@ -230,7 +230,6 @@ f 5//6 1//6 8//6
 
     return ss.str();
   }
-
 };
 
-#endif
+#endif  // UTIL_TESTOBJUTIL_H

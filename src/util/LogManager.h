@@ -16,7 +16,7 @@
  */
 class LogManager
 {
-public:
+ public:
   enum LogLevel {
     LEVEL_DEBUG = 0,
     LEVEL_INFO,
@@ -59,7 +59,7 @@ public:
 
   static LogManager& instance();
 
-private:
+ private:
   void log2Stream(LogLevel level,
                   const std::string& formatted) const;
   void log2AndroidStream(LogLevel level,
@@ -82,4 +82,4 @@ private:
   LogManager& operator=(const LogManager& c);
 };
 
-#endif
+#endif  // UTIL_LOGMANAGER_H

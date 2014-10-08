@@ -11,10 +11,10 @@ typedef cst_wave_struct cst_wave;
 
 class FliteUtil
 {
-public:
+ public:
   static sdl::SoundPtr textToSpeech(const std::string& text);
 
-private:
+ private:
   static bool writeWaveData(const cst_wave *w, SDL_RWops* out);
 
   FliteUtil();
@@ -23,4 +23,4 @@ private:
 
 
 
-#endif
+#endif  // AUDIO_FLITEUTIL_H

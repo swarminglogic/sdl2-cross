@@ -14,7 +14,7 @@
  */
 class TestCObjUtil : public CxxTest::TestSuite
 {
-public:
+ public:
   void testCobjReadWrite()
   {
     std::string tmpObjFile("tmpobjfile.obj");
@@ -83,7 +83,7 @@ public:
   }
 
 
-private:
+ private:
   std::string makeCubeObjFile() {
     return R"(# Blender v2.70 (sub 5) OBJ File: ''
 # www.blender.org
@@ -119,4 +119,4 @@ f 5//6 1//6 8//6
   }
 };
 
-#endif
+#endif  // UTIL_TESTCOBJUTIL_H

@@ -52,7 +52,7 @@
  */
 class CharMap
 {
-public:
+ public:
   enum Trait{
     C_WHITE = 0,
     C_GOLDEN,
@@ -72,7 +72,7 @@ public:
    * The constant width/height character size (in pixels).
    * Actual glyph dimensions are not relevant here.
    */
-  CharMap(const Size& charSize);
+  explicit CharMap(const Size& charSize);
   virtual ~CharMap();
 
   /**
@@ -108,7 +108,7 @@ public:
   static Point convertIndexToTBoxPosition(int index);
   static Point convertCharToTBoxIndex(char c);
 
-private:
+ private:
   int defaultTraitIndex_;
   int getTraitIndex(Trait trait) const;
   std::vector<Trait> traits_;
@@ -116,4 +116,4 @@ private:
   Size tBoxSize_;
 };
 
-#endif
+#endif  // UTIL_CHARMAP_H

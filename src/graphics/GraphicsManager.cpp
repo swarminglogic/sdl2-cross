@@ -19,7 +19,6 @@ GraphicsManager::GraphicsManager()
     isOpenGlDebugEnabled_(false),
     vertexArrayObject_(0u)
 {
-
   // TODO swarminglogic, 2014-04-16: Move this out somehow.
   // Either to MainManager, and/or configuration file.
   ViewConfig viewConfig(Size(1196, 768), "SDL Game");
@@ -86,15 +85,15 @@ void GraphicsManager::initalizeOpenGL(const ViewConfig& viewConfig)
   // Lists opengl es versions intended to try
 #ifdef USE_OPENGLES
   const std::pair<int, int> glVersions[4]
-     {{3,1}, {3,0},
-      {2,0}, {1,1}
+     {{3, 1}, {3, 0},
+      {2, 0}, {1, 1}
     };
   const std::string glName = "OpenGL ES";
 #else
   const std::pair<int, int> glVersions[11]
-     {{4,4}, {4,3}, {4,2}, {4,1}, {4,0},
-      {3,3}, {3,2}, {3,1}, {3,0},
-      {2,1}, {2,0}
+     {{4, 4}, {4, 3}, {4, 2}, {4, 1}, {4, 0},
+      {3, 3}, {3, 2}, {3, 1}, {3, 0},
+      {2, 1}, {2, 0}
     };
   const std::string glName = "OpenGL";
 #endif
@@ -116,7 +115,7 @@ void GraphicsManager::initalizeOpenGL(const ViewConfig& viewConfig)
   SDL_ClearError();
 
   // Set VSync
-  if(SDL_GL_SetSwapInterval(static_cast<int>(viewConfig.isVSync())) < 0)
+  if (SDL_GL_SetSwapInterval(static_cast<int>(viewConfig.isVSync())) < 0)
     log_.w() << "Failed to change vsync mode: " << SDL_GetError() << Log::end;
 
   // // Make it the current context
@@ -154,28 +153,34 @@ void GraphicsManager::logOpenGLContextInfo() const
   std::stringstream ss;
   ss << std::setw(20) << std::left << "OpenGL Version: "
      << glGetString(GL_VERSION);
-  log_.i(ss.str()); ss.str("");
+  log_.i(ss.str());
+  ss.str("");
   ss << std::setw(20) << std::left << "OpenGL GLSL: "
      << glGetString(GL_SHADING_LANGUAGE_VERSION);
-  log_.i(ss.str()); ss.str("");
+  log_.i(ss.str());
+  ss.str("");
   ss << std::setw(20) << std::left << "OpenGL Renderer: "
      << glGetString(GL_RENDERER);
-  log_.i(ss.str()); ss.str("");
+  log_.i(ss.str());
+  ss.str("");
   ss << std::setw(20) << std::left << "OpenGL Vendor: "
      << glGetString(GL_VENDOR);
-  log_.i(ss.str()); ss.str("");
+  log_.i(ss.str());
+  ss.str("");
 
   // supported extensions:
   GLint nExtensions;
   glGetIntegerv(GL_NUM_EXTENSIONS, &nExtensions);
   ss << std::setw(20) << std::left << "OpenGL #EXT: "
      << nExtensions;
-  log_.d(ss.str()); ss.str("");
+  log_.d(ss.str());
+  ss.str("");
 
   #ifdef DEBUG_OPENGL_EXT
   for (GLint i = 0 ; i < nExtensions ; ++i) {
     ss << glGetStringi(GL_EXTENSIONS, i);
-    log_.d(ss.str()); ss.str("");
+    log_.d(ss.str());
+    ss.str("");
   }
   #endif
 }

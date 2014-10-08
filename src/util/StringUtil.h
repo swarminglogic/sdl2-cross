@@ -15,7 +15,7 @@
  */
 class StringUtil
 {
-public:
+ public:
   static void split(const std::string &text,
                     std::vector<std::string>& elements,
                     char delimiter);
@@ -72,7 +72,7 @@ public:
   static std::string processIfEndif(const std::string& text,
                                     const std::string& keyword);
 
-private:
+ private:
   StringUtil();
   virtual ~StringUtil();
 
@@ -81,4 +81,4 @@ private:
   StringUtil& operator=(const StringUtil& c);
 };
 
-#endif
+#endif  // UTIL_STRINGUTIL_H

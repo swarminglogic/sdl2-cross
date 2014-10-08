@@ -132,7 +132,7 @@ while test $# -gt 0; do
                 -name '[!\.]*.h'   -or \
                 -name '[!\.]*.tpp' -or \
                 -name '[!\.]*.mk'
-               | xargs cat | md5sum" -e ./compile.sh a $@
+               | grep -Ev '_flymake.*' | xargs cat | md5sum" -e ./compile.sh a $@
              exit
              ;;
         wl)
@@ -143,7 +143,7 @@ while test $# -gt 0; do
                 -name '[!\.]*.tpp' -or \
                 -name 'SConscript*' -or \
                 -name 'SConstruct' \
-               | xargs cat | md5sum" -e ./compile.sh l $@
+               | grep -Ev '_flymake.*' | xargs cat | md5sum" -e ./compile.sh l $@
              exit
              ;;
         ws)
@@ -151,7 +151,7 @@ while test $# -gt 0; do
             watchfile -s "find ./assets/shaders \
                 -name '[!\.]*.frag' -or \
                 -name '[!\.]*.vert' \
-               | xargs cat | md5sum" -e ./devtools.sh validate-shaders
+               | grep -Ev '_flymake.*' | xargs cat | md5sum" -e ./devtools.sh validate-shaders
              exit
              ;;
         testl)

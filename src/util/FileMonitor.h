@@ -13,8 +13,8 @@
  */
 class FileMonitor
 {
-public:
-  FileMonitor(const std::string& filename);
+ public:
+  explicit FileMonitor(const std::string& filename);
 
   virtual ~FileMonitor();
 
@@ -34,7 +34,7 @@ public:
 
   const std::string& getFilename() const;
 
-private:
+ private:
   std::time_t getLastReadTime() const;
   std::time_t getLastModifiedTime() const;
 
@@ -42,4 +42,4 @@ private:
   std::time_t timestamp_;
 };
 
-#endif
+#endif  // UTIL_FILEMONITOR_H

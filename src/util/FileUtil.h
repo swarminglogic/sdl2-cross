@@ -12,7 +12,7 @@
  */
 class FileUtil
 {
-public:
+ public:
   /**
    * Reads the whole content of a file, returned as a string.
    *
@@ -61,11 +61,11 @@ public:
 
   static std::time_t getLastModifiedTime(const std::string& filename);
 
-private:
-  FileUtil(); // Static class
+ private:
+  FileUtil();  // Static class
   // Not implemented!
   FileUtil(const FileUtil& c);
   FileUtil& operator=(const FileUtil& c);
 };
 
-#endif
+#endif  // UTIL_FILEUTIL_H

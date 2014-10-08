@@ -13,8 +13,7 @@
  */
 class TestSize : public CxxTest::TestSuite
 {
-public:
-
+ public:
   void testBasic()
   {
     Size size;
@@ -23,7 +22,7 @@ public:
     TS_ASSERT_EQUALS(size.width(),    0);
     TS_ASSERT_EQUALS(size.height(),    0);
 
-    Size size2(5,123);
+    Size size2(5, 123);
     TS_ASSERT_EQUALS(size2.getWidth(),  5);
     TS_ASSERT_EQUALS(size2.getHeight(), 123);
     TS_ASSERT_EQUALS(size2.width(),  5);
@@ -56,11 +55,11 @@ public:
     Size opB(5, 7);
     opB += opA;
     TS_ASSERT_EQUALS(opB, Size(7, 10));
-    opA -= Size(1,1);
+    opA -= Size(1, 1);
     TS_ASSERT_EQUALS(opA, Size(1, 2));
     opB -= opB;
     TS_ASSERT_EQUALS(opB, Size(0, 0));
-    Size opC(5,-3);
+    Size opC(5, -3);
     opC *= 3.0;
     TS_ASSERT_EQUALS(opC, Size(15, -9));
 
@@ -117,7 +116,7 @@ public:
   void testTranspose() {
     Size opA(2, 3);
     opA.transpose();
-    TS_ASSERT_EQUALS(opA, Size(3,2));
+    TS_ASSERT_EQUALS(opA, Size(3, 2));
   }
 
   void testGetData() {
@@ -133,7 +132,7 @@ public:
     TS_ASSERT_EQUALS(size.h(), 42);
   }
 
-private:
+ private:
 };
 
-#endif
+#endif  // MATH_TESTSIZE_H

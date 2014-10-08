@@ -14,7 +14,7 @@
  */
 class TestSizef : public CxxTest::TestSuite
 {
-public:
+ public:
   void testBasic()
   {
     const float delta = 0.00001f;
@@ -75,11 +75,11 @@ public:
     Sizef opB(5, 7);
     opB += opA;
     TS_ASSERT_EQUALS(opB, Sizef(7, 10));
-    opA -= Sizef(1,1);
+    opA -= Sizef(1, 1);
     TS_ASSERT_EQUALS(opA, Sizef(1, 2));
     opB -= opB;
     TS_ASSERT_EQUALS(opB, Sizef(0, 0));
-    Sizef opC(5,-3);
+    Sizef opC(5, -3);
     opC *= 3.0;
     TS_ASSERT_EQUALS(opC, Sizef(15, -9));
 
@@ -193,7 +193,7 @@ public:
     TS_ASSERT_DELTA(op.h(), pt.y(), delta);
   }
 
-private:
+ private:
 };
 
-#endif
+#endif  // MATH_TESTSIZEF_H

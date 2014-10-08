@@ -17,7 +17,7 @@
  */
 class TestGlState : public CxxTest::TestSuite
 {
-public:
+ public:
   void testGlStatics()
   {
     // GlState::Capabaility
@@ -54,11 +54,11 @@ public:
 
     // Viewport
     // Checking that default is false
-    TS_ASSERT_EQUALS(GlState::getViewport(), Rect(0,0,0,0));
-    GlState::viewport(Rect(0,0,0,0));
-    TS_ASSERT_EQUALS(GlState::getViewport(), Rect(0,0,0,0));
-    GlState::viewport(Rect(0,0,800,600));
-    TS_ASSERT_EQUALS(GlState::getViewport(), Rect(0,0,800,600));
+    TS_ASSERT_EQUALS(GlState::getViewport(), Rect(0, 0, 0, 0));
+    GlState::viewport(Rect(0, 0, 0, 0));
+    TS_ASSERT_EQUALS(GlState::getViewport(), Rect(0, 0, 0, 0));
+    GlState::viewport(Rect(0, 0, 800, 600));
+    TS_ASSERT_EQUALS(GlState::getViewport(), Rect(0, 0, 800, 600));
 
     // Active texture
     TS_ASSERT_EQUALS(GlState::getActiveTexture(), GL_TEXTURE0);
@@ -80,7 +80,7 @@ public:
 #endif
   }
 
-private:
+ private:
 };
 
-#endif
+#endif  // GRAPHICS_TESTGLSTATE_H

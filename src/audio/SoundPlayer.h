@@ -13,7 +13,7 @@
  */
 class SoundPlayer
 {
-public:
+ public:
   SoundPlayer();
   virtual ~SoundPlayer();
 
@@ -44,7 +44,7 @@ public:
   //
   // update(SoundChunkShPtr sound, id?, position, distance)
 
-private:
+ private:
   Log log_;
 
   // NonCopyable
@@ -52,4 +52,4 @@ private:
   SoundPlayer& operator=(const SoundPlayer& c);
 };
 
-#endif
+#endif  // AUDIO_SOUNDPLAYER_H

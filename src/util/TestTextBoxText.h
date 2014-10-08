@@ -13,7 +13,7 @@
  */
 class TestTextBoxText : public CxxTest::TestSuite
 {
-public:
+ public:
   void testBasic()
   {
     TextBoxText tbt;
@@ -159,7 +159,7 @@ public:
     TS_ASSERT_EQUALS(formatted[2], "ta");
   }
 
-private:
+ private:
 };
 
-#endif
+#endif  // UTIL_TESTTEXTBOXTEXT_H

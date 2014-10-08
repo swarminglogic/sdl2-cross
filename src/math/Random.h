@@ -13,7 +13,7 @@
  */
 class Random
 {
-public:
+ public:
   static float get() {
     return dist_(device_);
   }
@@ -28,7 +28,7 @@ public:
   }
 
   static int getInt(int min, int max) {
-    assert(min <= max); // LCOV_EXCL_LINE
+    assert(min <= max);  // LCOV_EXCL_LINE
     std::uniform_int_distribution<int> dist(min, max);
     return dist(device_);
   }
@@ -42,7 +42,7 @@ public:
     return seed_;
   }
 
-private:
+ private:
   Random(){}
   ~Random();
 
@@ -55,4 +55,4 @@ private:
   Random& operator=(const Random& c);
 };
 
-#endif
+#endif  // MATH_RANDOM_H

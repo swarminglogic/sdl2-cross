@@ -70,11 +70,11 @@ void MainManager::initialize()
   imageRenderer_->handleResize(graphics_->getScreenSize().w(),
                                graphics_->getScreenSize().h());
 
-
   TextBoxText tbt;
   tbt.setHeight(12u);
   tbt.setWidthFixed(5u);
   CharMap cm(Size(5, 12));
+
   std::vector<CharMap::Trait> traits = {
     CharMap::C_GOLDEN,
     CharMap::C_CYAN,
@@ -102,7 +102,7 @@ void MainManager::initialize()
   textRenderer_->setText("FPS: 60");
 
   sound_ = audioResources_->loadSound("audio.ogg");
-  voice_.reset(new SoundChunk(FliteUtil::textToSpeech(R"(Test Voice)"))) ;
+  voice_.reset(new SoundChunk(FliteUtil::textToSpeech(R"(Test Voice)")));
 
   runtime_->start();
 }
@@ -134,7 +134,7 @@ void MainManager::run() {
   SDL_Event event;
 
   float previousTime = runtime_->getSeconds();
-  unsigned long frameNumber = 0u;
+  uint64_t frameNumber = 0u;
 
   while (isRunning_) {
 #ifndef NDEBUG
@@ -155,7 +155,7 @@ void MainManager::run() {
     currentTimeDelta_ = runtime_->getSeconds() - previousTime;
     previousTime = runtime_->getSeconds();
 
-    GlState::clearColor( 0.1f, 0.2f, 0.3f, 1.0f );
+    GlState::clearColor(0.1f, 0.2f, 0.3f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     textRenderer_->render(runtime_->getSeconds());
     // imageRenderer_->render(Point(0, 0), 0);
@@ -191,22 +191,19 @@ void MainManager::handleEvent(const SDL_Event& event)
       graphics_->setScreenSize(Size(width, height));
       textRenderer_->handleResize(width, height);
     }
-  }
-
-  else if (event.type == SDL_MOUSEBUTTONDOWN) {
+  } else if (event.type == SDL_MOUSEBUTTONDOWN) {
     // TODO swarminglogic, 2014-04-21: Remove sound test
     const int gWidth = graphics_->getScreenSize().w();
-    float mSpan = (float)(event.button.x - gWidth/2) / (float)gWidth;
+    float mSpan = static_cast<float>(event.button.x - gWidth/2) /
+        static_cast<float>(gWidth);
     // AudioPlayback::sound().play(sound_, mSpan, 0.7f);
     AudioPlayback::sound().play(voice_, mSpan, 0.7f);
-  }
-  else if (event.type == SDL_KEYDOWN) {
+  } else if (event.type == SDL_KEYDOWN) {
     if (event.key.keysym.scancode == SDL_SCANCODE_ESCAPE ||
         event.key.keysym.scancode == SDL_SCANCODE_AC_BACK) {
       isRunning_ = false;
     }
-  }
-  else if (event.type == SDL_QUIT) {
+  } else if (event.type == SDL_QUIT) {
     isRunning_ = false;
   }
 }
@@ -262,7 +259,7 @@ void MainManager::initSDLmixer()
   int mixFlagsInit = Mix_Init(mixFlags);
   if ((mixFlagsInit & mixFlags) != mixFlags)
     throw log_.exception("Failed to initialize SDL_mixer", Mix_GetError);
-  if( Mix_OpenAudio( 22050, MIX_DEFAULT_FORMAT, 2, 1024 ) == -1 )
+  if (Mix_OpenAudio( 22050, MIX_DEFAULT_FORMAT, 2, 1024 ) == -1)
     throw log_.exception("Failed to acquire sound device", Mix_GetError);
   atexit(Mix_CloseAudio);
   atexit(Mix_Quit);
@@ -299,8 +296,8 @@ void MainManager::initSDLmixer()
 
   (void)Mix_Volume(-1, MIX_MAX_VOLUME);
   log_.d() << "Music Volume level: "
-           << 100.0f * (float)Mix_VolumeMusic(-1) / MIX_MAX_VOLUME << "%"
-           << Log::end;
+           << 100.0f * static_cast<float>(Mix_VolumeMusic(-1)) / MIX_MAX_VOLUME
+           << "%" << Log::end;
 
   // TODO swarminglogic, 2014-02-08: Move to audio configuration setting.
   // Setting 64 channels to be played simulatenously
@@ -331,16 +328,16 @@ void MainManager::logSDLVersion(const std::string& what,
 {
   std::stringstream ss;
   ss << what << " Version (Compiled): "
-     << (int)compiled.major << "."
-     << (int)compiled.minor << "."
-     << (int)compiled.patch;
+     << static_cast<int>(compiled.major) << "."
+     << static_cast<int>(compiled.minor) << "."
+     << static_cast<int>(compiled.patch);
   if (!revision.empty())
     ss << " (" << revision << ")";
   log_.d(ss.str());
 
   log_.d() << what << " Version (Runtime):  "
-           << (int)linked.major << "."
-           << (int)linked.minor << "."
-           << (int)linked.patch
+           << static_cast<int>(linked.major) << "."
+           << static_cast<int>(linked.minor) << "."
+           << static_cast<int>(linked.patch)
            << Log::end;
 }

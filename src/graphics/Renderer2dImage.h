@@ -18,7 +18,7 @@
  */
 class Renderer2dImage : public RendererInterface
 {
-public:
+ public:
   Renderer2dImage();
   virtual ~Renderer2dImage();
 
@@ -33,7 +33,7 @@ public:
   // virtual void finalize() override;
   virtual void handleResize(int width, int height) override;
 
-private:
+ private:
   void updateShader();
   void updateQuad();
   void updateTexcoords();
@@ -64,4 +64,4 @@ private:
   Renderer2dImage& operator=(const Renderer2dImage& c);
 };
 
-#endif
+#endif  // GRAPHICS_RENDERER2DIMAGE_H

@@ -34,7 +34,7 @@ class SoundChunk;
  */
 class AudioResourceManager
 {
-public:
+ public:
   typedef std::shared_ptr<MusicTrack> MusicTrackShPtr;
   typedef std::shared_ptr<SoundChunk> SoundChunkShPtr;
 
@@ -47,7 +47,7 @@ public:
   SoundChunkShPtr load(const AssetSound& sound);
   SoundChunkShPtr loadSound(const std::string&  soundfile);
 
-private:
+ private:
   Log log_;
 
   std::map<AssetMusic, MusicTrackShPtr>    loadedMusic_;
@@ -58,4 +58,4 @@ private:
   AudioResourceManager& operator=(const AudioResourceManager& c);
 };
 
-#endif
+#endif  // AUDIO_AUDIORESOURCEMANAGER_H

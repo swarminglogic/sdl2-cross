@@ -13,14 +13,14 @@
  */
 class TestRect : public CxxTest::TestSuite
 {
-public:
+ public:
   void testRect()
   {
     // == !=, constructors
     TS_ASSERT_EQUALS(Rect(2, 4, 6, 8), Rect(2, 4, 6, 8));
     TS_ASSERT_DIFFERS(Rect(2, 4, 6, 8), Rect(2, 6, 4, 8));
-    TS_ASSERT_EQUALS(Rect(Point(2, 6), Size(4,8)), Rect(2, 6, 4, 8));
-    TS_ASSERT_EQUALS(Rect(Size(4,8)), Rect(0, 0, 4, 8));
+    TS_ASSERT_EQUALS(Rect(Point(2, 6), Size(4, 8)), Rect(2, 6, 4, 8));
+    TS_ASSERT_EQUALS(Rect(Size(4, 8)), Rect(0, 0, 4, 8));
 
     // Copy
     Point pos(10, 20);
@@ -79,7 +79,7 @@ public:
     TS_ASSERT_EQUALS(rect.h(), 104);
   }
 
-private:
+ private:
 };
 
-#endif
+#endif  // MATH_TESTRECT_H

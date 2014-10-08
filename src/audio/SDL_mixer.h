@@ -20,4 +20,4 @@ namespace sdl {
   CREATE_RAII_UP(Mix_Chunk, Mix_FreeChunk)  SoundPtr;
 }
 
-#endif
+#endif  // AUDIO_SDL_MIXER_H

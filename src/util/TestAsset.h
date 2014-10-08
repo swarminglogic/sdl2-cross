@@ -15,8 +15,7 @@
  */
 class TestAsset : public CxxTest::TestSuite
 {
-public:
-
+ public:
   void testBasePath()
   {
     TS_ASSERT_EQUALS(Asset::getBasePath(), "./assets/");
@@ -164,12 +163,12 @@ public:
     TS_ASSERT(shaderA < shaderB);
     TS_ASSERT(!(shaderB < shaderA));
 
-    AssetFont   asset3; // font
-    AssetImage  asset2; // image
-    AssetMesh   asset4; // mesh
-    AssetMusic  asset6; // music
-    AssetShader asset1; // shader
-    AssetSound  asset5; // sounds
+    AssetFont   asset3;  // font
+    AssetImage  asset2;  // image
+    AssetMesh   asset4;  // mesh
+    AssetMusic  asset6;  // music
+    AssetShader asset1;  // shader
+    AssetSound  asset5;  // sounds
     TS_ASSERT(asset3 < asset2);
     TS_ASSERT(asset2 < asset4);
     TS_ASSERT(asset4 < asset6);
@@ -218,7 +217,7 @@ public:
     TS_ASSERT_EQUALS(shader, shadercp2);
   }
 
-private:
+ private:
 };
 
-#endif
+#endif  // UTIL_TESTASSET_H

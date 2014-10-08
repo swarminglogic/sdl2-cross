@@ -12,7 +12,7 @@
  */
 class TestRandom : public CxxTest::TestSuite
 {
-public:
+ public:
   void testDefaultGet()
   {
     for (size_t i = 0 ; i < 100000 ; ++i) {
@@ -33,17 +33,17 @@ public:
   void testIntGet()
   {
     for (size_t i = 0 ; i < 1000 ; ++i) {
-      const float v = (float)Random::getInt(0, 10);
+      const float v = static_cast<float>(Random::getInt(0, 10));
       TS_ASSERT(v >= 0 && v <= 10);
     }
 
     for (size_t i = 0 ; i < 1000 ; ++i) {
-      const float v = (float)Random::getInt(-60, -30);
+      const float v = static_cast<float>(Random::getInt(-60, -30));
       TS_ASSERT(v >= -60 && v <= -30);
     }
   }
 
-private:
+ private:
 };
 
-#endif
+#endif  // MATH_TESTRANDOM_H

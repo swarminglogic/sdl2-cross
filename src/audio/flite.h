@@ -9,4 +9,4 @@ cst_voice *register_cmu_us_awb(const char *voxdir);
 cst_voice *register_cmu_us_rms(const char *voxdir);
 }
 
-#endif
+#endif  // AUDIO_FLITE_H

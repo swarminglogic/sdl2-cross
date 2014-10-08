@@ -11,8 +11,8 @@
  */
 class Exception
 {
-public:
-  Exception(const std::string& msg);
+ public:
+  explicit Exception(const std::string& msg);
 
   virtual ~Exception();
 
@@ -25,8 +25,8 @@ public:
   virtual void raise() const;
   virtual const char* what() const;
 
-private:
+ private:
   std::string msg_;
 };
 
-#endif
+#endif  // UTIL_EXCEPTION_H

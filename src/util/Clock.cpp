@@ -5,7 +5,7 @@
 #include <sstream>
 
 
-using namespace std::chrono;
+using std::chrono::system_clock;
 
 Clock::Clock()
   : time_()

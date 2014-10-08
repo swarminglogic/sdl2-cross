@@ -22,19 +22,17 @@ void SoundPlayer::play(SoundChunkShPtr sound,
   position = MathUtil::clamp(position, -1.0f, 1.0f);
 
   if (sound) {
-    int channel = Mix_PlayChannel( -1, sound->sound_.get(), 0);
+    int channel = Mix_PlayChannel(-1, sound->sound_.get(), 0);
     if ( channel >= 0 ) {
       const Uint8 right = MathUtil::mapToU8special(position);
       const Uint8 left  = static_cast<Uint8>(254u - right);
       const Uint8 dist  = MathUtil::mapToU8(distance);
       Mix_SetDistance(channel, dist);
       Mix_SetPanning(channel, left, right);
-    }
-    else {
+    } else {
       log_.w() << "Failed to acquire audio channel" << Log::end;
     }
-  }
-  else {
+  } else {
     log_.w() << "Tried to play bad sound chunk. " << Log::end;
   }
 }

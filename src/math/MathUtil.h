@@ -15,7 +15,7 @@ class Size;
  */
 class MathUtil
 {
-public:
+ public:
   static float PI;
   static float PIHALF;
   static float PIQUARTER;
@@ -111,7 +111,7 @@ public:
 
   static bool isRectangleOverlap(const Rectf& a, const Rectf& b);
 
-private:
+ private:
   MathUtil();
   virtual ~MathUtil();
 
@@ -120,4 +120,4 @@ private:
   MathUtil& operator=(const MathUtil& c);
 };
 
-#endif
+#endif  // MATH_MATHUTIL_H

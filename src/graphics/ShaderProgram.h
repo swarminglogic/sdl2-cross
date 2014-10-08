@@ -2,6 +2,7 @@
 #define GRAPHICS_SHADERPROGRAM_H
 
 #include <map>
+#include <string>
 
 #include <graphics/ShaderUtil.h>
 #include <util/Asset.h>
@@ -23,8 +24,8 @@ class File;
  */
 class ShaderProgram
 {
-public:
-  enum ShaderType{
+ public:
+  enum ShaderType {
     VERTEX,
     // CONTROL,
     // EVAL,
@@ -63,7 +64,7 @@ public:
    */
   bool compile();
 
-private:
+ private:
   void deleteProgram();
   bool hasShader(ShaderType type) const;
 
@@ -89,4 +90,4 @@ private:
 };
 
 typedef std::shared_ptr<ShaderProgram> ShaderProgramShPtr;
-#endif
+#endif  // GRAPHICS_SHADERPROGRAM_H

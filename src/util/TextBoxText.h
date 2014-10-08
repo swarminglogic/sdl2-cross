@@ -28,7 +28,7 @@
  */
 class TextBoxText
 {
-public:
+ public:
   TextBoxText();
   virtual ~TextBoxText();
 
@@ -62,7 +62,7 @@ public:
 
   void buildFormatted();
 
-private:
+ private:
   unsigned int textWidth(const std::string& text) const;
 
   std::string source_;
@@ -73,4 +73,4 @@ private:
   std::vector<std::string> formatted_;
 };
 
-#endif
+#endif  // UTIL_TEXTBOXTEXT_H

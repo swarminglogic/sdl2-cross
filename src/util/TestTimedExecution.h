@@ -30,11 +30,11 @@ namespace Mock {
  */
 class TestTimedExecution : public CxxTest::TestSuite
 {
-private:
+ private:
   void msleep(unsigned milliseconds) {
     std::this_thread::sleep_for(std::chrono::milliseconds(milliseconds));
   }
-public:
+ public:
   void testBasicOneShot()
   {
     Mock::Dummy mock;
@@ -71,8 +71,7 @@ public:
     TS_ASSERT_EQUALS(mock.get(), 2);
   }
 
-private:
-
+ private:
 };
 
-#endif
+#endif  // UTIL_TESTTIMEDEXECUTION_H

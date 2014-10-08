@@ -48,4 +48,4 @@
   typedef std::unique_ptr<OBJ, OBJ ## Deleter>
 
 
-#endif
+#endif  // UTIL_RAIIHELPER_H

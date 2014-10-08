@@ -18,15 +18,15 @@
  */
 class Surface
 {
-public:
+ public:
   Surface();
-  Surface(const AssetImage& imagefile);
+  explicit Surface(const AssetImage& imagefile);
 
   /**
    * Create based on SDL_Surface.
    * @note Takes ownership!
    */
-  Surface(SDL_Surface* surface);
+  explicit Surface(SDL_Surface* surface);
 
   virtual ~Surface();
 
@@ -81,7 +81,7 @@ public:
   float getRepeatFactorHint() const;
   void setRepeatFactorHint(float repeatFactor);
 
-private:
+ private:
   void releaseResources();
 
   Log log_;
@@ -99,4 +99,4 @@ private:
 
 typedef std::shared_ptr<Surface> SurfaceShPtr;
 
-#endif
+#endif  // GRAPHICS_SURFACE_H

@@ -13,11 +13,11 @@
  */
 class BashColor
 {
-public:
+ public:
   static std::string setColor(const std::string& text,
                               LogManager::LogLevel level);
 
-private:
+ private:
   enum Color {
     NONE = 0,
     BLACK, RED, GREEN,
@@ -39,4 +39,4 @@ private:
 };
 
 
-#endif
+#endif  // UTIL_BASHCOLOR_H

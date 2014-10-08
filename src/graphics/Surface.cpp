@@ -57,11 +57,11 @@ void Surface::loadImage(const AssetImage& imagefile)
   if (!surface_) {
     log_.e() << "Failed to load image " << path << Log::end;
     log_.e() << SDL_GetError() << Log::end;
-  }
-  else {
+  } else {
     imageRect_ = Rect(0, 0, surface_->w, surface_->h);
   }
 }
+
 
 void Surface::setSurface(SDL_Surface& surface)
 {
@@ -69,6 +69,7 @@ void Surface::setSurface(SDL_Surface& surface)
   releaseResources();
   imageRect_ = Rect(0, 0, surface_->w, surface_->h);
 }
+
 
 SDL_Surface* Surface::getSurface()
 {
@@ -91,11 +92,13 @@ unsigned int Surface::getWidth() const
   return imageRect_.w();
 }
 
+
 unsigned int Surface::getHeight() const
 {
   assert((surface_ || textureId_) && "Neither surface nor textureId set!");
   return imageRect_.h();
 }
+
 
 Size Surface::getSize() const
 {
@@ -105,16 +108,18 @@ Size Surface::getSize() const
 
 float Surface::glTexCoordX(float texcoord) const
 {
-  float surfSpace = ((float)imageRect_.x() + texcoord * (float)imageRect_.w()) /
-    (float)imageRect_.w();
+  float surfSpace = (static_cast<float>(imageRect_.x()) + texcoord *
+                     static_cast<float>(imageRect_.w())) /
+                     static_cast<float>(imageRect_.w());
   return MathUtil::nextPow2TexCoord(surfSpace, getWidth());
 }
 
 
 float Surface::glTexCoordY(float texcoord) const
 {
-  float surfSpace = ((float)imageRect_.y() + texcoord * (float)imageRect_.h()) /
-    (float)imageRect_.h();
+  float surfSpace = (static_cast<float>(imageRect_.y()) + texcoord *
+                     static_cast<float>(imageRect_.h())) /
+                     static_cast<float>(imageRect_.h());
   return MathUtil::nextPow2TexCoord(surfSpace, getHeight());
 }
 
@@ -135,17 +140,17 @@ void Surface::prepareForGl()
                                                    bpp,
                                                    Rmask, Gmask, Bmask, Amask));
 
-  SDL_SetSurfaceAlphaMod( surface_.get(), 0xFF );
-  SDL_SetSurfaceBlendMode( surface_.get(), SDL_BLENDMODE_NONE );
+  SDL_SetSurfaceAlphaMod(surface_.get(), 0xFF);
+  SDL_SetSurfaceBlendMode(surface_.get(), SDL_BLENDMODE_NONE);
 
-  SDL_BlitSurface( surface_.get(), NULL, tempSurface.get(), NULL );
+  SDL_BlitSurface(surface_.get(), NULL, tempSurface.get(), nullptr);
 
-  glGenTextures( 1, &textureId_ );
+  glGenTextures(1, &textureId_);
   GlState::bindTexture(GL_TEXTURE_2D, textureId_);
 
-  glTexImage2D( GL_TEXTURE_2D, 0, GL_RGBA,
-                width, height, 0, GL_RGBA,
-                GL_UNSIGNED_BYTE, tempSurface->pixels );
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA,
+               width, height, 0, GL_RGBA,
+               GL_UNSIGNED_BYTE, tempSurface->pixels);
 
   if (isMaxFiltering_) {
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -180,6 +185,7 @@ GLuint Surface::glBind() const
   return textureId_;
 }
 
+
 GLuint Surface::getTextureId() const
 {
   return textureId_;
@@ -187,9 +193,10 @@ GLuint Surface::getTextureId() const
 
 
 bool Surface::isMaxFiltering() const
- {
-   return isMaxFiltering_;
- }
+{
+  return isMaxFiltering_;
+}
+
 
 void Surface::setIsMaxFiltering(bool isMaxFilteringSet)
 {
@@ -201,6 +208,7 @@ float Surface::getRepeatFactorHint() const
 {
   return repeatFactor_;
 }
+
 
 void Surface::setRepeatFactorHint(float repeatFactor)
 {

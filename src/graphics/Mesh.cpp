@@ -1,7 +1,5 @@
 #include <graphics/Mesh.h>
 
-#include <fstream>
-
 #include <glm/glm.hpp>
 #include <graphics/GlState.h>
 #include <graphics/GlUtil.h>
@@ -128,7 +126,8 @@ bool Mesh::load()
   // TODO swarminglogic, 2014-04-28: PORT
   // fileMonitor_.resetTimeStamp();
   unsigned int time = timer_.reset();
-  log_.i() << "Finished loading. Spent " << (int)time << " ms." << Log::end;
+  log_.i() << "Finished loading. Spent "
+           << static_cast<int>(time) << " ms." << Log::end;
 
   log_.d() << "Number of mesh objects: " << shapes.size() << Log::end;
 
@@ -217,7 +216,7 @@ void Mesh::computeTangentBasis(MeshData& shape)
   assert(vertexCount < 3 * shape.tangents.size());
   assert(vertexCount < 3 * shape.bitangents.size());
 
-  std::vector<glm::vec3> tan1(vertexCount, glm::vec3(0.0f,0.0f,0.0f));
+  std::vector<glm::vec3> tan1(vertexCount, glm::vec3(0.0f, 0.0f, 0.0f));
   // std::vector<glm::vec3> tan2(vertexCount, glm::vec3(0.0f,0.0f,0.0f));
 
   for (size_t a = 0 ; a < triangleCount ; ++a) {

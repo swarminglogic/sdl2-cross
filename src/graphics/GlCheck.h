@@ -7,12 +7,12 @@
 
 class GlCheck
 {
-public:
+ public:
   static const char* glStatusString(GLenum error);
   static bool checkGlFramebuffer();
   static void debugGlFramebuffer();
   static const char* glEnumString(GLenum e);
-private:
+ private:
   GlCheck(){}
   virtual ~GlCheck(){}
 };
@@ -27,19 +27,19 @@ private:
     #define CHECKGL()                                     \
         do {                                              \
             GLenum glError = glGetError();                \
-            if(glError != GL_NO_ERROR) {                  \
+            if (glError != GL_NO_ERROR) {                 \
               Log log("CheckGL");                 \
               log.e() << __FILE__ << ":" << __LINE__      \
                       << ": OpenGL Error: "               \
                       << GlCheck::glStatusString(glError) \
                       << Log::end;                        \
             }                                             \
-        } while(__LINE__ == -1)
-    #else // ifdef GL_ASSERT_ERROR
+        } while (__LINE__ == -1)
+    #else  //  ifdef GL_ASSERT_ERROR
     #define CHECKGL()                                     \
         do {                                              \
             GLenum glError = glGetError();                \
-            if(glError != GL_NO_ERROR) {                  \
+            if (glError != GL_NO_ERROR) {                 \
               Log log("CheckGL");                 \
               log.e() << __FILE__ << ":" << __LINE__      \
                       << ": OpenGL Error: "               \
@@ -47,12 +47,12 @@ private:
                       << Log::end;                        \
               assert(false);                              \
             }                                             \
-        } while(__LINE__ == -1)
+        } while (__LINE__ == -1)
     #endif
-  #else // ifdef NDEBUG
+  #else  // ifdef NDEBUG
     #define CHECKGL()
   #endif
 #endif
 
 
-#endif
+#endif  // GRAPHICS_GLCHECK_H

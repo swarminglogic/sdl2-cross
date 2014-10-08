@@ -2,7 +2,7 @@
 
 
 ViewConfig::ViewConfig()
-  : ViewConfig(Size(800,600), "")
+    : ViewConfig(Size(800, 600), "")
 {
 }
 
@@ -62,9 +62,9 @@ void ViewConfig::setIsFullScreen(bool isFullScreenSet)
 }
 
 bool ViewConfig::isResizeable() const
- {
-   return isResizeable_;
- }
+{
+  return isResizeable_;
+}
 
 void ViewConfig::setIsResizeable(bool isResizeableEnabled)
 {

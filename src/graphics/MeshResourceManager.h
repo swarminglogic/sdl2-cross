@@ -20,7 +20,7 @@ class Mesh;
  */
 class MeshResourceManager
 {
-public:
+ public:
   typedef std::shared_ptr<Mesh> MeshShPtr;
 
   MeshResourceManager();
@@ -29,7 +29,7 @@ public:
   MeshShPtr load(const AssetMesh& mesh);
   MeshShPtr loadMesh(const std::string& meshfile);
 
-private:
+ private:
   Log log_;
   std::map<AssetMesh,  MeshShPtr> loadedMeshes_;
 
@@ -38,4 +38,4 @@ private:
   MeshResourceManager& operator=(const MeshResourceManager& c);
 };
 
-#endif
+#endif  // GRAPHICS_MESHRESOURCEMANAGER_H

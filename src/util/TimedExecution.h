@@ -32,7 +32,7 @@
  */
 class TimedExecution
 {
-public:
+ public:
   /**
    * Timed execution for function fun,
    *
@@ -40,7 +40,7 @@ public:
    * @param timeout  Number of milliseconds as exec() threshold.
    * @param nExecutions Number of times to execute. -1 for unlimited.
    */
-  TimedExecution(std::function<void (void)> fun,
+  TimedExecution(std::function<void(void)> fun,
                  uint timeout,
                  int nExecutions = -1);
 
@@ -55,8 +55,8 @@ public:
    */
   int getRemainingTimeout();
 
-private:
-  std::function<void (void)> fun_;
+ private:
+  std::function<void(void)> fun_;
   uint  timeout_;
   int   nExecutions_;
   Timer timer_;
@@ -66,4 +66,4 @@ private:
   TimedExecution& operator=(const TimedExecution& c);
 };
 
-#endif
+#endif  // UTIL_TIMEDEXECUTION_H

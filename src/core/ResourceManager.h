@@ -18,7 +18,7 @@ class ShaderResourceManager;
  */
 class ResourceManager
 {
-public:
+ public:
   ResourceManager();
   ~ResourceManager();
 
@@ -34,7 +34,7 @@ public:
   std::shared_ptr<MeshResourceManager>   getMesh();
   std::shared_ptr<ShaderResourceManager> getShader();
 
-private:
+ private:
   std::shared_ptr<AudioResourceManager>  audioResources_;
   std::shared_ptr<ImageResourceManager>  imageResources_;
   std::shared_ptr<MeshResourceManager>   meshResources_;
@@ -46,4 +46,4 @@ private:
   ResourceManager& operator=(const ResourceManager& c);
 };
 
-#endif
+#endif  // CORE_RESOURCEMANAGER_H

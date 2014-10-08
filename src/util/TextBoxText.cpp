@@ -63,12 +63,12 @@ std::vector<std::string> TextBoxText::getFormatted(float partial) const
   if (partial >= 1.0f)
     return formatted_;
 
-  long unsigned int totalCharacters = 0;
+  uint64_t totalCharacters = 0;
   for (const auto& line : formatted_)
     totalCharacters += line.size();
 
-  long unsigned int charsToPrint =
-      static_cast<long unsigned int>(
+  uint64_t charsToPrint =
+      static_cast<uint64_t>(
           std::round(partial * static_cast<float>(totalCharacters)));
 
   std::vector<std::string> partialText;
@@ -125,7 +125,7 @@ void TextBoxText::buildFormatted()
 
   // Checking each line against width
   for (const auto& line : lines) {
-    std::string fline(""); // formatted line
+    std::string fline("");  // formatted line
     uint flineWidth = 0;
 
     StringVector words = StringUtil::split(line, ' ');
