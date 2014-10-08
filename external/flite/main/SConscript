@@ -1,3 +1,4 @@
 Import('env')
 
-env.StaticLibrary('#/lib/flite_voice_list', 'flite_voice_list.c')
+voicelistLib = env.StaticLibrary('#/lib/flite_voice_list', 'flite_voice_list.c')
+Default(voicelistLib)

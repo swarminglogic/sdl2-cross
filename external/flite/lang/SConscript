@@ -3,4 +3,5 @@ Import('env')
 for subdir in ['usenglish', 'cmulex', 'cmu_us_awb', 'cmu_us_rms']:
     objs = []
     objs.extend(env.SConscript('%s/SConscript' % subdir, {'env': env}))
-    env.StaticLibrary('#/lib/flite_'+subdir, objs)
+    objLib = env.StaticLibrary('#/lib/flite_'+subdir, objs)
+    Default(objLib)

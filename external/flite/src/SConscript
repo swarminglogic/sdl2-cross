@@ -6,4 +6,5 @@ for subdir in ['cg', 'synth', 'wavesynth', 'utils', 'stats', 'speech'
                ,'regex', 'lexicon', 'hrg', 'audio']:
     objs.extend(env.SConscript('%s/SConscript' % subdir, {'env': env}))
 
-env.StaticLibrary('#/lib/flite', objs)
+fliteLib = env.StaticLibrary('#/lib/flite', objs)
+Default(fliteLib)
