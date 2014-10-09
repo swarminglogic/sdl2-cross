@@ -13,6 +13,8 @@ EXTERNAL_LIB_PATH := ../external
 
 LOCAL_C_INCLUDES := $(LOCAL_PATH)/$(SDL_PATH)/include \
   $(EXTERNAL_LIB_PATH) \
+  $(EXTERNAL_LIB_PATH)/polyvox/library/PolyVoxCore/include \
+  $(EXTERNAL_LIB_PATH)/polyvox/library/PolyVoxUtil/include \
   $(LOCAL_PATH)/$(SDL_IMAGE_PATH) \
   $(LOCAL_PATH)/$(SDL_MIXER_PATH) \
   $(LOCAL_PATH)/$(SDL_TTF_PATH) \
@@ -42,6 +44,7 @@ LOCAL_SRC_FILES := $(SDL_PATH)/src/main/android/SDL_android_main.c \
 
 LOCAL_SHARED_LIBRARIES := SDL2 SDL2_image SDL2_mixer SDL2_ttf \
 	                        noise \
+	                        PolyVoxCore PolyVoxUtil \
 	                        flite_cmu_us_awb flite_cmu_us_rms \
 	                        flite_voice_list flite_cmulex flite_usenglish flite
 

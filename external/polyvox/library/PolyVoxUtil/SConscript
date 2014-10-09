@@ -1,0 +1,13 @@
+Import('env')
+
+env['CXXFLAGS'].append('-fPIC')
+env['CXXFLAGS'].append('-std=c++11')
+env['CXXFLAGS'].append('-DPolyVoxUtil_EXPORTS')
+env['CXXFLAGS'].append('-DPOLYVOX_SHARED_EXPORTS')
+
+objs = []
+for obj in Glob('source/*.cpp'):
+    objs.append(env.Object(obj))
+
+polyvoxUtilLib = env.StaticLibrary('#/lib/PolyVoxUtil', objs)
+Default(polyvoxUtilLib)

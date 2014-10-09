@@ -22,8 +22,12 @@ lFlite    = ['flite_voice_list',
              'flite_cmulex',
              'flite']
 lNoise    = ['noise']
+lPolyVox  = ['PolyVoxCore', 'PolyVoxUtil']
 lOther    = ['m', 'dl', 'rt']
-lAll  = lSDL + lSDLimage + lSDLmixer + lSDLttf + lBullet + lGL + lFlite + lNoise + lOther
+lAll  = (lSDL + lSDLimage + lSDLmixer + lSDLttf +
+         lBullet + lGL +
+         lFlite + lNoise + lPolyVox +
+         lOther)
 
 libpaths = ['#/lib/',
             pathSdl    + '/lib',
@@ -68,6 +72,7 @@ cppflags.extend(['-isystem', pathBoost  + '/include',
                  '-isystem', pathSdl    + '/include/',
                  '-isystem', pathGlm,
                  '-isystem', 'external/',
+                 '-isystem', 'external/polyvox/library/PolyVoxCore/include',
                  '-isystem', pathBullet + '/include/bullet'])
 cppflags.extend(gccWarningLevel)
 for macro in macroDefinitions:
@@ -85,6 +90,8 @@ if 'LDFLAGS' in os.environ:
 sourcepaths = [
    base,
    '../external/',
+   '../external/polyvox/library/PolyVoxCore/include/',
+   '../external/polyvox/library/PolyVoxUtil/include/',
    pathBoost  + '/include',
    pathGlm,
    pathBullet + '/include/bullet/',

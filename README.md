@@ -1,6 +1,6 @@
 ![Swarming Logic cross-platform framework](https://raw.githubusercontent.com/swarminglogic/sdl2-cross/master/swl_logo.png)
 
-SDL2, C++11, OpenGL 3.3, OpenGL ES 3, Android/Desktop Project.
+SDL2, C++11, OpenGL 4.3, OpenGL ES 3, Android/Desktop Project.
 
 A WIP project to work to do game development targetting Android/Linux,
 with the intention to be easily extended to OSX, iOS, Win7.
@@ -24,15 +24,16 @@ The framework will rely on the following libraries
 
 | Library    | Tested Version         | Description                                             |
 | :--------- | :--------------------- | :------------------------------------------------------ |
-| SDL2       | `2.0.3 (6ec57a81e5d6)` | OpenGL glue, touch/gesture and keyboard input, and more |
-| SDL_image  | `2.0.0 (175c0200df0a)` | png/jpg loading                                         |
-| SDL_mixer  | `2.0.0 (74441a1c867d)` | ogg loading, sound playback                             |
-| SDL_ttf    | `2.0.12 (997babb2f547)`| ttf loading                                             |
+| SDL2       | `2.0.4 (9ecf775ead1b)` | OpenGL glue, touch/gesture and keyboard input, and more |
+| SDL_image  | `2.0.0 (e8573815cc1f)` | png/jpg loading                                         |
+| SDL_mixer  | `2.0.0 (9599bb0ff844)` | ogg loading, sound playback                             |
+| SDL_ttf    | `2.0.12 (e6ea74f184f0)`| ttf loading                                             |
 | bullet     | `2.82-r2704`           | physics                                                 |
 | flite      | `1.4`                  | text to speech synthesization engine                    |
 | GLM        | `0.9.5.2`              | math library similar to GLSL (headers only)             |
 | boost      | `1.55`                 | boost (headers only)                                    |
 | libnoise   | `1.0.0`                | noise generation library                                |
+| polyvox    | `0.2.1`                | voxel library                                           |
 
 
 ### Project Structure
@@ -71,6 +72,7 @@ The framework will rely on the following libraries
 ├── external                        { External Libraries }
 │   └── flite                      { Flite, TTS synthesis engine }
 │   └── noise                      { libnoise, noise generation library }
+│   └── polyvox                    { polyvox, voxel library }
 └── src                             { All code source files used by the application, excl. shaders }
     ├── audio                       { linked w/SDL, SDL_mixer}
     ├── core                        { linked w/All }
@@ -122,7 +124,8 @@ desktop build, but will soon also be used for android.
     |   |      model     |   |    io   |                   |
     |   |                |   |         |                   |
     |   | SDL, bullet    |   | SDL     |                   |
-    |   +––––––––––––––––+   +–––––––––+                   |
+    |   | polyvox        |   +–––––––––+                   |
+    |   +––––––––––––––––+                                 |
     |                                                      |
     +–––––––––––––––––––––––––+––––––––––––––––––––––––––––+
                               |
@@ -179,6 +182,7 @@ android/jni/SDL
 android/jni/bullet-src
 android/jni/flite
 android/jni/noise
+android/jni/polyvox
 src/util/gitrev.h
 html/
 coveragehistory/

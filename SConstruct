@@ -22,6 +22,10 @@ SConscript('external/flite/SConscript')
 # Build libnoise external library
 SConscript('external/noise/SConscript')
 
+# Build libnoise external library
+SConscript('external/polyvox/SConscript')
+
+
 Export('env')
 VariantDir('build', 'src')
 SConscript('build/SConscript')
