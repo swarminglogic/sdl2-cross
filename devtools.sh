@@ -1,5 +1,15 @@
 #!/bin/bash
 
+RED=$(tput setaf 1)
+GREEN=$(tput setaf 2)
+YELLOW=$(tput setaf 3)
+BLUE=$(tput setaf 4)
+MAGENTA=$(tput setaf 5)
+TEAL=$(tput setaf 6)
+NORMAL=$(tput sgr0)
+BOLD=$(tput bold)
+
+
 function showHelp() {
     echo "devtools - Shorthand commandline aliases
 Possible targets:
@@ -18,6 +28,7 @@ Possible targets:
     wa                     Auto-rebuild android on changes.
     wl                     Auto-rebuild linux on changes.
     ws                     Auto-validate shaders on changes.
+    wt                     Watch test directory, execute changed tests
     testl                  compile and run unit tests on linux
     lg,log                 adb logcat with SWL filter
     lga,loga               adb logcat with SWL, SDL, SDL/* filter
@@ -154,6 +165,45 @@ while test $# -gt 0; do
                | grep -Ev '_flymake.*' | xargs cat | md5sum" -e ./devtools.sh validate-shaders
              exit
              ;;
+        wt)
+            shift
+            # Cached md5sum of files in bin/tests/*
+            tmpfile=/tmp/.sdl2-cross.tests.md5sum
+            # Create this file if it doesn't already exist
+            if [ ! -e $tmpfile ] ; then touch $tmpfile ; fi
+            while true; do
+                # Wait until some file in ./bin/tests/ has changed
+                watchfile --oneshot -s "find ./bin/tests/ \
+                      -executable -type f -exec stat {} \;" -e true
+                # One second grace period for finalizing files
+                sleep 1
+                # Get tests and matching md5sum
+                currentMd5=$(find ./bin/tests/ -executable -type f -exec md5sum {} \; | \
+                    awk '{print $2,$1}' | sort)
+                # Compare w/cached md5sums and get current checksums
+                newTests=$(<<< "$currentMd5" diff $tmpfile - | grep -P "^>" | awk '{print $2}')
+                # File for accumulating failed tests output
+                failAccumFile=/tmp/.sdl2-cross.test.failure
+                if [ -e $failAccumFile ] ; then echo "" > $failAccumFile; fi
+                for i in $newTests ; do
+                    testLog=/tmp/.sdl2-cross.test.$(basename $i)
+                    ./$i > $testLog
+                    cat $testLog | grep --color=never "OK"
+                    cat $testLog | grep -v --color=never "OK" >> $failAccumFile
+                done
+                echo "$currentMd5" > $tmpfile
+                # Outputs failed tests with colouring:
+                # 1. Removes reduntant "In TestFoo::testFoo:"
+                # 2. Colors line TestFoo:testBarFunction
+                # 3. Colors path to failed line, break into new line before error
+                # 4. Color instances of "Error: "
+                cat $failAccumFile | \
+                    grep -vP "In Test.*::test.*:$" | \
+                    sed "s/^\(Test.*\)::\(.*\)/${RED}${BOLD}\1${NORMAL}::${YELLOW}\2${NORMAL}/g" | \
+                    sed "s/\(^\/.*\.h:[[:digit:]]\+:\)\(.*\)/${TEAL}\1${NORMAL}\n  \2\n/g" | \
+                    sed "s/\(Error:\)/${RED}\1${NORMAL}/g"
+            done
+            ;;
         testl)
             shift
             ./compile.sh l -t
