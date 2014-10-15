@@ -3,12 +3,14 @@ hasFailed=
 isQuiet=
 targetAndroidPlatform=android-18
 
+GRAY=$(tput setaf 0)
 RED=$(tput setaf 1)
 GREEN=$(tput setaf 2)
 YELLOW=$(tput setaf 3)
 BLUE=$(tput setaf 4)
 TEAL=$(tput setaf 6)
 NORMAL=$(tput sgr0)
+BOLD=$(tput bold)
 
 while test $# -gt 0; do
     case "$1" in
@@ -461,6 +463,40 @@ function findSDL2UtilSource {
     [[ ! $pathStatusCode -eq 0 ]] && hasFailed=true
 }
 
+function findOrGetWatchfile {
+    message "${GREEN}[watchfile]${NORMAL}"
+    if command -v watchfile > /dev/null ; then
+        writeStatus "  - watchfile script found in PATH" 0
+    else
+        if [ -x utils/scripts/watchfile ] ; then
+            writeStatus "  - watchfile script found in utils/scripts/" 0
+        else
+            writeStatus "  - watchfile script not found in PATH, downloading" 1
+            echo $GRAY
+            git clone https://gist.github.com/8963507.git utils/scripts/tmp && \
+                mv utils/scripts/tmp/watchfile.sh utils/scripts/watchfile && \
+                chmod +x utils/scripts/watchfile && \
+                rm -rf utils/scripts/tmp
+            echo $NORMAL
+            if [ -x utils/scripts/watchfile ] ; then
+                writeStatus "  - watchfile script now found in utils/scripts/" 0
+            else
+                writeStatus "  - watchfile script missing" 2
+            fi
+        fi
+    fi
+}
+
+
+# Create utils/scripts forlder if it doesn't already exist
+if [ ! -d utils/scripts ] ; then mkdir utils/scripts ; fi
+
+message "${TEAL}-----------------------------------${NORMAL}"
+message "${TEAL}Checking necessary utilities${NORMAL}"
+message "${TEAL}-----------------------------------${NORMAL}"
+findOrGetWatchfile
+
+message "\n"
 message "${TEAL}-----------------------------------${NORMAL}"
 message "${TEAL}Checking desktop build dependencies${NORMAL}"
 message "${TEAL}-----------------------------------${NORMAL}"

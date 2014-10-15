@@ -54,6 +54,11 @@ if test $# -eq 0 ; then
     exit
 fi
 
+scriptsPath=`pwd`/utils/scripts
+if [ -d $scriptsPath ] ; then
+    PATH=$PATH:$scriptsPath
+fi
+
 while test $# -gt 0; do
     case "$1" in
         h|help)
