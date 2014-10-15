@@ -55,7 +55,8 @@ utilFiles = [Glob('util/Test*.h') +
              Glob('util/*/Test*.h')]
 testUtil = env_test.CxxTest('#/bin/tests/TestUtil',
                             utilFiles,
-                            LIBS = [ 'swl-extern', 'swl-util','swl-math'] + c.lSDL)
+                            LIBS = ([ 'swl-extern', 'swl-util','swl-math'] +
+                                    c.lSDL + c.lNoise))
 Default(testUtil)
 
 
