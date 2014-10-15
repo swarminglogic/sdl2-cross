@@ -103,7 +103,7 @@ modelFiles = [Glob('model/Test*.h') +
 testModel = env_test.CxxTest('#/bin/tests/TestModel',
                              modelFiles,
                              LIBS = ['swl-model', 'swl-util', 'swl-math']
-                             + c.lSDL + c.lBullet)
+                             + c.lSDL + c.lBullet + c.lPolyVox)
 Default(testModel)
 
 
