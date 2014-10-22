@@ -1,23 +1,28 @@
-![Swarming Logic cross-platform framework](https://raw.githubusercontent.com/swarminglogic/sdl2-cross/master/swl_logo.png)
+![Swarming Logic cross-platform framework](https://raw.githubusercontent.com/swarminglogic/sdl2-cross/master/doc/swl_logo.png)
 
 SDL2, C++11, OpenGL 4.3, OpenGL ES 3, Android/Desktop Project.
 
 A WIP project to work to do game development targetting Android/Linux,
 with the intention to be easily extended to OSX, iOS, Win7.
 
+This isn't a game engine (at least not in its current state), but serves as a good basis for doing cross-platform development.
 
-### Features:
-* Scripts for simplifying initial build configuration for locating external libraries and creating necessary symbolic links. See the list of external libraries below.
-* Scripts for common development tasks such as building android/linux, android logcat, unit testing.
-* `CxxTest` based unit-testing (linux only)
+### Platform Features (summary):
+* Project initialization script for detecting required dependencies. [screenshot](https://raw.githubusercontent.com/swarminglogic/sdl2-cross/master/doc/initialize_project.png)
+* Utility for common development tasks (building android/linux, android logcat, unit testing, etc)
+* `CxxTest` based unit-testing (linux only, atm)
+* Combined OpenGL/GLES files with #ifdef ES, #else, #endif directives.
+* Several libraries with android build files (bullet, flite, libnoise, polyvox)
 * Script for generating html code coverage report.
-* ... todo
+* ...
 
 ### Future Features:
 * Deferred rendering
 * AngelScript based scripting language
 * Add external library SDL_net
-* A complete future list ^_^
+* `emscriptem` based HTML5 compilation
+* `g++-mingw-w64-x86-64` based Windows cross-compilation
+
 
 ### External Libraries:
 The framework will rely on the following libraries
@@ -149,6 +154,7 @@ desktop build, but will soon also be used for android.
 | `./initialize_project.sh`          | Check all dependencies and sets up symbolic links         |
 | `./compile.sh`                     | Utility for simplifying build commands                    |
 | `./devtools.sh`                    | Another utility for simplifying development commands      |
+| `./validateshaders.sh`             | Utility for preprocessing and validating GL/GLES shaders  |
 | `./src/util/gitrev.h`              | Automatically generated file for accessing current git id |
 
 * Linux/Android:
