@@ -41,11 +41,20 @@ if [[ ! $# -eq 3 ]] ; then
     showHelp
 fi
 
+
+
 keyword=$1
 shift
 if [[ ! -x `which glslangValidator` ]] ; then
-    echo "Could not find glslangValidator executable in PATH"
-    exit 1
+    scriptsPath=`pwd`/utils/scripts
+    if [ -d $scriptsPath ] ; then
+        PATH=$PATH:$scriptsPath
+    fi
+
+    if [[ ! -x `which glslangValidator` ]] ; then
+        echo "Could not find glslangValidator executable in PATH"
+        exit 1
+    fi
 fi
 if [[ ! -x ./bin/simpletextpreprocess ]] ; then
     echo "Could not find ./bin/simpletextpreprocess"

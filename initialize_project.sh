@@ -488,6 +488,28 @@ function findOrGetWatchfile {
 }
 
 
+function findOrGetGlslangValidator {
+    message "${GREEN}[glslangValidator]${NORMAL}"
+    if command -v glslangValidator > /dev/null ; then
+        writeStatus "  - glslangValidator script found in PATH" 0
+    else
+        if [ -x utils/scripts/glslangValidator ] ; then
+            writeStatus "  - glslangValidator script found in utils/scripts/" 0
+        else
+            writeStatus "  - glslangValidator script not found in PATH, downloading" 1
+            echo $GRAY
+            wget https://cvs.khronos.org/svn/repos/ogl/trunk/ecosystem/public/sdk/tools/glslang/Install/Linux/glslangValidator -O utils/scripts/glslangValidator && \
+                chmod +x utils/scripts/glslangValidator
+            echo $NORMAL
+            if [ -x utils/scripts/glslangValidator ] ; then
+                writeStatus "  - glslangValidator script now found in utils/scripts/" 0
+            else
+                writeStatus "  - glslangValidator script missing" 2
+            fi
+        fi
+    fi
+}
+
 # Create utils/scripts forlder if it doesn't already exist
 if [ ! -d utils/scripts ] ; then mkdir utils/scripts ; fi
 
@@ -495,6 +517,7 @@ message "${TEAL}-----------------------------------${NORMAL}"
 message "${TEAL}Checking necessary utilities${NORMAL}"
 message "${TEAL}-----------------------------------${NORMAL}"
 findOrGetWatchfile
+findOrGetGlslangValidator
 
 message "\n"
 message "${TEAL}-----------------------------------${NORMAL}"
