@@ -51,7 +51,6 @@ The framework relies on the following libraries
 ```
 ├── android                    > Base android build files
 │   ├── assets -> ../assets (symlink)
-│   ├── fixes                      { Various fixes for external libraries, etc. }
 │   ├── jni
 │   │   ├── bullet-android             { Android.mk for building bullet }
 │   │   ├── bullet-src -> [Bullet Source]    (symlink)
@@ -208,24 +207,3 @@ In compliance with the `flite` license, modifications and changes are explained 
 
 `./external/flite/sdl2-cross-changes.md`
 
-
-### Troubleshooting
-
-- **Trouble building SDL_mixer on android ("selected processor does not support Thumb mode ...")**
-  There were various issues with compiling the newest verions of SDL_mixer for ARM.
-
-  A patch that fixes these issues is kept in `./android/fixes/SDL_mixer.[HG-ID].android.fix.patch`
-
-  Apply the patch from the SDL_mixer directory, using:
-
-  `$ hg import --no-commit [PATH_TO_REPO]/android/fixes/SDL_mixer.[HG-ID].android.fix.patch`
-
-  If the patch failes to be properly applied, or fails to correct the build issues, try
-  checking out the SDL_mixer repo at the changeset ID matching [HD-ID] before applying the patch.
-
-  To revert this patch, before updating the repo, use
-
-  `$ hg update --clean`
-
-  Note that as of SDL_mixer changeset 672, 0237197714b6, patching should no
-  longer be necessary.
