@@ -24,69 +24,72 @@ This isn't a game engine (at least not in its current state), but serves as a go
 * `g++-mingw-w64-x86-64` based Windows cross-compilation
 
 
-### External Libraries:
-The framework will rely on the following libraries
+### External Libraries (not included):
+The framework relies on the following libraries
 
-| Library    | Tested Version         | Description                                             |
+| Library    | Version                | Description                                             |
 | :--------- | :--------------------- | :------------------------------------------------------ |
 | SDL2       | `2.0.4 (9ecf775ead1b)` | OpenGL glue, touch/gesture and keyboard input, and more |
 | SDL_image  | `2.0.0 (e8573815cc1f)` | png/jpg loading                                         |
 | SDL_mixer  | `2.0.0 (9599bb0ff844)` | ogg loading, sound playback                             |
 | SDL_ttf    | `2.0.12 (e6ea74f184f0)`| ttf loading                                             |
 | bullet     | `2.82-r2704`           | physics                                                 |
-| flite      | `1.4`                  | text to speech synthesization engine                    |
 | GLM        | `0.9.5.2`              | math library similar to GLSL (headers only)             |
 | boost      | `1.55`                 | boost (headers only)                                    |
+
+
+### External Libraries (included):
+| Library    | Version                | Description                                             |
+| :--------- | :--------------------- | :------------------------------------------------------ |
+| flite      | `1.4`                  | text to speech synthesization engine                    |
 | libnoise   | `1.0.0`                | noise generation library                                |
 | polyvox    | `0.2.1`                | voxel library                                           |
+| CxxTest    | `4.4`                  | unit test code generation utility                       |
 
 
 ### Project Structure
 ```
-├── android                         { Base android build files }
-│   ├── assets -> ../assets (symlink)
-│   ├── fixes                       { Various fixes for external libraries, etc. }
-│   ├── jni
-│   │   ├── bullet-android          { Android.mk for building bullet library }
-│   │   ├── bullet-src -> [Bullet Source]    (symlink)
-│   │   ├── SDL ->        [SDL Source]       (symlink)
-│   │   ├── SDL_image ->  [SDL_image Source] (symlink)
-│   │   ├── SDL_mixer ->  [SDL_mixer Source] (symlink)
-│   │   ├── SDL_ttf ->    [SDL_ttf Source]   (symlink)
-│   │   └── src -> ../../src (symlink)
-│   ├── res                         { Android specific assets }
-│   │   ├── drawable-hdpi
-│   │   ├── drawable-ldpi
-│   │   ├── drawable-mdpi
-│   │   ├── drawable-xhdpi
-│   │   ├── drawable-xxhdpi
-│   │   ├── layout
-│   │   └── values
-│   └── src
-│       └── org
-│           └── libsdl
-│               └── app            { JNI Java wrapper stuff }
-├── assets                          { All resources used by the application }
-│   ├── fonts
-│   ├── images
-│   ├── meshes
-│   ├── music
-│   ├── shaders
-│   └── sounds
-├── coveragehistory                 { Unit test coverage history }
-├── external                        { External Libraries }
-│   └── flite                      { Flite, TTS synthesis engine }
-│   └── noise                      { libnoise, noise generation library }
-│   └── polyvox                    { polyvox, voxel library }
-└── src                             { All code source files used by the application, excl. shaders }
-    ├── audio                       { linked w/SDL, SDL_mixer}
-    ├── core                        { linked w/All }
-    ├── extern                      { base library }
-    ├── graphics                    { linked w/SDL, SDL_image, SDL_opengl, SDL_ttf, GL}
-    ├── io                          { linked w/SDL }
-    ├── math                        { base library }
-    ├── model                       { linked w/SDL, bullet }
-    └── util                        { base library }
+├── android                    > Base android build files
+│   ├── assets -> ../assets (symlink)
+│   ├── fixes                      { Various fixes for external libraries, etc. }
+│   ├── jni
+│   │   ├── bullet-android             { Android.mk for building bullet }
+│   │   ├── bullet-src -> [Bullet Source]    (symlink)
+│   │   ├── SDL ->        [SDL Source]       (symlink)
+│   │   ├── SDL_image ->  [SDL_image Source] (symlink)
+│   │   ├── SDL_mixer ->  [SDL_mixer Source] (symlink)
+│   │   ├── SDL_ttf ->    [SDL_ttf Source]   (symlink)
+│   │   └── src -> ../../src (symlink)
+│   ├── res                        { Android specific assets }
+│   └── src                        { JNI Java wrapper stuff }
+├── assets                     { All resources used by the application }
+│   ├── fonts
+│   ├── images
+│   ├── meshes
+│   ├── music
+│   ├── shaders
+│   └── sounds
+├── coveragehistory            { Unit test coverage history folder, used by gencoverage.sh}
+├── external                   { External Libraries }
+│   └── flite                      { flite, TTS synthesis engine }
+│   └── noise                      { libnoise, noise generation library }
+│   └── polyvox                    { polyvox, voxel library }
+└── src                        { All code source files used by the application, excl. shaders }
+│   ├── audio                      { Audio and music playback }
+│   ├── core                       { Base that uses all other parts }
+│   ├── extern                     { External libraries that might be moved to ../external }
+│   ├── graphics                   { Graphics and OpenGL related}
+│   ├── io                         { Input/Output, keyboard, mouse, gamecontroller, }
+│   ├── math                       { Basic math classes }
+│   ├── model                      { Physics and world related }
+│   └── util                       { Utility and helper classes }
+└── utils                      { Misc utilities }
+    ├── cxxtest                     { Unit testing library, downloaded by initialize_project.sh}
+    ├── obj2cobj                    { Utility for compressing Wavefront OBJ files}
+    ├── obj2info                    { Utility for printing Wabefront OBJ data summary}
+    ├── patches                     { Patches used by initialize_project.sh}
+    ├── scripts                     { Various minor helper scripts, some downloaded by initialize_project.sh}
+    └── simpletextpreprocess        { Utility for preprocessing GL/GLES shader files}
 ```
 
 ### Dependency tree
@@ -191,6 +194,9 @@ android/jni/noise
 android/jni/polyvox
 src/util/gitrev.h
 html/
+utils/cxxtest
+utils/scripts/watchfile
+utils/scripts/glslangValidator
 coveragehistory/
 .coverage*
 runtime.log

@@ -498,7 +498,9 @@ function findOrGetGlslangValidator {
         else
             writeStatus "  - glslangValidator script not found in PATH, downloading" 1
             echo $GRAY
-            wget https://cvs.khronos.org/svn/repos/ogl/trunk/ecosystem/public/sdk/tools/glslang/Install/Linux/glslangValidator -O utils/scripts/glslangValidator && \
+            local url="https://cvs.khronos.org/svn/repos/ogl/"\
+              "trunk/ecosystem/public/sdk/tools/glslang/Install/Linux/glslangValidator"
+            wget $url -O utils/scripts/glslangValidator && \
                 chmod +x utils/scripts/glslangValidator
             echo $NORMAL
             if [ -x utils/scripts/glslangValidator ] ; then
@@ -510,6 +512,36 @@ function findOrGetGlslangValidator {
     fi
 }
 
+function findOrGetCxxTest {
+    message "${GREEN}[CxxTest]${NORMAL}"
+    TMPCXXTEST=
+    if ! validateEnvironmentVariable CXXTEST ; then
+        if [ -x "utils/cxxtest/bin/cxxtestgen" ] ; then
+            writeStatus "  - CxxTest found in utils/cxxtest/" 0
+        else
+            writeStatus "  - CxxTest not found in utils/cxxtest/, downloading" 1
+            echo $GRAY
+            if [ -d utils/cxxtest ] ; then
+                echo "Previous directory detected. Removing ./utils/cxxtest"
+                rm -rf ./utils/cxxtest/*
+                rmdir ./utils/cxxtest
+            fi
+            git clone https://github.com/CxxTest/cxxtest.git utils/cxxtest && \
+                cd utils/cxxtest && git checkout 4.4 && rm -rf .git && cd ../.. && \
+                patch -i utils/patches/cxxtest.191addd.printer.patch \
+                utils/cxxtest/cxxtest/ErrorFormatter.h
+            echo $NORMAL
+        fi
+        TMPCXXTEST="$(pwd)/utils/cxxtest"
+        setEnvVariable "CxxTest utility" "CXXTEST"
+    fi
+
+    pathStatusCode=0
+    [[ ! -x $CXXTEST/bin/cxxtestgen ]] && pathStatusCode=2
+    writeStatus "  - Checking CxxTest path ($CXXTEST)" $pathStatusCode
+}
+
+
 # Create utils/scripts forlder if it doesn't already exist
 if [ ! -d utils/scripts ] ; then mkdir utils/scripts ; fi
 
@@ -518,6 +550,8 @@ message "${TEAL}Checking necessary utilities${NORMAL}"
 message "${TEAL}-----------------------------------${NORMAL}"
 findOrGetWatchfile
 findOrGetGlslangValidator
+findOrGetCxxTest
+
 
 message "\n"
 message "${TEAL}-----------------------------------${NORMAL}"
