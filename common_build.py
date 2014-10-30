@@ -7,7 +7,7 @@ pathBoost   = os.environ["BOOST_DIR"];
 pathSdl     = os.environ["SDL2_DIR"];
 pathGlm     = os.environ["GLM_DIR"];
 pathBullet  = os.environ["BULLET_DIR"];
-pathCxxTest = os.environ["CXXTEST"];;
+pathCxxTest = os.environ["CXXTEST"];
 
 lSDL      = ['SDL2']
 lSDLimage = ['SDL2_image']
