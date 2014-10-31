@@ -1,0 +1,123 @@
+28a29,41
+> #include <iomanip>
+> #include <sstream>
+> #include <chrono>
+> 
+> 
+> namespace colorterm {
+> const char* CLEAR  = "\033[0m";
+> const char* CYAN   = "\033[36m";
+> const char* YELLOW = "\033[33m";
+> const char* GREEN  = "\033[32m";
+> }
+> 
+> 
+57c70,71
+<         _warningString(warningString)
+---
+>         _warningString(warningString),
+>         _lineLength(0)
+69d82
+<         (*_o) << "Running " << desc.worldName() << " tests (" << totalTests << ")";
+87c100
+<     void enterTest(const TestDescription &)
+---
+>     void enterTest(const TestDescription &desc)
+89c102,108
+<         _reported = false;
+---
+>       _lineLength = 0;
+>       std::stringstream ss;
+>       ss << desc.suiteName() << "::" << desc.testName();
+>       (*_o) << ss.str().c_str();
+>       _lineLength = ss.str().size();
+>       _reported = false;
+>       _testStart = std::chrono::high_resolution_clock::now();
+94,107c113,148
+<         if (tracker().testSkipped())
+<         {
+<             (*_o) << "s";
+<             _o->flush();
+<             fflush(stdout);
+<             _dotting = true;
+<         }
+<         else if (!tracker().testFailed())
+<         {
+<             (*_o) << ".";
+<             _o->flush();
+<             fflush(stdout);
+<             _dotting = true;
+<         }
+---
+>       int MAX_WIDTH = 80;
+>       std::stringstream ss;
+> 
+>       std::string status;
+>       if (tracker().testSkipped()) {
+>         status = colorterm::YELLOW + std::string("SKIPPED");
+>         MAX_WIDTH += 5;
+>       } else if (!tracker().testFailed()) {
+>         status = colorterm::GREEN + std::string("OK");
+>       } else {
+>         _o->flush();
+>         fflush(stdout);
+>         _dotting = true;
+>         return;
+>       }
+> 
+>       const std::chrono::time_point<std::chrono::high_resolution_clock> testEnd
+>         = std::chrono::high_resolution_clock::now();
+>       std::chrono::milliseconds ms =
+>           std::chrono::duration_cast<std::chrono::milliseconds>(
+>               testEnd - _testStart);
+> 
+>       std::stringstream ssTime;
+>       if ( ms.count() > 0 )
+>         ssTime << "(" << ms.count() << " ms) ";
+> 
+>       const int lineLength =
+>         MAX_WIDTH - _lineLength - int(status.size() - 4);
+>       ss << std::setw(std::max(0, lineLength));
+>       ss << ssTime.str();
+>       ss << "[ " << status << colorterm::CLEAR << " ]" << "\n";
+>       (*_o) << ss.str().c_str();
+> 
+>       _o->flush();
+>       fflush(stdout);
+>       _dotting = true;
+110c151
+<     void leaveWorld(const WorldDescription &desc)
+---
+>     void leaveWorld(const WorldDescription &)
+112,128c153
+<         if (!tracker().failedTests())
+<         {
+<             (*_o) << "OK!" << endl;
+<             return;
+<         }
+<         newLine();
+<         (*_o) << "Failed " << tracker().failedTests() << " and Skipped " << tracker().skippedTests() << " of " << totalTests << endl;
+<         unsigned numPassed = desc.numTotalTests() - tracker().failedTests() - tracker().skippedTests();
+<         unsigned numTotal = desc.numTotalTests() - tracker().skippedTests();
+<         if (numTotal == 0)
+<         {
+<             (*_o) << "Success rate: 100%" << endl;
+<         }
+<         else
+<         {
+<             (*_o) << "Success rate: " << (unsigned)(numPassed * 100.0 / numTotal) << "%" << endl;
+<         }
+---
+>       return;
+145,147c170,173
+<         if(expression && strlen(expression) > 0)
+<             stop(file, line) << _warningString << ": Test skipped: " <<
+<                              expression << endl;
+---
+>       std::stringstream ss;
+>       ss << " " << expression;
+>       _lineLength += ss.str().size();
+>       (*_o) << colorterm::CYAN << ss.str().c_str() << colorterm::CLEAR;
+342a369,370
+>     int _lineLength;
+>     std::chrono::time_point<std::chrono::high_resolution_clock> _testStart;

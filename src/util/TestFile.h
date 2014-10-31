@@ -38,6 +38,9 @@ class TestFile : public CxxTest::TestSuite
 
   void testExists()
   {
+#ifdef __ANDROID__
+    TS_SKIP("Not yet implemented for android.");
+#endif
     const std::string filename("./certainlythisdoesnotexist.txt");
     TS_ASSERT(!FileUtil::exists(filename));
     File file(filename);
@@ -53,6 +56,9 @@ class TestFile : public CxxTest::TestSuite
 
   void testRead()
   {
+#ifdef __ANDROID__
+    TS_SKIP("Not yet implemented for android.");
+#endif
     const std::string filename("./certainlythisdoesnotexist.txt");
     TS_ASSERT(!FileUtil::exists(filename));
 
@@ -99,6 +105,9 @@ class TestFile : public CxxTest::TestSuite
 
   void testReadToLocal()
   {
+#ifdef __ANDROID__
+    TS_SKIP("Not yet implemented for android.");
+#endif
     const std::string filename("./certainlythisdoesnotexist.txt");
     TS_ASSERT(!FileUtil::exists(filename));
 
@@ -112,6 +121,9 @@ class TestFile : public CxxTest::TestSuite
 
   void testCopy()
   {
+#ifdef __ANDROID__
+    TS_SKIP("Not yet implemented for android.");
+#endif
     const std::string filename("./certainlythisdoesnotexist.txt");
     TS_ASSERT(!FileUtil::exists(filename));
 
@@ -137,6 +149,9 @@ class TestFile : public CxxTest::TestSuite
 
   void testSetFilename()
   {
+#ifdef __ANDROID__
+    TS_SKIP("Not yet implemented for android.");
+#endif
     const std::string filename("./thisdoesexist.txt");
     FileUtil::write(filename, "foobar");
 

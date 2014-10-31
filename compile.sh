@@ -4,6 +4,7 @@ function showHelp() {
     echo "build - help utility for initializing various platform builds
 Possible targets:
     a, android
+    android-tests
     l, linux
     utils
     all          (build each of the above, if possible)
@@ -84,6 +85,11 @@ while test $# -gt 0; do
             shift
             android=yes
             ;;
+        android-tests)
+            shift
+            android=yes
+            androidTests=yes
+            ;;
         l|linux)
             shift
             linux=yes
@@ -108,6 +114,40 @@ while test $# -gt 0; do
     esac
 done
 
+# $1: Runner filename
+function create_android_unit_test_main_file {
+    local main=$1
+    local testlist=$(cd src/ && find . -name 'Test*.h' | \
+        grep -Ev '_flymake.*' | grep -v 'TestEmpty')
+    (cd src/ && ../utils/cxxtest/bin/cxxtestgen \
+        --error-print -o $main $testlist)
+    if [ ! -e src/$main ] ; then
+        echo "Failed to generate CxxTest runner"
+        exit 0;
+    fi
+
+    # Patch the generated runner file
+    local main_entry="int main\( int argc\, char \*argv\[\] \) \{"
+    local add_headers="#include <audio/SDL_mixer.h>
+#include <core/MainManager.h>
+#include <graphics/SDL_image.h>
+#include <util/SDL.h>
+"
+    local return_entry="return status\;"
+    local return_replace="IMG_Quit\(\)\;
+    const int nOpenAudio = Mix_QuerySpec\(nullptr\, nullptr\, nullptr\)\;
+    for \(int i = 0 \; i < nOpenAudio \; ++i\)
+      Mix_CloseAudio\(\)\;
+    while \(Mix_Init\(0\)\)
+      Mix_Quit\(\)\;
+    SDL_Quit\(\)\;
+    return status\;"
+
+    perl -i -pe "s,${main_entry},${add_headers}${main_entry},;" \
+        -pe "s,${return_entry},${return_replace},g" src/$main
+}
+
+
 serial='-j6'
 if [[ $isSerial ]] ; then
     serial="-j1"
@@ -116,6 +156,14 @@ fi
 if [[ $android ]] ; then
     if [[ $isVerbose ]] ; then
         verbose="V=1"
+    fi
+
+    if [[ $androidTests ]] ; then
+        # Configure to build
+        export SWL_ANDROID_MAIN_FILE=main_android_tests.cpp
+        create_android_unit_test_main_file $SWL_ANDROID_MAIN_FILE
+    else
+        export SWL_ANDROID_MAIN_FILE=main.cpp
     fi
 
     if [[ $cleanTarget ]] ; then

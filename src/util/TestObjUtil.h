@@ -20,6 +20,9 @@ class TestObjUtil : public CxxTest::TestSuite
  public:
   void testObjRead()
   {
+#ifdef __ANDROID__
+    TS_SKIP("Not yet implemented for android.");
+#endif
     std::string tmpObjFile("tmpobjfile.obj");
     {
       std::ofstream outfile(tmpObjFile);
@@ -47,6 +50,9 @@ class TestObjUtil : public CxxTest::TestSuite
   }
 
   void testObjReadFileSystemAgnostic() {
+#ifdef __ANDROID__
+    TS_SKIP("Not yet implemented for android.");
+#endif
     std::string tmpObjFile("tmpobjfile.obj");
     {
       std::ofstream outfile(tmpObjFile);

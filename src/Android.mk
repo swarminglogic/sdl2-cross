@@ -20,11 +20,11 @@ LOCAL_C_INCLUDES := $(LOCAL_PATH)/$(SDL_PATH)/include \
   $(LOCAL_PATH)/$(SDL_TTF_PATH) \
   $(BULLET_DIR)/include/bullet \
   $(BOOST_DIR)/include \
-  $(GLM_DIR)
+  $(GLM_DIR) \
+  $(CXXTEST)
 
 # Add your application source files here...
 LOCAL_SRC_FILES := $(SDL_PATH)/src/main/android/SDL_android_main.c \
-	 $(wildcard $(JNI_PATH)/src/*.cpp) \
 	 $(wildcard $(JNI_PATH)/src/audio/*.cpp) \
 	 $(wildcard $(JNI_PATH)/src/core/*.cpp) \
 	 $(wildcard $(JNI_PATH)/src/extern/*.cpp) \
@@ -33,6 +33,8 @@ LOCAL_SRC_FILES := $(SDL_PATH)/src/main/android/SDL_android_main.c \
 	 $(wildcard $(JNI_PATH)/src/math/*.cpp) \
 	 $(wildcard $(JNI_PATH)/src/model/*.cpp) \
 	 $(wildcard $(JNI_PATH)/src/util/*.cpp)
+
+LOCAL_SRC_FILES += $(wildcard $(JNI_PATH)/src/$(SWL_ANDROID_MAIN_FILE))
 
 #  $(shell find $(JNI_PATH)/src/ -name "*.cpp")
 
@@ -58,6 +60,7 @@ LOCAL_CFLAGS += -isystem $(GLM_DIR)
 LOCAL_CFLAGS += -isystem $(BOOST_DIR)/include
 LOCAL_CFLAGS += -isystem $(LOCAL_PATH)/$(SDL_PATH)/include
 LOCAL_CFLAGS += -isystem $(BULLET_DIR)/include/bullet
+LOCAL_CFLAGS += -isystem $(CXXTEST)
 
 
 # Android ndk and stl include paths

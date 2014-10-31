@@ -55,7 +55,7 @@ gccWarningLevel = [
    '-Wvariadic-macros', '-Wwrite-strings', '-pedantic',
    '-pedantic-errors', '-Woverloaded-virtual',
    '-Wswitch-enum', '-Werror'
-   ## Clang unsupported flags.
+   # # Clang unsupported flags.
    # '-fpermissive',
    # -Wunsafe-loop-optimizations'
 ]
@@ -95,4 +95,5 @@ sourcepaths = [
    pathBoost  + '/include',
    pathGlm,
    pathBullet + '/include/bullet/',
+   pathCxxTest,
    pathSdl    + "/include/"]

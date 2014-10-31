@@ -51,6 +51,9 @@ class TestLogManager : public CxxTest::TestSuite
 
   void testStreamLogging()
   {
+#ifdef __ANDROID__
+    TS_SKIP("Not yet implemented for android.");
+#endif
     LogManager lm(LogManager::LEVEL_NONE,
                   LogManager::LEVEL_DEBUG,
                   LogManager::COLORMODE_NONE);
@@ -67,6 +70,9 @@ class TestLogManager : public CxxTest::TestSuite
 
   void testStreamLevels()
   {
+#ifdef __ANDROID__
+    TS_SKIP("Not yet implemented for android.");
+#endif
     LogManager lm(LogManager::LEVEL_NONE,
                   LogManager::LEVEL_DEBUG,
                   LogManager::COLORMODE_NONE);
@@ -124,6 +130,9 @@ class TestLogManager : public CxxTest::TestSuite
 
   void testFileLogging()
   {
+#ifdef __ANDROID__
+    TS_SKIP("Not yet implemented for android.");
+#endif
     File logfile("./tmplogfile.log");
     LogManager lm(LogManager::LEVEL_DEBUG,
                   LogManager::LEVEL_NONE,

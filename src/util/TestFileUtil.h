@@ -20,6 +20,9 @@ class TestFileUtil : public CxxTest::TestSuite
  public:
   void testReadFile()
   {
+#ifdef __ANDROID__
+    TS_SKIP("Not yet implemented for android.");
+#endif
     const std::string text("This is the file content");
     const std::string fileName("./temporary_testfile.txt");
 
@@ -34,12 +37,18 @@ class TestFileUtil : public CxxTest::TestSuite
 
   void testWriteException()
   {
+#ifdef __ANDROID__
+    TS_SKIP("Not yet implemented for android.");
+#endif
     TS_ASSERT_THROWS(FileUtil::write("/foo/bar", "Hello"), Exception e);
     TS_ASSERT_THROWS(FileUtil::append("/foo/bar", "Hello"), Exception e);
   }
 
   void testWriteAppend()
   {
+#ifdef __ANDROID__
+    TS_SKIP("Not yet implemented for android.");
+#endif
     const std::string filename("./certainlythisdoesnotexist.txt");
     FileUtil::write(filename, "foo");
     TS_ASSERT_EQUALS(FileUtil::read(filename), "foo");

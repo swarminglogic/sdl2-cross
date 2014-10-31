@@ -35,6 +35,9 @@ class TestFileMonitor : public CxxTest::TestSuite
 
   void testExists()
   {
+#ifdef __ANDROID__
+    TS_SKIP("Not yet implemented for android.");
+#endif
     const std::string filename("./certainlythisdoesnotexist.txt");
     TS_ASSERT(!FileUtil::exists(filename));
     FileMonitor file(filename);
@@ -50,6 +53,9 @@ class TestFileMonitor : public CxxTest::TestSuite
 
   void testIsUpdated()
   {
+#ifdef __ANDROID__
+    TS_SKIP("Not yet implemented for android.");
+#endif
     const std::string filename("./certainlythisdoesnotexist.txt");
     TS_ASSERT(!FileUtil::exists(filename));
 

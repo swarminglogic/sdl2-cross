@@ -18,11 +18,17 @@ class TestAsset : public CxxTest::TestSuite
  public:
   void testBasePath()
   {
+#ifdef __ANDROID__
+    TS_SKIP("Not yet implemented for android.");
+#endif
     TS_ASSERT_EQUALS(Asset::getBasePath(), "./assets/");
   }
 
   void testAssetImage()
   {
+#ifdef __ANDROID__
+    TS_SKIP("Not yet implemented for android.");
+#endif
     AssetImage imageb;
     TS_ASSERT_EQUALS(imageb.path(), "./assets/images/");
     TS_ASSERT_EQUALS(imageb.filename(), "");
@@ -42,6 +48,9 @@ class TestAsset : public CxxTest::TestSuite
 
   void testAssetFont()
   {
+#ifdef __ANDROID__
+    TS_SKIP("Not yet implemented for android.");
+#endif
     AssetFont fontb;
     TS_ASSERT_EQUALS(fontb.path(), "./assets/fonts/");
     TS_ASSERT_EQUALS(fontb.filename(), "");
@@ -61,6 +70,9 @@ class TestAsset : public CxxTest::TestSuite
 
   void testAssetMesh()
   {
+#ifdef __ANDROID__
+    TS_SKIP("Not yet implemented for android.");
+#endif
     AssetMesh meshb;
     TS_ASSERT_EQUALS(meshb.path(), "./assets/meshes/");
     TS_ASSERT_EQUALS(meshb.filename(), "");
@@ -80,6 +92,9 @@ class TestAsset : public CxxTest::TestSuite
 
   void testAssetShader()
   {
+#ifdef __ANDROID__
+    TS_SKIP("Not yet implemented for android.");
+#endif
     AssetShader shaderb;
     TS_ASSERT_EQUALS(shaderb.path(), "./assets/shaders/");
     TS_ASSERT_EQUALS(shaderb.filename(), "");
@@ -99,6 +114,9 @@ class TestAsset : public CxxTest::TestSuite
 
   void testAssetSound()
   {
+#ifdef __ANDROID__
+    TS_SKIP("Not yet implemented for android.");
+#endif
     AssetSound soundb;
     TS_ASSERT_EQUALS(soundb.path(), "./assets/sounds/");
     TS_ASSERT_EQUALS(soundb.filename(), "");
@@ -118,6 +136,9 @@ class TestAsset : public CxxTest::TestSuite
 
   void testAssetMusic()
   {
+#ifdef __ANDROID__
+    TS_SKIP("Not yet implemented for android.");
+#endif
     AssetMusic musicb;
     TS_ASSERT_EQUALS(musicb.path(), "./assets/music/");
     TS_ASSERT_EQUALS(musicb.filename(), "");
@@ -136,6 +157,9 @@ class TestAsset : public CxxTest::TestSuite
   }
 
   void testVirtual() {
+#ifdef __ANDROID__
+    TS_SKIP("Not yet implemented for android.");
+#endif
     std::unique_ptr<Asset> asset(new AssetShader("test.frag"));
     TS_ASSERT_EQUALS(asset->path(), "./assets/shaders/test.frag");
     TS_ASSERT_EQUALS(asset->filename(), "test.frag");
@@ -183,6 +207,9 @@ class TestAsset : public CxxTest::TestSuite
   }
 
   void testEmptyString() {
+#ifdef __ANDROID__
+    TS_SKIP("Not yet implemented for android.");
+#endif
     AssetImage img;
     AssetFont font;
     AssetMesh mesh;

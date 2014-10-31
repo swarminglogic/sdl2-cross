@@ -17,6 +17,9 @@ class TestCObjUtil : public CxxTest::TestSuite
  public:
   void testCobjReadWrite()
   {
+#ifdef __ANDROID__
+    TS_SKIP("Not yet implemented for android.");
+#endif
     std::string tmpObjFile("tmpobjfile.obj");
     {
       std::ofstream outfile(tmpObjFile);

@@ -33,6 +33,7 @@ Possible targets:
     lg,log                 adb logcat with SWL filter
     lga,loga               adb logcat with SWL, SDL, SDL/* filter
     lgall,logall           adb logcat with no filter
+    lgt,logtests           adb logcat with CxxTest filter
     clean                  removal of all build directories (use with caution)
     cleanl                 removal of all linux build directories (use with caution)
     cleana                 removal of all android build directories (use with caution)
@@ -234,6 +235,11 @@ while test $# -gt 0; do
         lgall|logall)
             shift
             adb logcat -c && adb logcat
+            exit
+            ;;
+        lgt|logtests)
+            shift
+            adb logcat -c && adb logcat -s "CxxTest"
             exit
             ;;
         clean)
