@@ -514,33 +514,27 @@ function findOrGetGlslangValidator {
 
 function findOrGetCxxTest {
     message "${GREEN}[CxxTest]${NORMAL}"
-    TMPCXXTEST=
-    if ! validateEnvironmentVariable CXXTEST ; then
-        if [ -x "utils/cxxtest/bin/cxxtestgen" ] ; then
-            writeStatus "  - CxxTest found in utils/cxxtest/" 0
-        else
-            writeStatus "  - CxxTest not found in utils/cxxtest/, downloading" 1
-            echo $GRAY
-            if [ -d utils/cxxtest ] ; then
-                echo "Previous directory detected. Removing ./utils/cxxtest"
-                rm -rf ./utils/cxxtest/*
-                rmdir ./utils/cxxtest
-            fi
-            git clone https://github.com/CxxTest/cxxtest.git utils/cxxtest && \
-                cd utils/cxxtest && git checkout 4.4 && rm -rf .git && cd ../.. && \
-                patch -i utils/patches/cxxtest.191addd.formatter.patch \
-                         utils/cxxtest/cxxtest/ErrorFormatter.h && \
-                patch -i utils/patches/cxxtest.191addd.printer.patch \
-                         utils/cxxtest/cxxtest/ErrorPrinter.h
-            echo $NORMAL
+    if [ -x "utils/cxxtest/bin/cxxtestgen" ] ; then
+        writeStatus "  - CxxTest found in utils/cxxtest/" 0
+    else
+        writeStatus "  - CxxTest not found in utils/cxxtest/, downloading" 1
+        echo $GRAY
+        if [ -d utils/cxxtest ] ; then
+            echo "Previous directory detected. Removing ./utils/cxxtest"
+            rm -rf ./utils/cxxtest/{.gitignore,}*
         fi
-        TMPCXXTEST="$(pwd)/utils/cxxtest"
-        setEnvVariable "CxxTest utility" "CXXTEST"
+        git clone https://github.com/CxxTest/cxxtest.git utils/cxxtest && \
+            cd utils/cxxtest && git checkout 4.4 && rm -rf .git && cd ../.. && \
+            patch -i utils/patches/cxxtest.191addd.formatter.patch \
+            utils/cxxtest/cxxtest/ErrorFormatter.h && \
+            patch -i utils/patches/cxxtest.191addd.printer.patch \
+            utils/cxxtest/cxxtest/ErrorPrinter.h
+        echo $NORMAL
     fi
-
+    TMPCXXTEST="utils/cxxtest"
     pathStatusCode=0
-    [[ ! -x $CXXTEST/bin/cxxtestgen ]] && pathStatusCode=2
-    writeStatus "  - Checking CxxTest path ($CXXTEST)" $pathStatusCode
+    [[ ! -x $TMPCXXTEST/bin/cxxtestgen ]] && pathStatusCode=2
+    writeStatus "  - Checking CxxTest path ($TMPCXXTEST)" $pathStatusCode
 }
 
 
