@@ -20,17 +20,10 @@ class TestObjUtil : public CxxTest::TestSuite
  public:
   void testObjRead()
   {
-#ifdef __ANDROID__
-    TS_SKIP("Not yet implemented for android.");
-#endif
-    std::string tmpObjFile("tmpobjfile.obj");
-    {
-      std::ofstream outfile(tmpObjFile);
-      outfile << makeCubeObjFile();
-    }
-
+    std::stringstream objstream(makeCubeObjFile());
+    tinyobj::MaterialFileReader mat("");
     std::vector<tinyobj::shape_t> cube;
-    LoadObj(cube, tmpObjFile.c_str());
+    tinyobj::LoadObj(cube, objstream, mat);
     TS_ASSERT(!cube.empty());
     TS_ASSERT_EQUALS(cube.size(), 1u);
 
@@ -45,13 +38,13 @@ class TestObjUtil : public CxxTest::TestSuite
       TS_ASSERT_LESS_THAN_EQUALS(x - delta, 1.0);
       TS_ASSERT_LESS_THAN_EQUALS(-1.0, x + delta);
     }
-
-    TS_ASSERT(std::remove(tmpObjFile.c_str()) == 0);
   }
 
   void testObjReadFileSystemAgnostic() {
 #ifdef __ANDROID__
-    TS_SKIP("Not yet implemented for android.");
+    TS_SKIP("Not implemented for android.");
+    // TODO swarminglogic, 2014-11-04: Rewrite CObjUtil to use SDL_RWopts
+    // instead of streams.
 #endif
     std::string tmpObjFile("tmpobjfile.obj");
     {

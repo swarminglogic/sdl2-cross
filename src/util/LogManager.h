@@ -49,8 +49,8 @@ class LogManager
   void setFileLogLevel(LogLevel fileLogLevel);
   LogLevel getStreamLogLevel() const;
   void setStreamLogLevel(LogLevel streamLogLevel);
-  const std::string& getLogfilePath() const;
-  void setLogfilePath(std::string logfilePath);
+  const std::string& getLogfileName() const;
+  void setLogfileName(std::string logfileName);
 
   LogManager::ColorMode getStreamColorMode() const;
   void setStreamColorMode(LogManager::ColorMode streamColorMode);
@@ -73,7 +73,7 @@ class LogManager
   LogLevel streamLogLevel_;
   ColorMode streamColorMode_;
 
-  std::string logfilePath_;
+  std::string logfileName_;
   const std::string androidLoggerTag_;
   mutable std::ostream* out_;
 

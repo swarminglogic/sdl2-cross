@@ -28,56 +28,50 @@ class TestFileMonitor : public CxxTest::TestSuite
   void testBasics()
   {
     const std::string filename("./certainlythisdoesnotexist.txt");
-    FileMonitor file(filename);
-    TS_ASSERT_EQUALS(filename, file.getFilename());
+    FileMonitor fileMon(filename);
+    TS_ASSERT_EQUALS(filename, fileMon.getFilename());
   }
 
 
   void testExists()
   {
-#ifdef __ANDROID__
-    TS_SKIP("Not yet implemented for android.");
-#endif
     const std::string filename("./certainlythisdoesnotexist.txt");
-    TS_ASSERT(!FileUtil::exists(filename));
-    FileMonitor file(filename);
-    TS_ASSERT(!file.exists());
-    TS_ASSERT(!file.exists());
+    TS_ASSERT(!FileUtil::exists(filename, FileUtil::FILETYPE_WRITABLE));
+    FileMonitor fileMon(filename, FileUtil::FILETYPE_WRITABLE);
+    TS_ASSERT(!fileMon.exists());
+    TS_ASSERT(!fileMon.exists());
 
     const std::string content { "This is the content." };
-    FileUtil::write(filename, content);
-    TS_ASSERT(FileUtil::exists(filename));
-    TS_ASSERT(FileUtil::remove(filename.c_str()));
+    FileUtil::write(filename, content, FileUtil::FILETYPE_WRITABLE);
+    TS_ASSERT(FileUtil::exists(filename, FileUtil::FILETYPE_WRITABLE));
+    TS_ASSERT(FileUtil::remove(filename, FileUtil::FILETYPE_WRITABLE));
   }
 
 
   void testIsUpdated()
   {
-#ifdef __ANDROID__
-    TS_SKIP("Not yet implemented for android.");
-#endif
     const std::string filename("./certainlythisdoesnotexist.txt");
-    TS_ASSERT(!FileUtil::exists(filename));
+    TS_ASSERT(!FileUtil::exists(filename, FileUtil::FILETYPE_WRITABLE));
 
-    FileMonitor file(filename);
+    FileMonitor fileMon(filename, FileUtil::FILETYPE_WRITABLE);
 
-    // Write some content, check if file exists now
+    // Write some content, check if fileMon exists now
     const std::string content { "This is the content." };
-    FileUtil::write(filename, content);
-    TS_ASSERT(FileUtil::exists(filename));
-    TS_ASSERT(file.isUpdated());
+    FileUtil::write(filename, content, FileUtil::FILETYPE_WRITABLE);
+    TS_ASSERT(FileUtil::exists(filename, FileUtil::FILETYPE_WRITABLE));
+    TS_ASSERT(fileMon.isUpdated());
 
     // Reset timestamp
-    file.resetTimeStamp();
-    TS_ASSERT(!file.isUpdated());
+    fileMon.resetTimeStamp();
+    TS_ASSERT(!fileMon.isUpdated());
 
 #ifdef SLOW_TESTS
     msleep(1200);
-    FileUtil::write(filename, "changed");
-    TS_ASSERT(file.isUpdated());
+    FileUtil::write(filename, "changed", FileUtil::FILETYPE_WRITABLE);
+    TS_ASSERT(fileMon.isUpdated());
 #endif
 
-    TS_ASSERT(FileUtil::remove(filename.c_str()));
+    TS_ASSERT(FileUtil::remove(filename, FileUtil::FILETYPE_WRITABLE));
   }
 };
 

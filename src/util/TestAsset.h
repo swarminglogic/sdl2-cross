@@ -19,28 +19,32 @@ class TestAsset : public CxxTest::TestSuite
   void testBasePath()
   {
 #ifdef __ANDROID__
-    TS_SKIP("Not yet implemented for android.");
-#endif
+    TS_ASSERT_EQUALS(Asset::getBasePath(), "");
+#else
     TS_ASSERT_EQUALS(Asset::getBasePath(), "./assets/");
+#endif
   }
 
   void testAssetImage()
   {
 #ifdef __ANDROID__
-    TS_SKIP("Not yet implemented for android.");
+    const std::string prefix = "";
+#else
+    const std::string prefix = "./assets/";
 #endif
+
     AssetImage imageb;
-    TS_ASSERT_EQUALS(imageb.path(), "./assets/images/");
+    TS_ASSERT_EQUALS(imageb.path(), prefix + "images/");
     TS_ASSERT_EQUALS(imageb.filename(), "");
     TS_ASSERT_EQUALS(imageb.type(), Asset::IMAGE);
 
-
     AssetImage image("test.png");
-    TS_ASSERT_EQUALS(image.path(), "./assets/images/test.png");
+    TS_ASSERT_EQUALS(image.path(), prefix + "images/test.png");
     TS_ASSERT_EQUALS(image.filename(), "test.png");
     TS_ASSERT_EQUALS(image.type(), Asset::IMAGE);
+
     AssetImage imageCp = image;
-    TS_ASSERT_EQUALS(imageCp.path(), "./assets/images/test.png");
+    TS_ASSERT_EQUALS(imageCp.path(), prefix + "images/test.png");
     TS_ASSERT_EQUALS(imageCp.filename(), "test.png");
     TS_ASSERT_EQUALS(imageCp.type(), Asset::IMAGE);
     TS_ASSERT_EQUALS(image, imageCp);
@@ -49,20 +53,23 @@ class TestAsset : public CxxTest::TestSuite
   void testAssetFont()
   {
 #ifdef __ANDROID__
-    TS_SKIP("Not yet implemented for android.");
+    const std::string prefix = "";
+#else
+    const std::string prefix = "./assets/";
 #endif
+
     AssetFont fontb;
-    TS_ASSERT_EQUALS(fontb.path(), "./assets/fonts/");
+    TS_ASSERT_EQUALS(fontb.path(), prefix + "fonts/");
     TS_ASSERT_EQUALS(fontb.filename(), "");
     TS_ASSERT_EQUALS(fontb.type(), Asset::FONT);
 
     AssetFont font("test.ttf");
-    TS_ASSERT_EQUALS(font.path(), "./assets/fonts/test.ttf");
+    TS_ASSERT_EQUALS(font.path(), prefix + "fonts/test.ttf");
     TS_ASSERT_EQUALS(font.filename(), "test.ttf");
     TS_ASSERT_EQUALS(font.type(), Asset::FONT);
 
     AssetFont fontCp = font;
-    TS_ASSERT_EQUALS(fontCp.path(), "./assets/fonts/test.ttf");
+    TS_ASSERT_EQUALS(fontCp.path(), prefix + "fonts/test.ttf");
     TS_ASSERT_EQUALS(fontCp.filename(), "test.ttf");
     TS_ASSERT_EQUALS(fontCp.type(), Asset::FONT);
     TS_ASSERT_EQUALS(font, fontCp);
@@ -71,20 +78,22 @@ class TestAsset : public CxxTest::TestSuite
   void testAssetMesh()
   {
 #ifdef __ANDROID__
-    TS_SKIP("Not yet implemented for android.");
+    const std::string prefix = "";
+#else
+    const std::string prefix = "./assets/";
 #endif
     AssetMesh meshb;
-    TS_ASSERT_EQUALS(meshb.path(), "./assets/meshes/");
+    TS_ASSERT_EQUALS(meshb.path(), prefix + "meshes/");
     TS_ASSERT_EQUALS(meshb.filename(), "");
     TS_ASSERT_EQUALS(meshb.type(), Asset::MESH);
 
     AssetMesh mesh("test.cobj");
-    TS_ASSERT_EQUALS(mesh.path(), "./assets/meshes/test.cobj");
+    TS_ASSERT_EQUALS(mesh.path(), prefix + "meshes/test.cobj");
     TS_ASSERT_EQUALS(mesh.filename(), "test.cobj");
     TS_ASSERT_EQUALS(mesh.type(), Asset::MESH);
 
     AssetMesh meshCp = mesh;
-    TS_ASSERT_EQUALS(meshCp.path(), "./assets/meshes/test.cobj");
+    TS_ASSERT_EQUALS(meshCp.path(), prefix + "meshes/test.cobj");
     TS_ASSERT_EQUALS(meshCp.filename(), "test.cobj");
     TS_ASSERT_EQUALS(meshCp.type(), Asset::MESH);
     TS_ASSERT_EQUALS(mesh, meshCp);
@@ -93,20 +102,22 @@ class TestAsset : public CxxTest::TestSuite
   void testAssetShader()
   {
 #ifdef __ANDROID__
-    TS_SKIP("Not yet implemented for android.");
+    const std::string prefix = "";
+#else
+    const std::string prefix = "./assets/";
 #endif
     AssetShader shaderb;
-    TS_ASSERT_EQUALS(shaderb.path(), "./assets/shaders/");
+    TS_ASSERT_EQUALS(shaderb.path(), prefix + "shaders/");
     TS_ASSERT_EQUALS(shaderb.filename(), "");
     TS_ASSERT_EQUALS(shaderb.type(), Asset::SHADER);
 
     AssetShader shader("test.frag");
-    TS_ASSERT_EQUALS(shader.path(), "./assets/shaders/test.frag");
+    TS_ASSERT_EQUALS(shader.path(), prefix + "shaders/test.frag");
     TS_ASSERT_EQUALS(shader.filename(), "test.frag");
     TS_ASSERT_EQUALS(shader.type(), Asset::SHADER);
 
     AssetShader shaderCp = shader;
-    TS_ASSERT_EQUALS(shaderCp.path(), "./assets/shaders/test.frag");
+    TS_ASSERT_EQUALS(shaderCp.path(), prefix + "shaders/test.frag");
     TS_ASSERT_EQUALS(shaderCp.filename(), "test.frag");
     TS_ASSERT_EQUALS(shaderCp.type(), Asset::SHADER);
     TS_ASSERT_EQUALS(shader, shaderCp);
@@ -115,20 +126,23 @@ class TestAsset : public CxxTest::TestSuite
   void testAssetSound()
   {
 #ifdef __ANDROID__
-    TS_SKIP("Not yet implemented for android.");
+    const std::string prefix = "";
+#else
+    const std::string prefix = "./assets/";
 #endif
+
     AssetSound soundb;
-    TS_ASSERT_EQUALS(soundb.path(), "./assets/sounds/");
+    TS_ASSERT_EQUALS(soundb.path(), prefix + "sounds/");
     TS_ASSERT_EQUALS(soundb.filename(), "");
     TS_ASSERT_EQUALS(soundb.type(), Asset::SOUND);
 
     AssetSound sound("test.flac");
-    TS_ASSERT_EQUALS(sound.path(), "./assets/sounds/test.flac");
+    TS_ASSERT_EQUALS(sound.path(), prefix + "sounds/test.flac");
     TS_ASSERT_EQUALS(sound.filename(), "test.flac");
     TS_ASSERT_EQUALS(sound.type(), Asset::SOUND);
 
     AssetSound soundCp = sound;
-    TS_ASSERT_EQUALS(soundCp.path(), "./assets/sounds/test.flac");
+    TS_ASSERT_EQUALS(soundCp.path(), prefix + "sounds/test.flac");
     TS_ASSERT_EQUALS(soundCp.filename(), "test.flac");
     TS_ASSERT_EQUALS(soundCp.type(), Asset::SOUND);
     TS_ASSERT_EQUALS(sound, soundCp);
@@ -137,20 +151,23 @@ class TestAsset : public CxxTest::TestSuite
   void testAssetMusic()
   {
 #ifdef __ANDROID__
-    TS_SKIP("Not yet implemented for android.");
+    const std::string prefix = "";
+#else
+    const std::string prefix = "./assets/";
 #endif
+
     AssetMusic musicb;
-    TS_ASSERT_EQUALS(musicb.path(), "./assets/music/");
+    TS_ASSERT_EQUALS(musicb.path(), prefix + "music/");
     TS_ASSERT_EQUALS(musicb.filename(), "");
     TS_ASSERT_EQUALS(musicb.type(), Asset::MUSIC);
 
     AssetMusic music("test.flac");
-    TS_ASSERT_EQUALS(music.path(), "./assets/music/test.flac");
+    TS_ASSERT_EQUALS(music.path(), prefix + "music/test.flac");
     TS_ASSERT_EQUALS(music.filename(), "test.flac");
     TS_ASSERT_EQUALS(music.type(), Asset::MUSIC);
 
     AssetMusic musicCp = music;
-    TS_ASSERT_EQUALS(musicCp.path(), "./assets/music/test.flac");
+    TS_ASSERT_EQUALS(musicCp.path(), prefix + "music/test.flac");
     TS_ASSERT_EQUALS(musicCp.filename(), "test.flac");
     TS_ASSERT_EQUALS(musicCp.type(), Asset::MUSIC);
     TS_ASSERT_EQUALS(music, musicCp);
@@ -158,15 +175,18 @@ class TestAsset : public CxxTest::TestSuite
 
   void testVirtual() {
 #ifdef __ANDROID__
-    TS_SKIP("Not yet implemented for android.");
+    const std::string prefix = "";
+#else
+    const std::string prefix = "./assets/";
 #endif
+
     std::unique_ptr<Asset> asset(new AssetShader("test.frag"));
-    TS_ASSERT_EQUALS(asset->path(), "./assets/shaders/test.frag");
+    TS_ASSERT_EQUALS(asset->path(), prefix + "shaders/test.frag");
     TS_ASSERT_EQUALS(asset->filename(), "test.frag");
     TS_ASSERT_EQUALS(asset->type(), Asset::SHADER);
 
     asset.reset(new AssetImage("image.png"));
-    TS_ASSERT_EQUALS(asset->path(), "./assets/images/image.png");
+    TS_ASSERT_EQUALS(asset->path(), prefix + "images/image.png");
     TS_ASSERT_EQUALS(asset->filename(), "image.png");
     TS_ASSERT_EQUALS(asset->type(), Asset::IMAGE);
   }
@@ -208,8 +228,11 @@ class TestAsset : public CxxTest::TestSuite
 
   void testEmptyString() {
 #ifdef __ANDROID__
-    TS_SKIP("Not yet implemented for android.");
+    const std::string prefix = "";
+#else
+    const std::string prefix = "./assets/";
 #endif
+
     AssetImage img;
     AssetFont font;
     AssetMesh mesh;
@@ -217,22 +240,22 @@ class TestAsset : public CxxTest::TestSuite
     AssetSound sound;
     AssetMusic music;
     TS_ASSERT_EQUALS(img.filename(), "");
-    TS_ASSERT_EQUALS(img.path(), "./assets/images/");
+    TS_ASSERT_EQUALS(img.path(), prefix + "images/");
 
     TS_ASSERT_EQUALS(font.filename(), "");
-    TS_ASSERT_EQUALS(font.path(), "./assets/fonts/");
+    TS_ASSERT_EQUALS(font.path(), prefix + "fonts/");
 
     TS_ASSERT_EQUALS(mesh.filename(), "");
-    TS_ASSERT_EQUALS(mesh.path(), "./assets/meshes/");
+    TS_ASSERT_EQUALS(mesh.path(), prefix + "meshes/");
 
     TS_ASSERT_EQUALS(shader.filename(), "");
-    TS_ASSERT_EQUALS(shader.path(), "./assets/shaders/");
+    TS_ASSERT_EQUALS(shader.path(), prefix + "shaders/");
 
     TS_ASSERT_EQUALS(sound.filename(), "");
-    TS_ASSERT_EQUALS(sound.path(), "./assets/sounds/");
+    TS_ASSERT_EQUALS(sound.path(), prefix + "sounds/");
 
     TS_ASSERT_EQUALS(music.filename(), "");
-    TS_ASSERT_EQUALS(music.path(), "./assets/music/");
+    TS_ASSERT_EQUALS(music.path(), prefix + "music/");
   }
 
   void testCopy() {

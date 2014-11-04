@@ -40,20 +40,17 @@ class TestLogManager : public CxxTest::TestSuite
     lm.setStreamColorMode(LogManager::COLORMODE_NONE);
     TS_ASSERT_EQUALS(lm.getStreamColorMode(), LogManager::COLORMODE_NONE);
 
-    const std::string logfilePath = "./logfile.log";
-    lm.setLogfilePath(logfilePath);
-    TS_ASSERT_EQUALS(logfilePath, lm.getLogfilePath());
+    const std::string logfileName = "./logfile.log";
+    lm.setLogfileName(logfileName);
+    TS_ASSERT_EQUALS(logfileName, lm.getLogfileName());
 
-    const std::string logfilePath2 = "./foo.log";
-    lm.setLogfilePath(logfilePath2);
-    TS_ASSERT_EQUALS(logfilePath2, lm.getLogfilePath());
+    const std::string logfileName2 = "./foo.log";
+    lm.setLogfileName(logfileName2);
+    TS_ASSERT_EQUALS(logfileName2, lm.getLogfileName());
   }
 
   void testStreamLogging()
   {
-#ifdef __ANDROID__
-    TS_SKIP("Not yet implemented for android.");
-#endif
     LogManager lm(LogManager::LEVEL_NONE,
                   LogManager::LEVEL_DEBUG,
                   LogManager::COLORMODE_NONE);
@@ -70,9 +67,6 @@ class TestLogManager : public CxxTest::TestSuite
 
   void testStreamLevels()
   {
-#ifdef __ANDROID__
-    TS_SKIP("Not yet implemented for android.");
-#endif
     LogManager lm(LogManager::LEVEL_NONE,
                   LogManager::LEVEL_DEBUG,
                   LogManager::COLORMODE_NONE);
@@ -130,15 +124,12 @@ class TestLogManager : public CxxTest::TestSuite
 
   void testFileLogging()
   {
-#ifdef __ANDROID__
-    TS_SKIP("Not yet implemented for android.");
-#endif
-    File logfile("./tmplogfile.log");
+    File logfile("./tmplogfile.log", FileUtil::FILETYPE_WRITABLE);
     LogManager lm(LogManager::LEVEL_DEBUG,
                   LogManager::LEVEL_NONE,
                   LogManager::COLORMODE_NONE);
     TS_ASSERT(!logfile.exists());
-    lm.setLogfilePath(logfile.getFilename());
+    lm.setLogfileName(logfile.getFilename());
     TS_ASSERT(!logfile.exists());
 
     lm.logColumnHeaders();
@@ -236,7 +227,7 @@ class TestLogManager : public CxxTest::TestSuite
     TS_ASSERT(isSusbtring(logfile.read(), "err4"));
     TS_ASSERT(!logfile.update());
 
-    TS_ASSERT(FileUtil::remove(logfile.getFilename()));
+    TS_ASSERT(logfile.remove());
   }
 
   void testStaticObject()

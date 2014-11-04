@@ -4,6 +4,8 @@
 #include <ctime>
 #include <string>
 
+#include <util/FileUtil.h>
+
 
 /**
  * File class.
@@ -20,9 +22,17 @@
 class File
 {
  public:
-  explicit File(const std::string& filename);
 
   File();
+  explicit File(const std::string& filename);
+
+  /**
+   * Let's caller specify filetype.
+   * See FileUtil for details.
+   */
+  File(const std::string& filename,
+       FileUtil::FileType filetype);
+
 
   virtual ~File();
 
@@ -34,13 +44,37 @@ class File
    */
   bool exists() const;
 
+
+  /**
+   * Deletes the file it represents from filesystem
+   * @return true if successfull, false otherwise.
+   */
+  bool remove() const;
+
   /**
    * Reads the whole content of file, returned as string.
    * Optional is  isModified() ->[true]-> getLocalCopy()
    */
   const std::string& read();
 
+
   /**
+   * Replaces the content of the file.
+   *
+   * @param content  The content to replace with.
+   */
+  void write(const std::string& content);
+
+
+  /**
+   * Appends content to file.
+   *
+   * @param content The content to append.
+   */
+  void append(const std::string& content);
+
+
+   /**
    * @return Local copy.
    */
   const std::string& getLocalCopy() const;
@@ -83,8 +117,10 @@ class File
   std::time_t timeLastRead_;
 
   std::string localCopy_;
-  // std::size_t contentReadHash_;
   std::size_t localCopyHash_;
+
+  FileUtil::FileType filetype_;
+  static std::string preferencePath_;
 };
 
 #endif  // UTIL_FILE_H

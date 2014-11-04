@@ -2,7 +2,6 @@
 #define UTIL_TESTFILEUTIL_H
 
 #include <cstdio>
-#include <fstream>
 
 #include <util/Exception.h>
 #include <util/FileUtil.h>
@@ -20,18 +19,14 @@ class TestFileUtil : public CxxTest::TestSuite
  public:
   void testReadFile()
   {
-#ifdef __ANDROID__
-    TS_SKIP("Not yet implemented for android.");
-#endif
     const std::string text("This is the file content");
     const std::string fileName("./temporary_testfile.txt");
 
     writeFile(text, fileName);
-    std::string readText = FileUtil::read(fileName);
+    std::string readText = FileUtil::read(fileName,
+                                          FileUtil::FILETYPE_WRITABLE);
     TS_ASSERT_EQUALS(text, readText);
-    TS_ASSERT_THROWS(FileUtil::read("thisFileDoesNotExist"),
-                     Exception);
-    TS_ASSERT_EQUALS(std::remove(fileName.c_str()), 0);
+    TS_ASSERT(FileUtil::remove(fileName, FileUtil::FILETYPE_WRITABLE));
   }
 
 
@@ -46,23 +41,19 @@ class TestFileUtil : public CxxTest::TestSuite
 
   void testWriteAppend()
   {
-#ifdef __ANDROID__
-    TS_SKIP("Not yet implemented for android.");
-#endif
     const std::string filename("./certainlythisdoesnotexist.txt");
-    FileUtil::write(filename, "foo");
-    TS_ASSERT_EQUALS(FileUtil::read(filename), "foo");
-    FileUtil::append(filename, "bar");
-    TS_ASSERT_EQUALS(FileUtil::read(filename), "foobar");
-    TS_ASSERT(FileUtil::remove(filename.c_str()));
+    const FileUtil::FileType fileType = FileUtil::FILETYPE_WRITABLE;
+    FileUtil::write(filename, "foo", fileType);
+    TS_ASSERT_EQUALS(FileUtil::read(filename, fileType), "foo");
+    FileUtil::append(filename, "bar", fileType);
+    TS_ASSERT_EQUALS(FileUtil::read(filename, fileType), "foobar");
+    TS_ASSERT(FileUtil::remove(filename, fileType));
   }
 
  private:
   void writeFile(const std::string& text,
                  const std::string& fileName) {
-    std::ofstream file(fileName);
-    TS_ASSERT(file);
-    file << text;
+    FileUtil::write(fileName, text, FileUtil::FILETYPE_WRITABLE);
   }
 };
 

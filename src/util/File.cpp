@@ -8,18 +8,26 @@
 #include <util/FileUtil.h>
 
 
-File::File(const std::string& filename)
-  : filename_(filename),
-    timeLastRead_(0),
-    localCopy_(""),
-    localCopyHash_(0)
-{
-}
-
 File::File() : File("")
 {
 }
 
+
+File::File(const std::string& filename)
+    : File(filename, FileUtil::FILETYPE_UNSPECIFIED)
+{
+}
+
+
+File::File(const std::string& filename,
+           FileUtil::FileType filetype)
+    : filename_(filename),
+      timeLastRead_(0),
+      localCopy_(""),
+      localCopyHash_(0),
+      filetype_(filetype)
+{
+}
 
 
 File::~File()
@@ -29,14 +37,20 @@ File::~File()
 
 bool File::exists() const
 {
-  return FileUtil::exists(filename_);
+  return FileUtil::exists(filename_, filetype_);
+}
+
+
+bool File::remove() const
+{
+  return FileUtil::remove(filename_, filetype_);
 }
 
 
 const std::string& File::read()
 {
   timeLastRead_ = Clock::now();
-  const std::string content = FileUtil::read(filename_);
+  const std::string content = FileUtil::read(filename_, filetype_);
   std::size_t contentHash = std::hash<std::string>()(content);
   if (contentHash != localCopyHash_) {
     localCopy_ = content;
@@ -44,6 +58,21 @@ const std::string& File::read()
   }
   return localCopy_;
 }
+
+
+void File::write(const std::string& content)
+{
+  // TODO swarminglogic, 2014-11-04: Assert correct filetype_
+  FileUtil::write(filename_, content, filetype_);
+}
+
+
+void File::append(const std::string& content)
+{
+  // TODO swarminglogic, 2014-11-04: Assert correct filetype_
+  FileUtil::append(filename_, content, filetype_);
+}
+
 
 const std::string& File::getLocalCopy() const
 {

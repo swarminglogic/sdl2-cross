@@ -30,6 +30,7 @@ Possible targets:
     ws                     Auto-validate shaders on changes.
     wt                     Watch test directory, execute changed tests
     testl                  compile and run unit tests on linux
+    rtestl                 run all unit tests on linux
     lg,log                 adb logcat with SWL filter
     lga,loga               adb logcat with SWL, SDL, SDL/* filter
     lgall,logall           adb logcat with no filter
@@ -209,6 +210,23 @@ while test $# -gt 0; do
                     sed "s/\(^\/.*\.h:[[:digit:]]\+:\)\(.*\)/${TEAL}\1${NORMAL}\n  \2\n/g" | \
                     sed "s/\(Error:\)/${RED}\1${NORMAL}/g"
             done
+            ;;
+        rtestl)
+            shift
+            failAccumFile=/tmp/.sdl2-cross.alltest.failure
+            echo "" > $failAccumFile;
+            tests=$(find ./bin/tests/ -executable -type f)
+            for i in $tests ; do
+                testLog=/tmp/.sdl2-cross.alltest.$(basename $i)
+                ./$i > $testLog
+                cat $testLog | grep --color=never "OK"
+                cat $testLog | grep -v --color=never "OK" >> $failAccumFile
+            done
+            cat $failAccumFile | \
+                grep -vP "In Test.*::test.*:$" | \
+                sed "s/^\(Test.*\)::\(.*\)/${RED}${BOLD}\1${NORMAL}::${YELLOW}\2${NORMAL}/g" | \
+                sed "s/\(^\/.*\.h:[[:digit:]]\+:\)\(.*\)/${TEAL}\1${NORMAL}\n  \2\n/g" | \
+                sed "s/\(Error:\)/${RED}\1${NORMAL}/g"
             ;;
         testl)
             shift

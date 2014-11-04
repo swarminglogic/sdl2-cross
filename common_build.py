@@ -72,6 +72,7 @@ cppflags.extend(['-isystem', pathBoost  + '/include',
                  '-isystem', pathSdl    + '/include/',
                  '-isystem', pathGlm,
                  '-isystem', 'external/',
+                 '-isystem', pathCxxTest,
                  '-isystem', 'external/polyvox/library/PolyVoxCore/include',
                  '-isystem', pathBullet + '/include/bullet'])
 cppflags.extend(gccWarningLevel)

@@ -35,9 +35,6 @@ class TestLog : public CxxTest::TestSuite
 
   void testBasics()
   {
-#ifdef __ANDROID__
-    TS_SKIP("Not yet implemented for android.");
-#endif
     Log log_("FooTest1");
     TS_ASSERT(getLogAndClear().empty());
 
@@ -96,9 +93,6 @@ class TestLog : public CxxTest::TestSuite
 
   void testStreamConversions()
   {
-#ifdef __ANDROID__
-    TS_SKIP("Not yet implemented for android.");
-#endif
     Log log_("BarTest1");
     TS_ASSERT(getLogAndClear().empty());
 
@@ -189,9 +183,6 @@ class TestLog : public CxxTest::TestSuite
 
   void testLogException()
   {
-#ifdef __ANDROID__
-    TS_SKIP("Not yet implemented for android.");
-#endif
     Log log_("ExceptionTest1");
     const std::string exceptionString = "Throw it around";
     bool requiredSwitch = false;

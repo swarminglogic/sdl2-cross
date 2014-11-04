@@ -38,36 +38,35 @@ class TestFile : public CxxTest::TestSuite
 
   void testExists()
   {
-#ifdef __ANDROID__
-    TS_SKIP("Not yet implemented for android.");
-#endif
     const std::string filename("./certainlythisdoesnotexist.txt");
-    TS_ASSERT(!FileUtil::exists(filename));
-    File file(filename);
+    TS_ASSERT(!FileUtil::exists(filename,
+                                FileUtil::FILETYPE_WRITABLE));
+    File file(filename, FileUtil::FILETYPE_WRITABLE);
     TS_ASSERT(!file.exists());
     TS_ASSERT(!file.exists());
 
     const std::string content { "This is the content." };
-    FileUtil::write(filename, content);
-    TS_ASSERT(FileUtil::exists(filename));
-    TS_ASSERT(FileUtil::remove(filename.c_str()));
+    FileUtil::write(filename, content,
+                    FileUtil::FILETYPE_WRITABLE);
+    TS_ASSERT(file.exists());
+    TS_ASSERT(FileUtil::exists(filename,
+                               FileUtil::FILETYPE_WRITABLE));
+    TS_ASSERT(FileUtil::remove(filename, FileUtil::FILETYPE_WRITABLE));
+    TS_ASSERT(!file.exists());
   }
 
 
   void testRead()
   {
-#ifdef __ANDROID__
-    TS_SKIP("Not yet implemented for android.");
-#endif
     const std::string filename("./certainlythisdoesnotexist.txt");
-    TS_ASSERT(!FileUtil::exists(filename));
-
-    File file(filename);
+    TS_ASSERT(!FileUtil::exists(filename,
+                                FileUtil::FILETYPE_WRITABLE));
+    File file(filename, FileUtil::FILETYPE_WRITABLE);
 
     // Write some content, check if file exists now
     const std::string content { "This is the content." };
-    FileUtil::write(filename, content);
-    TS_ASSERT(FileUtil::exists(filename));
+    FileUtil::write(filename, content, FileUtil::FILETYPE_WRITABLE);
+    TS_ASSERT(FileUtil::exists(filename, FileUtil::FILETYPE_WRITABLE));
 
     // Read the file, check if it has updated since last read.
     const std::string& loaded = file.read();
@@ -79,7 +78,7 @@ class TestFile : public CxxTest::TestSuite
 
     // [modify], update, !update, [modify], getLocalCopy, !update
     const std::string text1 {"Text1"};
-    FileUtil::write(filename, text1);
+    FileUtil::write(filename, text1, FileUtil::FILETYPE_WRITABLE);
     TS_ASSERT(file.update());
     TS_ASSERT(!file.update());
     std::string getText1 = {file.getLocalCopy()};
@@ -88,47 +87,57 @@ class TestFile : public CxxTest::TestSuite
 
     // [modify], update, [modify], read, !update
     const std::string text2 {"Text2"};
-    FileUtil::write(filename, text2);
+    FileUtil::write(filename, text2, FileUtil::FILETYPE_WRITABLE);
     TS_ASSERT(file.update());
     std::string getText2 = {file.read()};
     TS_ASSERT(!file.update());
 
 #ifdef SLOW_TESTS
     msleep(1200);
-    FileUtil::write(filename, "changed");
+    FileUtil::write(filename, "changed", FileUtil::FILETYPE_WRITABLE);
     TS_ASSERT(file.isUpdated());
     TS_ASSERT(file.update());
 #endif
 
-    TS_ASSERT(FileUtil::remove(filename.c_str()));
+    TS_ASSERT(file.remove());
   }
+
+
+  void testWriteAppend()
+  {
+    const std::string filename("./certainlythisdoesnotexist.txt");
+    File file("./certainlythisdoesnotexist.txt",
+              FileUtil::FILETYPE_WRITABLE);
+    TS_ASSERT(!file.exists());
+    file.write("foo");
+    TS_ASSERT_EQUALS(file.read(), "foo");
+    file.append("bar");
+    TS_ASSERT_EQUALS(file.read(), "foobar");
+    TS_ASSERT(file.remove());
+  }
+
 
   void testReadToLocal()
   {
-#ifdef __ANDROID__
-    TS_SKIP("Not yet implemented for android.");
-#endif
     const std::string filename("./certainlythisdoesnotexist.txt");
-    TS_ASSERT(!FileUtil::exists(filename));
 
-    File file(filename);
+    File file(filename, FileUtil::FILETYPE_WRITABLE);
+    TS_ASSERT(!file.exists());
     const std::string content { "This is the content." };
-    FileUtil::write(filename, content);
+    file.write(content);
     file.update();
     TS_ASSERT_EQUALS(file.getLocalCopy(), content);
-    TS_ASSERT(FileUtil::remove(filename.c_str()));
+    TS_ASSERT(file.remove());
   }
 
   void testCopy()
   {
-#ifdef __ANDROID__
-    TS_SKIP("Not yet implemented for android.");
-#endif
     const std::string filename("./certainlythisdoesnotexist.txt");
-    TS_ASSERT(!FileUtil::exists(filename));
+    TS_ASSERT(!FileUtil::exists(filename,
+                                FileUtil::FILETYPE_WRITABLE));
 
     // Basic
-    File file(filename);
+    File file(filename, FileUtil::FILETYPE_WRITABLE);
     File filecp = file;
     File fileas(file);
     TS_ASSERT_EQUALS(file.getFilename(), filecp.getFilename());
@@ -136,7 +145,7 @@ class TestFile : public CxxTest::TestSuite
 
     // After copy
     const std::string text1 {"Text1"};
-    FileUtil::write(filename, text1);
+    file.write(text1);
     TS_ASSERT(file.update());
     File file3(file);
     File file4 = file;
@@ -144,25 +153,30 @@ class TestFile : public CxxTest::TestSuite
     TS_ASSERT(!file4.update());
     TS_ASSERT_EQUALS(file3.read(), text1);
 
-    TS_ASSERT(FileUtil::remove(filename.c_str()));
+    TS_ASSERT(file.exists());
+    TS_ASSERT(file3.exists());
+    TS_ASSERT(file4.exists());
+    TS_ASSERT(file.remove());
+    TS_ASSERT(!file.exists());
+    TS_ASSERT(!file3.exists());
+    TS_ASSERT(!file4.exists());
   }
 
   void testSetFilename()
   {
-#ifdef __ANDROID__
-    TS_SKIP("Not yet implemented for android.");
-#endif
     const std::string filename("./thisdoesexist.txt");
-    FileUtil::write(filename, "foobar");
+    FileUtil::write(filename, "foobar", FileUtil::FILETYPE_WRITABLE);
 
-    File file(filename);
+    File file(filename, FileUtil::FILETYPE_WRITABLE);
     TS_ASSERT(file.exists());
 
     const std::string filename2("./certainlythisdoesnotexist.txt");
     file.setFilename(filename2);
     TS_ASSERT(!file.exists());
 
-    TS_ASSERT(FileUtil::remove(filename.c_str()));
+    file.setFilename(filename);
+    TS_ASSERT(file.exists());
+    TS_ASSERT(file.remove());
   }
 };
 

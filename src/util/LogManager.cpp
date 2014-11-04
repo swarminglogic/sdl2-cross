@@ -30,7 +30,7 @@ LogManager::LogManager(LogLevel fileLogLevel,
   : fileLogLevel_(fileLogLevel),
     streamLogLevel_(streamLogLevel),
     streamColorMode_(colorMode),
-    logfilePath_(""),
+    logfileName_(""),
     androidLoggerTag_("SWL"),
     out_(nullptr)
 {
@@ -104,13 +104,12 @@ void LogManager::log2Stream(
       const std::string& formatted) const
 {
 #ifndef LOG2STREAM_DISABLED
-#ifdef __ANDROID__
+  #ifdef __ANDROID__
   log2AndroidStream(level, formatted);
-#else
+  #endif  // __ANDROID__
   if (out_)
     *out_ << formatted << std::endl;
   (void)level;
-#endif
 #else
   (void)formatted;
 #endif
@@ -141,10 +140,10 @@ void LogManager::log2AndroidStream(LogLevel level,
 void LogManager::log2File(const std::string& formatted) const
 {
 #ifndef LOG2FILE_DISABLED
-  if (logfilePath_.empty())
+  if (logfileName_.empty())
     return;
-  FileUtil::append(logfilePath_, formatted);
-  FileUtil::append(logfilePath_, "\n");
+  FileUtil::append(logfileName_, formatted, FileUtil::FILETYPE_WRITABLE);
+  FileUtil::append(logfileName_, "\n", FileUtil::FILETYPE_WRITABLE);
 #else
   (void)formatted;
 #endif
@@ -175,15 +174,15 @@ void LogManager::setStreamLogLevel(LogLevel streamLogLevel)
 }
 
 
-const std::string& LogManager::getLogfilePath() const
+const std::string& LogManager::getLogfileName() const
 {
-  return logfilePath_;
+  return logfileName_;
 }
 
 
-void LogManager::setLogfilePath(std::string logfilePath)
+void LogManager::setLogfileName(std::string logfileName)
 {
-  logfilePath_ = logfilePath;
+  logfileName_ = logfileName;
 }
 
 
