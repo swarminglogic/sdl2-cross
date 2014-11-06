@@ -4,7 +4,7 @@
 #include <graphics/ImageResourceManager.h>
 #include <graphics/MeshResourceManager.h>
 #include <graphics/ShaderResourceManager.h>
-#include <util/assert.h>
+#include <util/Assert.h>
 
 
 ResourceManager::ResourceManager()

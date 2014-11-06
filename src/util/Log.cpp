@@ -2,7 +2,7 @@
 
 #include <util/Exception.h>
 #include <util/LogManager.h>
-#include <util/assert.h>
+#include <util/Assert.h>
 
 
 Log::Log(const std::string& loggerName)

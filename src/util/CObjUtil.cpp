@@ -1,6 +1,6 @@
 #include <util/CObjUtil.h>
 
-#include <util/assert.h>
+#include <util/Assert.h>
 
 
 CObjUtil::CObjUtil()

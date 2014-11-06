@@ -2,7 +2,7 @@
 
 #include <graphics/GlState.h>
 #include <math/MathUtil.h>
-#include <util/assert.h>
+#include <util/Assert.h>
 
 
 GlTexture::GlTexture()

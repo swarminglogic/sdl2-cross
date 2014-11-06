@@ -10,7 +10,7 @@
 #include <util/FileInfo.h>
 #include <util/FileUtil.h>
 #include <util/SDL.h>
-#include <util/assert.h>
+#include <util/Assert.h>
 #include <util/gitrev.h>
 
 

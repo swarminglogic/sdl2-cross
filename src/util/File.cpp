@@ -6,7 +6,7 @@
 #include <util/Clock.h>
 #include <util/FileInfo.h>
 #include <util/FileUtil.h>
-#include <util/assert.h>
+#include <util/Assert.h>
 
 
 File::File() : File("")
@@ -137,5 +137,11 @@ void File::setFilename(const std::string& filename)
   timeLastRead_  = 0;
   localCopy_     = "";
   localCopyHash_ = 0;
+}
+
+
+const FileInfo& File::getFileInfo() const
+{
+  return fileInfo_;
 }
 

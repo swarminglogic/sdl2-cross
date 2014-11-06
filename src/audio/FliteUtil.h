@@ -2,7 +2,7 @@
 #define AUDIO_FLITEUTIL_H
 
 #include <audio/SDL_mixer.h>
-#include <util/assert.h>
+#include <util/Assert.h>
 
 
 // Forward declarations

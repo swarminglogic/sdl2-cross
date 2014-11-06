@@ -5,7 +5,7 @@
 
 #include <graphics/GlState.h>
 #include <graphics/SDL_opengl.h>
-#include <util/assert.h>
+#include <util/Assert.h>
 
 
 /**

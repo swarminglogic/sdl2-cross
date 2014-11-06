@@ -1,6 +1,6 @@
 #include <util/TimedExecution.h>
 
-#include <util/assert.h>
+#include <util/Assert.h>
 
 
 TimedExecution::TimedExecution(std::function<void(void)> fun,

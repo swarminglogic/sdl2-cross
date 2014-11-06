@@ -3,7 +3,7 @@
 #include <algorithm>
 
 #include <math/MathUtil.h>
-#include <util/assert.h>
+#include <util/Assert.h>
 
 
 CharMap::CharMap()

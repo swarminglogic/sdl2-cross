@@ -2,7 +2,7 @@
 
 #include <audio/SDL_mixer.h>
 #include <util/Asset.h>
-#include <util/assert.h>
+#include <util/Assert.h>
 
 
 AudioPlayback::AudioPlayback()

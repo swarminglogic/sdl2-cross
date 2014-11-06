@@ -3,7 +3,7 @@
 #include <cmath>
 
 #include <util/StringUtil.h>
-#include <util/assert.h>
+#include <util/Assert.h>
 
 
 TextBoxText::TextBoxText()

@@ -179,6 +179,15 @@ class TestFile : public CxxTest::TestSuite
     File fileas(file);
     TS_ASSERT_EQUALS(file.getFilename(), filecp.getFilename());
     TS_ASSERT_EQUALS(file.getFilename(), fileas.getFilename());
+    TS_ASSERT_EQUALS(file.getFileInfo().getFilename(),
+                     fileas.getFileInfo().getFilename());
+    TS_ASSERT_EQUALS(file.getFileInfo().getFiletype(),
+                     fileas.getFileInfo().getFiletype());
+    TS_ASSERT_EQUALS(file.getFileInfo().getFilename(),
+                     filecp.getFileInfo().getFilename());
+    TS_ASSERT_EQUALS(file.getFileInfo().getFiletype(),
+                     filecp.getFileInfo().getFiletype());
+
 
     // After copy
     const std::string text1 {"Text1"};

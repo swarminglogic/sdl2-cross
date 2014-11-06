@@ -5,7 +5,7 @@
 #include <graphics/GlState.h>
 #include <graphics/SDL_image.h>
 #include <math/MathUtil.h>
-#include <util/assert.h>
+#include <util/Assert.h>
 
 
 Surface::Surface(SDL_Surface* surface)

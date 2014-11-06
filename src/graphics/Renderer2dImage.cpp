@@ -2,7 +2,7 @@
 
 #include <graphics/GlUtil.h>
 #include <graphics/ShaderResourceManager.h>
-#include <util/assert.h>
+#include <util/Assert.h>
 
 
 Renderer2dImage::Renderer2dImage()

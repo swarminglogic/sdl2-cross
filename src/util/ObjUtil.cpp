@@ -5,7 +5,7 @@
 #include <util/CObjUtil.h>
 #include <util/FileUtil.h>
 #include <util/StringUtil.h>
-#include <util/assert.h>
+#include <util/Assert.h>
 
 
 std::vector<tinyobj::shape_t> ObjUtil::read(AssetMesh meshfile)

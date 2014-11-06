@@ -6,7 +6,7 @@
 #include <math/Rectf.h>
 #include <math/Size.h>
 #include <math/Sizef.h>
-#include <util/assert.h>
+#include <util/Assert.h>
 
 
 float MathUtil::PI = 3.14159265359f;

@@ -5,7 +5,7 @@
 #include <util/Exception.h>
 #include <util/FileInfo.h>
 #include <util/SDL.h>
-#include <util/assert.h>
+#include <util/Assert.h>
 
 
 #ifdef USE_BOOST_FS

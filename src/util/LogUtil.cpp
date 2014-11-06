@@ -2,7 +2,7 @@
 
 #include <util/Log.h>
 #include <util/SDL.h>
-#include <util/assert.h>
+#include <util/Assert.h>
 
 
 // LCOV_EXCL_START

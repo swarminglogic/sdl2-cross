@@ -4,7 +4,7 @@
 
 #include <util/Clock.h>
 #include <util/FileUtil.h>
-#include <util/assert.h>
+#include <util/Assert.h>
 
 
 FileMonitor::FileMonitor(const std::string& filename,

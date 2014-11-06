@@ -121,6 +121,7 @@ class File
   const std::string& getFilename() const;
   void setFilename(const std::string& filename);
 
+  const FileInfo& getFileInfo() const;
 
  private:
   std::time_t getLastModifiedTime() const;

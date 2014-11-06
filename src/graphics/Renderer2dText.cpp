@@ -6,7 +6,7 @@
 #include <math/Size.h>
 #include <util/CharMap.h>
 #include <util/TextBoxText.h>
-#include <util/assert.h>
+#include <util/Assert.h>
 
 
 Renderer2dText::Renderer2dText()
