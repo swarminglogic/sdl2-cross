@@ -4,6 +4,7 @@
 #include <sstream>
 
 #include <util/File.h>
+#include <util/FileInfo.h>
 #include <util/FileUtil.h>
 #include <util/LogManager.h>
 
@@ -124,7 +125,7 @@ class TestLogManager : public CxxTest::TestSuite
 
   void testFileLogging()
   {
-    File logfile("./tmplogfile.log", FileUtil::FILETYPE_WRITABLE);
+    File logfile("./tmplogfile.log", FileInfo::TYPE_WRITABLE);
     LogManager lm(LogManager::LEVEL_DEBUG,
                   LogManager::LEVEL_NONE,
                   LogManager::COLORMODE_NONE);

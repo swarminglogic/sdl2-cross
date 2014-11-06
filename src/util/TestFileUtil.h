@@ -4,6 +4,7 @@
 #include <cstdio>
 
 #include <util/Exception.h>
+#include <util/FileInfo.h>
 #include <util/FileUtil.h>
 
 #include <cxxtest/TestSuite.h>
@@ -24,9 +25,9 @@ class TestFileUtil : public CxxTest::TestSuite
 
     writeFile(text, fileName);
     std::string readText = FileUtil::read(fileName,
-                                          FileUtil::FILETYPE_WRITABLE);
+                                          FileInfo::TYPE_WRITABLE);
     TS_ASSERT_EQUALS(text, readText);
-    TS_ASSERT(FileUtil::remove(fileName, FileUtil::FILETYPE_WRITABLE));
+    TS_ASSERT(FileUtil::remove(fileName, FileInfo::TYPE_WRITABLE));
   }
 
 
@@ -42,7 +43,7 @@ class TestFileUtil : public CxxTest::TestSuite
   void testWriteAppend()
   {
     const std::string filename("./certainlythisdoesnotexist.txt");
-    const FileUtil::FileType fileType = FileUtil::FILETYPE_WRITABLE;
+    const FileInfo::FileType fileType = FileInfo::TYPE_WRITABLE;
     FileUtil::write(filename, "foo", fileType);
     TS_ASSERT_EQUALS(FileUtil::read(filename, fileType), "foo");
     FileUtil::append(filename, "bar", fileType);
@@ -53,7 +54,7 @@ class TestFileUtil : public CxxTest::TestSuite
  private:
   void writeFile(const std::string& text,
                  const std::string& fileName) {
-    FileUtil::write(fileName, text, FileUtil::FILETYPE_WRITABLE);
+    FileUtil::write(fileName, text, FileInfo::TYPE_WRITABLE);
   }
 };
 

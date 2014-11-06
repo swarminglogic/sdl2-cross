@@ -3,6 +3,7 @@
 #include <cstdio>
 
 #include <util/Exception.h>
+#include <util/FileInfo.h>
 #include <util/SDL.h>
 #include <util/assert.h>
 
@@ -20,10 +21,16 @@ bool FileUtil::isUserWriteablePathCached_ = false;
 std::string FileUtil::userWriteablePath_ = std::string();
 
 
-std::string FileUtil::prefixPath(const std::string& filename,
-                                 FileUtil::FileType fileType)
+std::string FileUtil::prefixPath(const FileInfo& fileInfo)
 {
-  if (fileType == FILETYPE_WRITABLE) {
+  return prefixPath(fileInfo.getFilename(), fileInfo.getFiletype());
+}
+
+
+std::string FileUtil::prefixPath(const std::string& filename,
+                                 FileInfo::FileType fileType)
+{
+  if (fileType == FileInfo::TYPE_WRITABLE) {
     const std::string& prefix = FileUtil::getUserWritablePath();
     if (prefix[0] == filename[0])
       return filename;
@@ -34,16 +41,15 @@ std::string FileUtil::prefixPath(const std::string& filename,
   }
 }
 
-
 namespace sdl {
 //  Modified version of SDL_RWFromFile, that solves the problem of properly
 //  distinguishing between assets and user modifiable directory.
 SDL_RWops* RWFromFile(const char *file,
                       const char *mode,
-                      FileUtil::FileType fileType) {
+                      FileInfo::FileType fileType) {
   RWopsPtr rwops(nullptr);
 #ifdef __ANDROID__
-  if (fileType == FileUtil::FILETYPE_WRITABLE) {
+  if (fileType == FileInfo::TYPE_WRITABLE) {
     if (*file == '/') {
       FILE *fp = fopen(file, mode);
       if (fp)
@@ -63,13 +69,21 @@ SDL_RWops* RWFromFile(const char *file,
 }
 }
 
+
+std::string FileUtil::read(const FileInfo& fileInfo)
+{
+  return read(fileInfo.getFilename(), fileInfo.getFiletype());
+}
+
+
 std::string FileUtil::read(const std::string& filename,
-                           FileUtil::FileType fileType)
+                           FileInfo::FileType fileType)
 {
   const std::string pFilename = prefixPath(filename, fileType);
   sdl::RWopsPtr file(sdl::RWFromFile(pFilename.c_str(), "rb", fileType));
   if (file) {
     std::string data;
+
     // Go to end and report get size
     SDL_RWseek(file.get(), 0, SEEK_END);
     data.resize(SDL_RWtell(file.get()));
@@ -86,9 +100,16 @@ std::string FileUtil::read(const std::string& filename,
 }
 
 
+void FileUtil::write(const FileInfo& fileInfo,
+                     const std::string& content)
+{
+  write(fileInfo.getFilename(), content, fileInfo.getFiletype());
+}
+
+
 void FileUtil::write(const std::string& filename,
                      const std::string& content,
-                     FileUtil::FileType fileType)
+                     FileInfo::FileType fileType)
 {
   write_or_append(filename, content, fileType, "w");
 }
@@ -96,7 +117,7 @@ void FileUtil::write(const std::string& filename,
 
 void FileUtil::write_or_append(const std::string& filename,
                                const std::string& content,
-                               FileType fileType,
+                               FileInfo::FileType fileType,
                                const char* mode)
 {
   // TODO swarminglogic, 2014-11-03: add assertion on bad fileType
@@ -118,8 +139,14 @@ void FileUtil::write_or_append(const std::string& filename,
 }
 
 
+bool FileUtil::exists(const FileInfo& fileInfo)
+{
+  return exists(fileInfo.getFilename(), fileInfo.getFiletype());
+}
+
+
 bool FileUtil::exists(const std::string& filename,
-                      FileUtil::FileType fileType)
+                      FileInfo::FileType fileType)
 {
   const std::string pFilename = prefixPath(filename, fileType);
   sdl::RWopsPtr file(sdl::RWFromFile(pFilename.c_str(),
@@ -129,17 +156,30 @@ bool FileUtil::exists(const std::string& filename,
 }
 
 
+void FileUtil::append(const FileInfo& fileInfo,
+                      const std::string& content)
+{
+  return append(fileInfo.getFilename(), content, fileInfo.getFiletype());
+}
+
+
 void FileUtil::append(const std::string& filename,
                       const std::string& content,
-                      FileUtil::FileType fileType)
+                      FileInfo::FileType fileType)
 {
   // TODO swarminglogic, 2014-11-03: add assertion on bad fileType
   write_or_append(filename, content, fileType, "a");
 }
 
 
+bool FileUtil::remove(const FileInfo& fileInfo)
+{
+  return remove(fileInfo.getFilename(), fileInfo.getFiletype());
+}
+
+
 bool FileUtil::remove(const std::string& filename,
-                      FileUtil::FileType fileType)
+                      FileInfo::FileType fileType)
 {
   // TODO swarminglogic, 2014-11-03: add assertion on bad fileType
   const std::string pFilename = prefixPath(filename, fileType);
@@ -147,8 +187,14 @@ bool FileUtil::remove(const std::string& filename,
 }
 
 
+std::time_t FileUtil::getLastModifiedTime(const FileInfo& fileInfo)
+{
+  return getLastModifiedTime(fileInfo.getFilename(), fileInfo.getFiletype());
+}
+
+
 std::time_t FileUtil::getLastModifiedTime(const std::string& filename,
-                                          FileUtil::FileType fileType)
+                                          FileInfo::FileType fileType)
 {
   const std::string pFilename = prefixPath(filename, fileType);
 #ifdef USE_BOOST_FS

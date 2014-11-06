@@ -5,9 +5,11 @@
 #include <thread>
 
 #include <util/File.h>
+#include <util/FileInfo.h>
 #include <util/FileUtil.h>
 
 #include <cxxtest/TestSuite.h>
+
 
 //  #define SLOW_TESTS
 
@@ -40,18 +42,18 @@ class TestFile : public CxxTest::TestSuite
   {
     const std::string filename("./certainlythisdoesnotexist.txt");
     TS_ASSERT(!FileUtil::exists(filename,
-                                FileUtil::FILETYPE_WRITABLE));
-    File file(filename, FileUtil::FILETYPE_WRITABLE);
+                                FileInfo::TYPE_WRITABLE));
+    File file(filename, FileInfo::TYPE_WRITABLE);
     TS_ASSERT(!file.exists());
     TS_ASSERT(!file.exists());
 
     const std::string content { "This is the content." };
     FileUtil::write(filename, content,
-                    FileUtil::FILETYPE_WRITABLE);
+                    FileInfo::TYPE_WRITABLE);
     TS_ASSERT(file.exists());
     TS_ASSERT(FileUtil::exists(filename,
-                               FileUtil::FILETYPE_WRITABLE));
-    TS_ASSERT(FileUtil::remove(filename, FileUtil::FILETYPE_WRITABLE));
+                               FileInfo::TYPE_WRITABLE));
+    TS_ASSERT(FileUtil::remove(filename, FileInfo::TYPE_WRITABLE));
     TS_ASSERT(!file.exists());
   }
 
@@ -60,13 +62,13 @@ class TestFile : public CxxTest::TestSuite
   {
     const std::string filename("./certainlythisdoesnotexist.txt");
     TS_ASSERT(!FileUtil::exists(filename,
-                                FileUtil::FILETYPE_WRITABLE));
-    File file(filename, FileUtil::FILETYPE_WRITABLE);
+                                FileInfo::TYPE_WRITABLE));
+    File file(filename, FileInfo::TYPE_WRITABLE);
 
     // Write some content, check if file exists now
     const std::string content { "This is the content." };
-    FileUtil::write(filename, content, FileUtil::FILETYPE_WRITABLE);
-    TS_ASSERT(FileUtil::exists(filename, FileUtil::FILETYPE_WRITABLE));
+    FileUtil::write(filename, content, FileInfo::TYPE_WRITABLE);
+    TS_ASSERT(FileUtil::exists(filename, FileInfo::TYPE_WRITABLE));
 
     // Read the file, check if it has updated since last read.
     const std::string& loaded = file.read();
@@ -78,7 +80,7 @@ class TestFile : public CxxTest::TestSuite
 
     // [modify], update, !update, [modify], getLocalCopy, !update
     const std::string text1 {"Text1"};
-    FileUtil::write(filename, text1, FileUtil::FILETYPE_WRITABLE);
+    FileUtil::write(filename, text1, FileInfo::TYPE_WRITABLE);
     TS_ASSERT(file.update());
     TS_ASSERT(!file.update());
     std::string getText1 = {file.getLocalCopy()};
@@ -87,14 +89,14 @@ class TestFile : public CxxTest::TestSuite
 
     // [modify], update, [modify], read, !update
     const std::string text2 {"Text2"};
-    FileUtil::write(filename, text2, FileUtil::FILETYPE_WRITABLE);
+    FileUtil::write(filename, text2, FileInfo::TYPE_WRITABLE);
     TS_ASSERT(file.update());
     std::string getText2 = {file.read()};
     TS_ASSERT(!file.update());
 
 #ifdef SLOW_TESTS
     msleep(1200);
-    FileUtil::write(filename, "changed", FileUtil::FILETYPE_WRITABLE);
+    FileUtil::write(filename, "changed", FileInfo::TYPE_WRITABLE);
     TS_ASSERT(file.isUpdated());
     TS_ASSERT(file.update());
 #endif
@@ -107,7 +109,7 @@ class TestFile : public CxxTest::TestSuite
   {
     const std::string filename("./certainlythisdoesnotexist.txt");
     File file("./certainlythisdoesnotexist.txt",
-              FileUtil::FILETYPE_WRITABLE);
+              FileInfo::TYPE_WRITABLE);
     TS_ASSERT(!file.exists());
     file.write("foo");
     TS_ASSERT_EQUALS(file.read(), "foo");
@@ -121,7 +123,7 @@ class TestFile : public CxxTest::TestSuite
   {
     const std::string filename("./certainlythisdoesnotexist.txt");
 
-    File file(filename, FileUtil::FILETYPE_WRITABLE);
+    File file(filename, FileInfo::TYPE_WRITABLE);
     TS_ASSERT(!file.exists());
     const std::string content { "This is the content." };
     file.write(content);
@@ -134,10 +136,10 @@ class TestFile : public CxxTest::TestSuite
   {
     const std::string filename("./certainlythisdoesnotexist.txt");
     TS_ASSERT(!FileUtil::exists(filename,
-                                FileUtil::FILETYPE_WRITABLE));
+                                FileInfo::TYPE_WRITABLE));
 
     // Basic
-    File file(filename, FileUtil::FILETYPE_WRITABLE);
+    File file(filename, FileInfo::TYPE_WRITABLE);
     File filecp = file;
     File fileas(file);
     TS_ASSERT_EQUALS(file.getFilename(), filecp.getFilename());
@@ -165,9 +167,9 @@ class TestFile : public CxxTest::TestSuite
   void testSetFilename()
   {
     const std::string filename("./thisdoesexist.txt");
-    FileUtil::write(filename, "foobar", FileUtil::FILETYPE_WRITABLE);
+    FileUtil::write(filename, "foobar", FileInfo::TYPE_WRITABLE);
 
-    File file(filename, FileUtil::FILETYPE_WRITABLE);
+    File file(filename, FileInfo::TYPE_WRITABLE);
     TS_ASSERT(file.exists());
 
     const std::string filename2("./certainlythisdoesnotexist.txt");

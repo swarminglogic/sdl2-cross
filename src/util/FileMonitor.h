@@ -4,7 +4,7 @@
 #include <ctime>
 #include <string>
 
-#include <util/FileUtil.h>
+#include <util/FileInfo.h>
 
 
 /**
@@ -17,7 +17,7 @@ class FileMonitor
 {
  public:
   FileMonitor(const std::string& filename,
-              FileUtil::FileType ft = FileUtil::FILETYPE_UNSPECIFIED);
+              FileInfo::FileType ft = FileInfo::TYPE_UNSPECIFIED);
 
   virtual ~FileMonitor();
 
@@ -44,7 +44,7 @@ class FileMonitor
   std::string filename_;
   std::time_t timestamp_;
 
-  FileUtil::FileType fileType_;
+  FileInfo::FileType fileType_;
 };
 
 #endif  // UTIL_FILEMONITOR_H

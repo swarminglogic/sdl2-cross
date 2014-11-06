@@ -4,6 +4,8 @@
 #include <ctime>
 #include <string>
 
+#include <util/FileInfo.h>
+
 
 /**
  * Static utility class for managing files
@@ -28,14 +30,9 @@
 class FileUtil
 {
  public:
-  enum FileType{
-    FILETYPE_WRITABLE = 0,
-    FILETYPE_ASSET,
-    FILETYPE_UNSPECIFIED,
-  };
-
+  static std::string prefixPath(const FileInfo& fileInfo);
   static std::string prefixPath(const std::string& filename,
-                                FileType ft);
+                                FileInfo::FileType ft);
 
   /**
    * Reads the whole content of a file, returned as a string.
@@ -45,8 +42,9 @@ class FileUtil
    * @throw Exception, if I/O error occurs.
    * @return Content of file.
    */
+  static std::string read(const FileInfo& fileInfo);
   static std::string read(const std::string& filename,
-                          FileType ft = FILETYPE_UNSPECIFIED);
+                          FileInfo::FileType ft = FileInfo::TYPE_UNSPECIFIED);
 
   /**
    * Appends content to a file (creates one if non-existent).
@@ -56,9 +54,11 @@ class FileUtil
    * @param filename
    * @param content
    */
+  static void append(const FileInfo& fileInfo,
+                     const std::string& content);
   static void append(const std::string& filename,
                      const std::string& content,
-                     FileType ft = FILETYPE_UNSPECIFIED);
+                     FileInfo::FileType ft = FileInfo::TYPE_UNSPECIFIED);
 
   /**
    * Checks if a file exists or not.
@@ -67,8 +67,9 @@ class FileUtil
    * @param filename  Path to file to check.
    * @return  True if file exists (and is accessible, of course).
    */
+  static bool exists(const FileInfo& fileInfo);
   static bool exists(const std::string& filename,
-                     FileType ft = FILETYPE_UNSPECIFIED);
+                     FileInfo::FileType ft = FileInfo::TYPE_UNSPECIFIED);
 
   /**
    * Writes content to a file (creates one if non-existent).
@@ -78,18 +79,23 @@ class FileUtil
    * @param filename
    * @param content
    */
+  static void write(const FileInfo& fileInfo,
+                    const std::string& content);
   static void write(const std::string& filename,
                     const std::string& content,
-                    FileType ft = FILETYPE_UNSPECIFIED);
+                    FileInfo::FileType ft = FileInfo::TYPE_UNSPECIFIED);
 
   /**
    * Deletes a file, returns true if successfull, false otherwise.
    */
+  static bool remove(const FileInfo& fileInfo);
   static bool remove(const std::string& filename,
-                     FileType ft = FILETYPE_UNSPECIFIED);
+                     FileInfo::FileType ft = FileInfo::TYPE_UNSPECIFIED);
 
-  static std::time_t getLastModifiedTime(const std::string& filename,
-                                         FileType ft = FILETYPE_UNSPECIFIED);
+  static std::time_t getLastModifiedTime(const FileInfo& fileInfo);
+  static std::time_t getLastModifiedTime(
+      const std::string& filename,
+      FileInfo::FileType ft = FileInfo::TYPE_UNSPECIFIED);
 
   /**
    * Determines the path used to store user files.
@@ -102,7 +108,7 @@ class FileUtil
  private:
   static void write_or_append(const std::string& filename,
                               const std::string& content,
-                              FileType ft,
+                              FileInfo::FileType ft,
                               const char* mode);
 
   static bool isUserWriteablePathCached_;

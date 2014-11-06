@@ -4,6 +4,7 @@
 #include <chrono>
 #include <thread>
 
+#include <util/FileInfo.h>
 #include <util/FileMonitor.h>
 #include <util/FileUtil.h>
 
@@ -36,29 +37,29 @@ class TestFileMonitor : public CxxTest::TestSuite
   void testExists()
   {
     const std::string filename("./certainlythisdoesnotexist.txt");
-    TS_ASSERT(!FileUtil::exists(filename, FileUtil::FILETYPE_WRITABLE));
-    FileMonitor fileMon(filename, FileUtil::FILETYPE_WRITABLE);
+    TS_ASSERT(!FileUtil::exists(filename, FileInfo::TYPE_WRITABLE));
+    FileMonitor fileMon(filename, FileInfo::TYPE_WRITABLE);
     TS_ASSERT(!fileMon.exists());
     TS_ASSERT(!fileMon.exists());
 
     const std::string content { "This is the content." };
-    FileUtil::write(filename, content, FileUtil::FILETYPE_WRITABLE);
-    TS_ASSERT(FileUtil::exists(filename, FileUtil::FILETYPE_WRITABLE));
-    TS_ASSERT(FileUtil::remove(filename, FileUtil::FILETYPE_WRITABLE));
+    FileUtil::write(filename, content, FileInfo::TYPE_WRITABLE);
+    TS_ASSERT(FileUtil::exists(filename, FileInfo::TYPE_WRITABLE));
+    TS_ASSERT(FileUtil::remove(filename, FileInfo::TYPE_WRITABLE));
   }
 
 
   void testIsUpdated()
   {
     const std::string filename("./certainlythisdoesnotexist.txt");
-    TS_ASSERT(!FileUtil::exists(filename, FileUtil::FILETYPE_WRITABLE));
+    TS_ASSERT(!FileUtil::exists(filename, FileInfo::TYPE_WRITABLE));
 
-    FileMonitor fileMon(filename, FileUtil::FILETYPE_WRITABLE);
+    FileMonitor fileMon(filename, FileInfo::TYPE_WRITABLE);
 
     // Write some content, check if fileMon exists now
     const std::string content { "This is the content." };
-    FileUtil::write(filename, content, FileUtil::FILETYPE_WRITABLE);
-    TS_ASSERT(FileUtil::exists(filename, FileUtil::FILETYPE_WRITABLE));
+    FileUtil::write(filename, content, FileInfo::TYPE_WRITABLE);
+    TS_ASSERT(FileUtil::exists(filename, FileInfo::TYPE_WRITABLE));
     TS_ASSERT(fileMon.isUpdated());
 
     // Reset timestamp
@@ -67,11 +68,11 @@ class TestFileMonitor : public CxxTest::TestSuite
 
 #ifdef SLOW_TESTS
     msleep(1200);
-    FileUtil::write(filename, "changed", FileUtil::FILETYPE_WRITABLE);
+    FileUtil::write(filename, "changed", FileInfo::TYPE_WRITABLE);
     TS_ASSERT(fileMon.isUpdated());
 #endif
 
-    TS_ASSERT(FileUtil::remove(filename, FileUtil::FILETYPE_WRITABLE));
+    TS_ASSERT(FileUtil::remove(filename, FileInfo::TYPE_WRITABLE));
   }
 };
 

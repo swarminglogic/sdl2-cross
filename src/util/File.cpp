@@ -4,6 +4,7 @@
 #include <limits>
 
 #include <util/Clock.h>
+#include <util/FileInfo.h>
 #include <util/FileUtil.h>
 #include <util/assert.h>
 
@@ -14,13 +15,13 @@ File::File() : File("")
 
 
 File::File(const std::string& filename)
-    : File(filename, FileUtil::FILETYPE_UNSPECIFIED)
+    : File(filename, FileInfo::TYPE_UNSPECIFIED)
 {
 }
 
 
 File::File(const std::string& filename,
-           FileUtil::FileType filetype)
+           FileInfo::FileType filetype)
     : filename_(filename),
       timeLastRead_(0),
       localCopy_(""),

@@ -4,7 +4,7 @@
 #include <ctime>
 #include <string>
 
-#include <util/FileUtil.h>
+#include <util/FileInfo.h>
 
 
 /**
@@ -31,7 +31,7 @@ class File
    * See FileUtil for details.
    */
   File(const std::string& filename,
-       FileUtil::FileType filetype);
+       FileInfo::FileType filetype);
 
 
   virtual ~File();
@@ -119,7 +119,7 @@ class File
   std::string localCopy_;
   std::size_t localCopyHash_;
 
-  FileUtil::FileType filetype_;
+  FileInfo::FileType filetype_;
   static std::string preferencePath_;
 };
 

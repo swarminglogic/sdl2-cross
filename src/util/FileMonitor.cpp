@@ -8,7 +8,7 @@
 
 
 FileMonitor::FileMonitor(const std::string& filename,
-                         FileUtil::FileType fileType)
+                         FileInfo::FileType fileType)
   : filename_(filename),
     timestamp_(0),
     fileType_(fileType)

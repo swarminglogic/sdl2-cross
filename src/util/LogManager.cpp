@@ -7,6 +7,7 @@
 #include <util/BashColor.h>
 #include <util/Clock.h>
 #include <util/File.h>
+#include <util/FileInfo.h>
 #include <util/FileUtil.h>
 #include <util/SDL.h>
 #include <util/assert.h>
@@ -143,8 +144,8 @@ void LogManager::log2File(const std::string& formatted) const
 #ifndef LOG2FILE_DISABLED
   if (logfileName_.empty())
     return;
-  FileUtil::append(logfileName_, formatted, FileUtil::FILETYPE_WRITABLE);
-  FileUtil::append(logfileName_, "\n", FileUtil::FILETYPE_WRITABLE);
+  FileUtil::append(logfileName_, formatted, FileInfo::TYPE_WRITABLE);
+  FileUtil::append(logfileName_, "\n", FileInfo::TYPE_WRITABLE);
 #else
   (void)formatted;
 #endif
@@ -184,7 +185,7 @@ const std::string& LogManager::getLogfileName() const
 void LogManager::setLogfileName(std::string logfileName)
 {
   // If file already exists, remove it.
-  File logFile(logfileName, FileUtil::FILETYPE_WRITABLE);
+  File logFile(logfileName, FileInfo::TYPE_WRITABLE);
   if (logFile.exists())
     logFile.remove();
   logfileName_ = logfileName;
