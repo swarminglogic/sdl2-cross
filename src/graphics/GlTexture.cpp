@@ -1,9 +1,8 @@
 #include <graphics/GlTexture.h>
 
-#include <cassert>
-
 #include <graphics/GlState.h>
 #include <math/MathUtil.h>
+#include <util/assert.h>
 
 
 GlTexture::GlTexture()

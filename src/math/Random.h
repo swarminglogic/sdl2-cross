@@ -1,8 +1,9 @@
 #ifndef MATH_RANDOM_H
 #define MATH_RANDOM_H
 
-#include <cassert>
 #include <random>
+
+#include <util/assert.h>
 
 
 /**

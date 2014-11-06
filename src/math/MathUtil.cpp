@@ -1,12 +1,12 @@
 #include <math/MathUtil.h>
 
 #include <algorithm>
-#include <cassert>
 
 #include <math/Pointf.h>
 #include <math/Rectf.h>
 #include <math/Size.h>
 #include <math/Sizef.h>
+#include <util/assert.h>
 
 
 float MathUtil::PI = 3.14159265359f;

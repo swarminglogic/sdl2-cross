@@ -1,11 +1,11 @@
 #ifndef GRAPHICS_GLUTIL_H
 #define GRAPHICS_GLUTIL_H
 
-#include <cassert>
 #include <vector>
 
 #include <graphics/GlState.h>
 #include <graphics/SDL_opengl.h>
+#include <util/assert.h>
 
 
 /**

@@ -1,13 +1,12 @@
 #include <graphics/Renderer2dText.h>
 
-#include <cassert>
-
 #include <graphics/GlCheck.h>
 #include <graphics/GlUtil.h>
 #include <graphics/ShaderResourceManager.h>
 #include <math/Size.h>
 #include <util/CharMap.h>
 #include <util/TextBoxText.h>
+#include <util/assert.h>
 
 
 Renderer2dText::Renderer2dText()

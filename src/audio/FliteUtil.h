@@ -1,9 +1,9 @@
 #ifndef AUDIO_FLITEUTIL_H
 #define AUDIO_FLITEUTIL_H
 
-#include <cassert>
-
 #include <audio/SDL_mixer.h>
+#include <util/assert.h>
+
 
 // Forward declarations
 struct cst_wave_struct;

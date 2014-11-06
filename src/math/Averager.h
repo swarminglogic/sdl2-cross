@@ -1,8 +1,9 @@
 #ifndef MATH_AVERAGER_H
 #define MATH_AVERAGER_H
 
-#include <cassert>
 #include <list>
+
+#include <util/assert.h>
 
 
 /**

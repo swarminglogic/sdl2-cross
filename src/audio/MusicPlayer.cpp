@@ -1,6 +1,6 @@
 #include <audio/MusicPlayer.h>
 
-#include <cassert>
+#include <util/assert.h>
 
 
 MusicPlayer::MusicPlayer()

@@ -1,6 +1,6 @@
 #include <util/TimedExecution.h>
 
-#include <cassert>
+#include <util/assert.h>
 
 
 TimedExecution::TimedExecution(std::function<void(void)> fun,
@@ -46,4 +46,3 @@ int TimedExecution::getRemainingTimeout()
 {
   return timeout_ - timer_.getTicks();
 }
-

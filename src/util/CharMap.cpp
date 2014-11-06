@@ -1,9 +1,10 @@
 #include <util/CharMap.h>
 
 #include <algorithm>
-#include <cassert>
 
 #include <math/MathUtil.h>
+#include <util/assert.h>
+
 
 CharMap::CharMap()
   : CharMap(Size(0, 0))
@@ -114,4 +115,3 @@ int CharMap::getTraitIndex(Trait trait) const
   else
     return -1;
 }
-

@@ -1,9 +1,8 @@
 #include <audio/AudioPlayback.h>
 
-#include <cassert>
-
 #include <audio/SDL_mixer.h>
 #include <util/Asset.h>
+#include <util/assert.h>
 
 
 AudioPlayback::AudioPlayback()
@@ -28,4 +27,3 @@ SoundPlayer& AudioPlayback::sound()
   static SoundPlayer instance;
   return instance;
 }
-

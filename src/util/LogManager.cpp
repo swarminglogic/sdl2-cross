@@ -1,6 +1,5 @@
 #include <util/LogManager.h>
 
-#include <cassert>
 #include <iomanip>
 #include <sstream>
 #include <string>
@@ -10,6 +9,7 @@
 #include <util/File.h>
 #include <util/FileUtil.h>
 #include <util/SDL.h>
+#include <util/assert.h>
 #include <util/gitrev.h>
 
 

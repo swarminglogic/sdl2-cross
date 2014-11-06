@@ -1,10 +1,10 @@
 #include <util/FileUtil.h>
 
-#include <cassert>
 #include <cstdio>
 
 #include <util/Exception.h>
 #include <util/SDL.h>
+#include <util/assert.h>
 
 
 #ifdef USE_BOOST_FS

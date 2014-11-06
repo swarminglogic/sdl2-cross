@@ -1,11 +1,11 @@
 #include <graphics/Surface.h>
 
-#include <cassert>
 #include <string>
 
 #include <graphics/GlState.h>
 #include <graphics/SDL_image.h>
 #include <math/MathUtil.h>
+#include <util/assert.h>
 
 
 Surface::Surface(SDL_Surface* surface)

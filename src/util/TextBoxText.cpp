@@ -1,9 +1,9 @@
 #include <util/TextBoxText.h>
 
-#include <cassert>
 #include <cmath>
 
 #include <util/StringUtil.h>
+#include <util/assert.h>
 
 
 TextBoxText::TextBoxText()

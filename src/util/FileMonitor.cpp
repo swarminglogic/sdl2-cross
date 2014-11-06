@@ -1,10 +1,10 @@
 #include <util/FileMonitor.h>
 
-#include <cassert>
 #include <functional>
 
 #include <util/Clock.h>
 #include <util/FileUtil.h>
+#include <util/assert.h>
 
 
 FileMonitor::FileMonitor(const std::string& filename,
@@ -50,4 +50,3 @@ const std::string& FileMonitor::getFilename() const
 {
   return filename_;
 }
-

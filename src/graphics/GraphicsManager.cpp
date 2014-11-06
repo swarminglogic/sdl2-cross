@@ -1,8 +1,7 @@
 #include <graphics/GraphicsManager.h>
 
-#include <cassert>
-
 #include <graphics/ViewConfig.h>
+#include <util/assert.h>
 
 
 #ifdef __ANDROID__

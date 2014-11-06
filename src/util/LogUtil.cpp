@@ -1,9 +1,9 @@
 #include <util/LogUtil.h>
 
-#include <cassert>
-
 #include <util/Log.h>
 #include <util/SDL.h>
+#include <util/assert.h>
+
 
 // LCOV_EXCL_START
 void LogUtil::log(const SDL_Event& event)

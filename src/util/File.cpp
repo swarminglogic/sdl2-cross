@@ -1,11 +1,11 @@
 #include <util/File.h>
 
-#include <cassert>
 #include <functional>
 #include <limits>
 
 #include <util/Clock.h>
 #include <util/FileUtil.h>
+#include <util/assert.h>
 
 
 File::File() : File("")

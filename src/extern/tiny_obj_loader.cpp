@@ -20,7 +20,7 @@
 
 #include <cstdlib>
 #include <cstring>
-#include <cassert>
+#include <util/assert.h>
 
 #include <string>
 #include <vector>

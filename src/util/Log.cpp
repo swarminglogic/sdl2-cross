@@ -1,9 +1,8 @@
 #include <util/Log.h>
 
-#include <cassert>
-
 #include <util/Exception.h>
 #include <util/LogManager.h>
+#include <util/assert.h>
 
 
 Log::Log(const std::string& loggerName)

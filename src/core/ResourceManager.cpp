@@ -1,11 +1,10 @@
 #include <core/ResourceManager.h>
 
-#include <cassert>
-
 #include <audio/AudioResourceManager.h>
 #include <graphics/ImageResourceManager.h>
 #include <graphics/MeshResourceManager.h>
 #include <graphics/ShaderResourceManager.h>
+#include <util/assert.h>
 
 
 ResourceManager::ResourceManager()
@@ -66,4 +65,3 @@ std::shared_ptr<ShaderResourceManager> ResourceManager::getShader()
 {
   return shaderResources_;
 }
-

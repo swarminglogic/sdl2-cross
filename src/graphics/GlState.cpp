@@ -1,8 +1,7 @@
 #include <graphics/GlState.h>
 
-#include <cassert>
-
 #include <graphics/GlCheck.h>
+#include <util/assert.h>
 
 
 const std::array<GLenum, GlState::N_GLCAP> GlState::capEnumToGL_
