@@ -26,13 +26,14 @@ FileInfo::FileInfo(const std::string& filename, FileType filetype)
 }
 
 
-std::string FileInfo::getFilename() const
+
+const std::string& FileInfo::getFilename() const
 {
   return filename_;
 }
 
 
-void FileInfo::setFilename(std::string filename)
+void FileInfo::setFilename(const std::string& filename)
 {
   filename_ = filename;
 }

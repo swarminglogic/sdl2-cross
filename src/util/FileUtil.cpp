@@ -186,6 +186,29 @@ bool FileUtil::remove(const std::string& filename,
   return std::remove(pFilename.c_str()) == 0;
 }
 
+bool FileUtil::rename(const FileInfo& fileInfo, const std::string& newFilename)
+{
+  return rename(fileInfo.getFilename(), newFilename, fileInfo.getFiletype());
+}
+
+bool FileUtil::rename(const FileInfo& fileInfo, const FileInfo& newFileInfo)
+{
+  assert(fileInfo.getFiletype() == newFileInfo.getFiletype());
+  return rename(fileInfo, newFileInfo.getFilename());
+}
+
+bool FileUtil::rename(const std::string& filename,
+                      const std::string& newFilename,
+                      FileInfo::FileType ft)
+{
+  std::string pFilename = prefixPath(filename, ft);
+  std::string pNewFilename = prefixPath(newFilename, ft);
+  if (pFilename == pNewFilename)
+    return false;
+  else
+    return std::rename(pFilename.c_str(), pNewFilename.c_str()) == 0;
+}
+
 
 std::time_t FileUtil::getLastModifiedTime(const FileInfo& fileInfo)
 {

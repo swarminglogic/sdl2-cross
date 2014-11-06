@@ -86,6 +86,15 @@ class FileUtil
                     FileInfo::FileType ft = FileInfo::TYPE_UNSPECIFIED);
 
   /**
+   * Renames a file, returns true if successfull, false otherwise.
+   */
+  static bool rename(const FileInfo& fileInfo, const std::string& newFilename);
+  static bool rename(const FileInfo& fileInfo, const FileInfo& newFileInfo);
+  static bool rename(const std::string& filename,
+                     const std::string& newFilename,
+                     FileInfo::FileType ft = FileInfo::TYPE_UNSPECIFIED);
+
+  /**
    * Deletes a file, returns true if successfull, false otherwise.
    */
   static bool remove(const FileInfo& fileInfo);

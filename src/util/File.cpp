@@ -22,11 +22,16 @@ File::File(const std::string& filename)
 
 File::File(const std::string& filename,
            FileInfo::FileType filetype)
-    : filename_(filename),
+    : File(FileInfo(filename, filetype))
+{
+}
+
+
+File::File(const FileInfo& fileInfo)
+    : fileInfo_(fileInfo),
       timeLastRead_(0),
       localCopy_(""),
-      localCopyHash_(0),
-      filetype_(filetype)
+      localCopyHash_(0)
 {
 }
 
@@ -38,20 +43,36 @@ File::~File()
 
 bool File::exists() const
 {
-  return FileUtil::exists(filename_, filetype_);
+  return FileUtil::exists(fileInfo_);
 }
 
 
 bool File::remove() const
 {
-  return FileUtil::remove(filename_, filetype_);
+  return FileUtil::remove(fileInfo_);
+}
+
+
+bool File::rename(const std::string& newFilename)
+{
+  bool isRenameOk = FileUtil::rename(fileInfo_, newFilename);
+  if (isRenameOk)
+    fileInfo_.setFilename(newFilename);
+  return isRenameOk;
+}
+
+
+bool File::rename(const FileInfo& newFileInfo)
+{
+  assert(fileInfo_.getFiletype() == newFileInfo.getFiletype());
+  return rename(newFileInfo.getFilename());
 }
 
 
 const std::string& File::read()
 {
   timeLastRead_ = Clock::now();
-  const std::string content = FileUtil::read(filename_, filetype_);
+  const std::string content = FileUtil::read(fileInfo_);
   std::size_t contentHash = std::hash<std::string>()(content);
   if (contentHash != localCopyHash_) {
     localCopy_ = content;
@@ -64,14 +85,14 @@ const std::string& File::read()
 void File::write(const std::string& content)
 {
   // TODO swarminglogic, 2014-11-04: Assert correct filetype_
-  FileUtil::write(filename_, content, filetype_);
+  FileUtil::write(fileInfo_, content);
 }
 
 
 void File::append(const std::string& content)
 {
   // TODO swarminglogic, 2014-11-04: Assert correct filetype_
-  FileUtil::append(filename_, content, filetype_);
+  FileUtil::append(fileInfo_, content);
 }
 
 
@@ -97,22 +118,24 @@ bool File::isUpdated() const
 
 std::time_t File::getLastModifiedTime() const
 {
-  return FileUtil::getLastModifiedTime(filename_);
+  return FileUtil::getLastModifiedTime(fileInfo_.getFilename());
 }
 
 
 const std::string& File::File::getFilename() const
 {
-  return filename_;
+  return fileInfo_.getFilename();
 }
 
 
 void File::setFilename(const std::string& filename)
 {
-  if (filename_ == filename) return;
+  if (fileInfo_.getFilename() == filename)
+    return;
 
-  filename_        = filename;
-  timeLastRead_    = 0;
-  localCopy_       = "";
-  localCopyHash_   = 0;
+  fileInfo_.setFilename(filename);
+  timeLastRead_  = 0;
+  localCopy_     = "";
+  localCopyHash_ = 0;
 }
+

@@ -118,6 +118,41 @@ class TestFile : public CxxTest::TestSuite
     TS_ASSERT(file.remove());
   }
 
+  void testRename()
+  {
+    const FileInfo fileInfo("foobarfile.txt", FileInfo::TYPE_WRITABLE);
+    const FileInfo newFileInfo("meeh.info", FileInfo::TYPE_WRITABLE);
+    File file(fileInfo);
+    File newFile(newFileInfo);
+    TS_ASSERT(!file.exists());
+    TS_ASSERT(!newFile.exists());
+
+    file.write("foom");
+    TS_ASSERT(file.exists());
+    TS_ASSERT(!newFile.exists());
+
+    // Trying to rename non existing file to existing file.
+    TS_ASSERT(!newFile.rename(fileInfo));
+    TS_ASSERT(file.exists());
+    TS_ASSERT(!newFile.exists());
+
+    // Trying to rename to self:
+    TS_ASSERT(!file.rename(fileInfo));
+    TS_ASSERT(!file.rename(fileInfo.getFilename()));
+    TS_ASSERT(file.exists());
+    TS_ASSERT(!newFile.exists());
+
+    // Renaming to new file
+    TS_ASSERT(FileUtil::exists(fileInfo));
+    TS_ASSERT(file.rename(newFileInfo));
+    TS_ASSERT_EQUALS(file.getFilename(), newFileInfo.getFilename());
+    TS_ASSERT(!FileUtil::exists(fileInfo));
+    TS_ASSERT(newFile.exists());
+
+    TS_ASSERT(newFile.remove());
+    TS_ASSERT(!newFile.exists());
+    TS_ASSERT(!file.exists());
+  }
 
   void testReadToLocal()
   {

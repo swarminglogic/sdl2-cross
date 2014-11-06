@@ -24,17 +24,13 @@ class FileInfo
   explicit FileInfo(const std::string& filename);
   FileInfo(const std::string& filename, FileType filetype);
 
-  std::string getFilename() const;
-  void setFilename(std::string filename);
+  const std::string& getFilename() const;
+  void setFilename(const std::string& filename);
 
   FileType getFiletype() const;
   void setFiletype(FileType filetype);
 
  private:
-  // NonCopyable
-  FileInfo(const FileInfo& c);
-  FileInfo& operator=(const FileInfo& c);
-
   std::string filename_;
   FileType filetype_;
 };

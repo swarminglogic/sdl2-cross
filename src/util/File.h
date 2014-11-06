@@ -25,6 +25,7 @@ class File
 
   File();
   explicit File(const std::string& filename);
+  explicit File(const FileInfo& fileInfo);
 
   /**
    * Let's caller specify filetype.
@@ -32,6 +33,7 @@ class File
    */
   File(const std::string& filename,
        FileInfo::FileType filetype);
+
 
 
   virtual ~File();
@@ -50,6 +52,15 @@ class File
    * @return true if successfull, false otherwise.
    */
   bool remove() const;
+
+
+  /**
+   * Deletes the file it represents from filesystem
+   * @return true if successfull, false otherwise.
+   */
+  bool rename(const std::string& newFilename);
+  bool rename(const FileInfo& newFileInfo);
+
 
   /**
    * Reads the whole content of file, returned as string.
@@ -110,17 +121,15 @@ class File
   const std::string& getFilename() const;
   void setFilename(const std::string& filename);
 
+
  private:
   std::time_t getLastModifiedTime() const;
 
-  std::string filename_;
+  FileInfo fileInfo_;
   std::time_t timeLastRead_;
 
   std::string localCopy_;
   std::size_t localCopyHash_;
-
-  FileInfo::FileType filetype_;
-  static std::string preferencePath_;
 };
 
 #endif  // UTIL_FILE_H

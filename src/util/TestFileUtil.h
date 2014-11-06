@@ -51,6 +51,52 @@ class TestFileUtil : public CxxTest::TestSuite
     TS_ASSERT(FileUtil::remove(filename, fileType));
   }
 
+  void testExistsRemove()
+  {
+    const std::string filename("./certainlythisdoesnotexist.txt");
+    const FileInfo::FileType fileType = FileInfo::TYPE_WRITABLE;
+    TS_ASSERT(!FileUtil::exists(filename, fileType));
+    FileUtil::write(filename, "foo", fileType);
+    TS_ASSERT(FileUtil::exists(filename, fileType));
+    TS_ASSERT(FileUtil::remove(filename, fileType));
+    TS_ASSERT(!FileUtil::exists(filename, fileType));
+  }
+
+  void testRename()
+  {
+    const std::string filename("foobarfile.txt");
+    const std::string newFilename("mofbanana.txt");
+    const FileInfo::FileType fileType = FileInfo::TYPE_WRITABLE;
+    TS_ASSERT(!FileUtil::exists(filename, fileType));
+    TS_ASSERT(!FileUtil::exists(newFilename, fileType));
+
+    FileUtil::write(filename, "foom", fileType);
+    TS_ASSERT(FileUtil::exists(filename, fileType));
+    TS_ASSERT(!FileUtil::exists(newFilename, fileType));
+
+    // Trying to rename non existing file to existing file.
+    TS_ASSERT(!FileUtil::rename(newFilename, filename, fileType));
+    TS_ASSERT(FileUtil::exists(filename, fileType));
+    TS_ASSERT(!FileUtil::exists(newFilename, fileType));
+
+    // Renaming to self
+    TS_ASSERT(!FileUtil::rename(filename, filename, fileType));
+    TS_ASSERT(FileUtil::exists(filename, fileType));
+    TS_ASSERT(!FileUtil::exists(newFilename, fileType));
+
+    // Renaming to new file
+    TS_ASSERT(FileUtil::rename(filename, newFilename, fileType));
+    TS_ASSERT(!FileUtil::exists(filename, fileType));
+    TS_ASSERT(FileUtil::exists(newFilename, fileType));
+    TS_ASSERT_EQUALS(FileUtil::read(newFilename, fileType), "foom");
+
+    TS_ASSERT(!FileUtil::remove(filename, fileType));
+    TS_ASSERT(FileUtil::remove(newFilename, fileType));
+    TS_ASSERT(!FileUtil::exists(filename, fileType));
+    TS_ASSERT(!FileUtil::exists(newFilename, fileType));
+  }
+
+
  private:
   void writeFile(const std::string& text,
                  const std::string& fileName) {
