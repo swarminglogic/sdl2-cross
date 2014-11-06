@@ -7,6 +7,7 @@
 
 #include <util/BashColor.h>
 #include <util/Clock.h>
+#include <util/File.h>
 #include <util/FileUtil.h>
 #include <util/SDL.h>
 #include <util/gitrev.h>
@@ -182,6 +183,10 @@ const std::string& LogManager::getLogfileName() const
 
 void LogManager::setLogfileName(std::string logfileName)
 {
+  // If file already exists, remove it.
+  File logFile(logfileName, FileUtil::FILETYPE_WRITABLE);
+  if (logFile.exists())
+    logFile.remove();
   logfileName_ = logfileName;
 }
 
