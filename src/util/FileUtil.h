@@ -85,6 +85,25 @@ class FileUtil
                     const std::string& content,
                     FileInfo::FileType ft = FileInfo::TYPE_UNSPECIFIED);
 
+
+  /**
+   * More expensive function to replace the content of the file.
+   * It writes to a temporary file (suffixed by ".tmp").
+   *
+   * Reads back the data, and if as expected, renames the file to replace it
+   *
+   * Returns true if it was succesfull, false otherwise.  On failure, it also
+   * clears up temporary file, and leaves the original as was (if it didn't
+   * exist before this call, it still doesn't).
+   *
+   * @param content
+   */
+  static bool safeWrite(const FileInfo& fileInfo,
+                        const std::string& content);
+  static bool safeWrite(const std::string& filename,
+                        const std::string& content,
+                        FileInfo::FileType ft = FileInfo::TYPE_WRITABLE);
+
   /**
    * Renames a file, returns true if successfull, false otherwise.
    */

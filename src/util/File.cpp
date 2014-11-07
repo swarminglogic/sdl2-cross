@@ -89,6 +89,12 @@ void File::write(const std::string& content)
 }
 
 
+bool File::safeWrite(const std::string& content)
+{
+  return FileUtil::safeWrite(fileInfo_, content);
+}
+
+
 void File::append(const std::string& content)
 {
   // TODO swarminglogic, 2014-11-04: Assert correct filetype_
@@ -122,7 +128,7 @@ std::time_t File::getLastModifiedTime() const
 }
 
 
-const std::string& File::File::getFilename() const
+const std::string& File::getFilename() const
 {
   return fileInfo_.getFilename();
 }
@@ -144,4 +150,3 @@ const FileInfo& File::getFileInfo() const
 {
   return fileInfo_;
 }
-

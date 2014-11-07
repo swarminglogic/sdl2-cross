@@ -76,6 +76,18 @@ class File
    */
   void write(const std::string& content);
 
+  /**
+   * More expensive function to replace the content of the file.
+   * It writes to a temporary file (suffixed by ".tmp").
+   *
+   * Reads back the data, and if as expected, renames the file to replace it
+   *
+   * Returns true if it was succesfull, false otherwise.
+   *
+   * @param content
+   */
+  bool safeWrite(const std::string& content);
+
 
   /**
    * Appends content to file.

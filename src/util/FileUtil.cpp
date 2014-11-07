@@ -115,6 +115,38 @@ void FileUtil::write(const std::string& filename,
 }
 
 
+bool FileUtil::safeWrite(const FileInfo& fileInfo,
+                         const std::string& content)
+{
+  return safeWrite(fileInfo.getFilename(), content, fileInfo.getFiletype());
+}
+
+
+bool FileUtil::safeWrite(const std::string& filename,
+                         const std::string& content,
+                         FileInfo::FileType ft)
+{
+  // Create temporary file and write the data to this file.
+  const std::string tmpFilename = filename + ".tmp";
+  bool isDataOk = false;
+  try {
+    assert(!FileUtil::exists(tmpFilename, ft));
+    FileUtil::write(tmpFilename, content, ft);
+    isDataOk = FileUtil::read(tmpFilename, ft) == content;
+    if (isDataOk)
+      FileUtil::rename(tmpFilename, filename, ft);
+  } catch (const Exception& e) {
+    isDataOk = false;
+  }
+
+  // Double check cleanup
+  if (!isDataOk && FileUtil::exists(tmpFilename, ft))
+    FileUtil::remove(tmpFilename, ft);
+
+  return isDataOk;
+}
+
+
 void FileUtil::write_or_append(const std::string& filename,
                                const std::string& content,
                                FileInfo::FileType fileType,

@@ -51,6 +51,24 @@ class TestFileUtil : public CxxTest::TestSuite
     TS_ASSERT(FileUtil::remove(filename, fileType));
   }
 
+  void testSafeWrite() {
+    // Hard to test that it fails correctly.
+    const FileInfo::FileType ft = FileInfo::TYPE_WRITABLE;
+    const std::string fn("somefile.txt");
+    const FileInfo fi(fn, ft);
+    TS_ASSERT(!FileUtil::exists(fi));
+    TS_ASSERT(FileUtil::safeWrite(fi, "Foo was written"));
+    TS_ASSERT(FileUtil::exists(fi));
+    TS_ASSERT_EQUALS(FileUtil::read(fi), "Foo was written");
+
+    TS_ASSERT(FileUtil::safeWrite(fi, "And it was good"));
+    TS_ASSERT_EQUALS(FileUtil::read(fi), "And it was good");
+    TS_ASSERT(FileUtil::remove(fi));
+    TS_ASSERT(!FileUtil::exists(fi));
+    TS_ASSERT(!FileUtil::exists(fn + ".tmp", ft));
+  }
+
+
   void testExistsRemove()
   {
     const std::string filename("./certainlythisdoesnotexist.txt");
