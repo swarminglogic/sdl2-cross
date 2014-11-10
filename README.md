@@ -202,6 +202,16 @@ src/main_android_tests.cpp
 runtime.log
 ```
 
+
+### Preferences/Settings File Format
+
+The internal format for user preferences follows [`Boost.PropertyTree`'s INFO-format](http://www.boost.org/doc/libs/1_55_0/doc/html/boost_propertytree/parsers.html#boost_propertytree.parsers.info_parser).
+
+This is a more versatile format than the typical `INI` format.
+
+For `emacs` users, a major mode can be [found here](https://gist.github.com/swarminglogic/be3cd49fcba5ef891727)
+
+
 ### Flite license and changelog
 
 In compliance with the `flite` license, modifications and changes are explained in
