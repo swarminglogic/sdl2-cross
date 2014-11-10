@@ -2,10 +2,11 @@
 
 #include <cstdio>
 
+#include <util/Assert.h>
+#include <util/Asset.h>
 #include <util/Exception.h>
 #include <util/FileInfo.h>
 #include <util/SDL.h>
-#include <util/Assert.h>
 
 
 #ifdef USE_BOOST_FS
@@ -19,11 +20,21 @@ namespace fs = boost::filesystem;
 
 bool FileUtil::isUserWriteablePathCached_ = false;
 std::string FileUtil::userWriteablePath_ = std::string();
+#ifdef __ANDROID__
+const std::string FileUtil::assetPrefix_("");
+#else
+const std::string FileUtil::assetPrefix_("./assets/");
+#endif
 
 
 std::string FileUtil::prefixPath(const FileInfo& fileInfo)
 {
   return prefixPath(fileInfo.getFilename(), fileInfo.getFiletype());
+}
+
+std::string FileUtil::prefixPath(const Asset& asset)
+{
+  return prefixPath(asset.path(), FileInfo::TYPE_ASSET);
 }
 
 
@@ -36,6 +47,8 @@ std::string FileUtil::prefixPath(const std::string& filename,
       return filename;
     else
       return prefix + filename;
+  } else if (fileType == FileInfo::TYPE_ASSET){
+    return assetPrefix_ + filename;
   } else {
     return filename;
   }
@@ -75,6 +88,10 @@ std::string FileUtil::read(const FileInfo& fileInfo)
   return read(fileInfo.getFilename(), fileInfo.getFiletype());
 }
 
+std::string FileUtil::read(const Asset& asset)
+{
+  return read(asset.path(), FileInfo::TYPE_ASSET);
+}
 
 std::string FileUtil::read(const std::string& filename,
                            FileInfo::FileType fileType)
@@ -120,7 +137,6 @@ bool FileUtil::safeWrite(const FileInfo& fileInfo,
 {
   return safeWrite(fileInfo.getFilename(), content, fileInfo.getFiletype());
 }
-
 
 bool FileUtil::safeWrite(const std::string& filename,
                          const std::string& content,
@@ -177,6 +193,11 @@ bool FileUtil::exists(const FileInfo& fileInfo)
 }
 
 
+bool FileUtil::exists(const Asset& asset)
+{
+  return exists(asset.path(), FileInfo::TYPE_ASSET);
+}
+
 bool FileUtil::exists(const std::string& filename,
                       FileInfo::FileType fileType)
 {
@@ -193,6 +214,7 @@ void FileUtil::append(const FileInfo& fileInfo,
 {
   return append(fileInfo.getFilename(), content, fileInfo.getFiletype());
 }
+
 
 
 void FileUtil::append(const std::string& filename,

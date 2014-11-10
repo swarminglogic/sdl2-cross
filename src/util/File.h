@@ -24,7 +24,8 @@ class File
  public:
 
   File();
-  explicit File(const std::string& filename);
+  // TODO swarminglogic, 2014-11-10: Fix tests!
+  // explicit File(const std::string& filename);
   explicit File(const FileInfo& fileInfo);
 
   /**

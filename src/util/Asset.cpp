@@ -1,11 +1,5 @@
 #include <util/Asset.h>
 
-#ifdef __ANDROID__
-const std::string Asset::base_("");
-#else
-const std::string Asset::base_("./assets/");
-#endif
-
 Asset::Asset()
   : type_(INVALID_TYPE),
     subfolder_(""),
@@ -26,18 +20,12 @@ Asset::Type Asset::type() const
 
 std::string Asset::path() const
 {
-  return base_ + subfolder_ + filename_;
+  return subfolder_ + filename_;
 }
 
 std::string Asset::filename() const
 {
   return filename_;
-}
-
-
-std::string Asset::getBasePath()
-{
-  return base_;
 }
 
 

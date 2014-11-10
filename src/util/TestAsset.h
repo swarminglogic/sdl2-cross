@@ -16,15 +16,6 @@
 class TestAsset : public CxxTest::TestSuite
 {
  public:
-  void testBasePath()
-  {
-#ifdef __ANDROID__
-    TS_ASSERT_EQUALS(Asset::getBasePath(), "");
-#else
-    TS_ASSERT_EQUALS(Asset::getBasePath(), "./assets/");
-#endif
-  }
-
   void testAssetImage()
   {
     AssetImage imageb;
@@ -222,7 +213,7 @@ class TestAsset : public CxxTest::TestSuite
   }
 
  private:
-  const std::string basepath = Asset::getBasePath();
+  const std::string basepath;
 };
 
 #endif  // UTIL_TESTASSET_H

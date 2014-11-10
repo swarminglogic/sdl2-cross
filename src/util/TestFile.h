@@ -29,7 +29,7 @@ class TestFile : public CxxTest::TestSuite
   void testBasics()
   {
     const std::string filename("./certainlythisdoesnotexist.txt");
-    File file(filename);
+    File file(filename, FileInfo::TYPE_WRITABLE);
     TS_ASSERT_EQUALS(filename, file.getFilename());
 
     // Default constructor

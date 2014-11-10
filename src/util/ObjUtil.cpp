@@ -1,3 +1,4 @@
+#include <util/Log.h>
 #include <util/ObjUtil.h>
 
 #include <sstream>
@@ -13,7 +14,7 @@ std::vector<tinyobj::shape_t> ObjUtil::read(AssetMesh meshfile)
   // check if file is compressed, and if so, use ObjUtil::readCompressedObj()
   bool isCompressed = (StringUtil::suffix(meshfile.path(), 5) == ".cobj");
   if (isCompressed) {
-    std::string data = FileUtil::read(meshfile.path());
+    std::string data = FileUtil::read(meshfile);
     std::stringstream ss(data);
     return CObjUtil::readCompressedObj(ss);
   } else {

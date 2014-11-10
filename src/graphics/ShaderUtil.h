@@ -6,7 +6,6 @@
 #include <vector>
 
 #include <graphics/SDL_opengl.h>
-#include <util/Log.h>
 
 
 typedef std::pair<GLenum, std::string> ShaderInfo;
@@ -19,20 +18,6 @@ typedef std::pair<GLenum, std::string> ShaderInfo;
 class ShaderUtil
 {
  public:
-  /**
-   * Creates a shader program using the provided.
-   * Accepts pairs of shader types and corresponding source file paths.
-   *
-   * Lists must be the same size.
-   * Errors and debug information is sent to cerr.
-   *
-   * @note Does not check for duplicate shader types.
-   *
-   * @param shaders  Vector of < SHADER-TYPE, SOURCE-FILE-PATH > pairs.
-   * @return  Program id created.
-   */
-  static GLuint createShaderProgram(const std::vector<ShaderInfo>& shaders);
-
   /**
    * Utility for checking OpenGL Shader information.
    *
@@ -54,17 +39,6 @@ class ShaderUtil
                                       GLenum statusType = GL_LINK_STATUS);
 
  private:
-  /**
-   * Creates a OpenGL shader of specified type, with provided source file.
-   *
-   * @param type         OpenGL shader type enum, e.g GL_VERTEX_SHADER
-   * @param sourceFile   Full path to shader source file
-   * @return             Id of created shader.
-   */
-  static GLuint prepareShader(GLenum type, const std::string& sourceFile);
-
-  static Log log_;
-
   // Pure static class, private constructor
   ShaderUtil();
 };

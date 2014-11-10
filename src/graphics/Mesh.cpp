@@ -115,7 +115,7 @@ bool Mesh::hasTangentSpace(size_t shapeIndex) const
 bool Mesh::load()
 {
   log_.i() << "Loading OBJ file: " << filename_.path() << Log::end;
-  if (!FileUtil::exists(filename_.path())) {
+  if (!FileUtil::exists(filename_)) {
     log_.e() << "Could not find OBJ file " << filename_.path() << Log::end;
     return false;
   }

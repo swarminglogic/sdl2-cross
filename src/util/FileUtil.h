@@ -7,6 +7,8 @@
 #include <util/FileInfo.h>
 
 
+class Asset;
+
 /**
  * Static utility class for managing files
  *
@@ -31,6 +33,7 @@ class FileUtil
 {
  public:
   static std::string prefixPath(const FileInfo& fileInfo);
+  static std::string prefixPath(const Asset& asset);
   static std::string prefixPath(const std::string& filename,
                                 FileInfo::FileType ft);
 
@@ -43,8 +46,9 @@ class FileUtil
    * @return Content of file.
    */
   static std::string read(const FileInfo& fileInfo);
+  static std::string read(const Asset& asset);
   static std::string read(const std::string& filename,
-                          FileInfo::FileType ft = FileInfo::TYPE_UNSPECIFIED);
+                          FileInfo::FileType ft);
 
   /**
    * Appends content to a file (creates one if non-existent).
@@ -68,8 +72,9 @@ class FileUtil
    * @return  True if file exists (and is accessible, of course).
    */
   static bool exists(const FileInfo& fileInfo);
+  static bool exists(const Asset& asset);
   static bool exists(const std::string& filename,
-                     FileInfo::FileType ft = FileInfo::TYPE_UNSPECIFIED);
+                     FileInfo::FileType ft);
 
   /**
    * Writes content to a file (creates one if non-existent).
@@ -83,7 +88,7 @@ class FileUtil
                     const std::string& content);
   static void write(const std::string& filename,
                     const std::string& content,
-                    FileInfo::FileType ft = FileInfo::TYPE_UNSPECIFIED);
+                    FileInfo::FileType ft = FileInfo::TYPE_WRITABLE);
 
 
   /**
@@ -111,14 +116,14 @@ class FileUtil
   static bool rename(const FileInfo& fileInfo, const FileInfo& newFileInfo);
   static bool rename(const std::string& filename,
                      const std::string& newFilename,
-                     FileInfo::FileType ft = FileInfo::TYPE_UNSPECIFIED);
+                     FileInfo::FileType ft = FileInfo::TYPE_WRITABLE);
 
   /**
    * Deletes a file, returns true if successfull, false otherwise.
    */
   static bool remove(const FileInfo& fileInfo);
   static bool remove(const std::string& filename,
-                     FileInfo::FileType ft = FileInfo::TYPE_UNSPECIFIED);
+                     FileInfo::FileType ft = FileInfo::TYPE_WRITABLE);
 
   static std::time_t getLastModifiedTime(const FileInfo& fileInfo);
   static std::time_t getLastModifiedTime(
@@ -141,6 +146,7 @@ class FileUtil
 
   static bool isUserWriteablePathCached_;
   static std::string userWriteablePath_;
+  static const std::string assetPrefix_;
 
   FileUtil();  // Static class
   // Not implemented!

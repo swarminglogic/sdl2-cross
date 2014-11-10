@@ -9,13 +9,7 @@
 #include <util/Assert.h>
 
 
-File::File() : File("")
-{
-}
-
-
-File::File(const std::string& filename)
-    : File(filename, FileInfo::TYPE_UNSPECIFIED)
+File::File() : File("", FileInfo::TYPE_UNSPECIFIED)
 {
 }
 

@@ -5,6 +5,7 @@
 
 #include <extern/tiny_obj_loader.h>
 #include <util/CObjUtil.h>
+#include <util/FileUtil.h>
 #include <util/ObjUtil.h>
 
 #include <cxxtest/TestSuite.h>
@@ -46,20 +47,28 @@ class TestObjUtil : public CxxTest::TestSuite
     // TODO swarminglogic, 2014-11-04: Rewrite CObjUtil to use SDL_RWopts
     // instead of streams.
 #endif
-    std::string tmpObjFile("tmpobjfile.obj");
+
+    // Write obj data to tmpObjAsset file
+    AssetMesh tmpObjAsset("tmpobjfile.obj");
+    const std::string tmpObjAssetPath(FileUtil::prefixPath(tmpObjAsset));
     {
-      std::ofstream outfile(tmpObjFile);
+      std::ofstream outfile(tmpObjAssetPath);
       outfile << makeCubeObjFile();
     }
-    std::vector<tinyobj::shape_t> cube;
-    LoadObj(cube, tmpObjFile.c_str());
 
+    // Load obj data from newly created OBJ file -> cube
+    std::vector<tinyobj::shape_t> cube;
+    LoadObj(cube, tmpObjAssetPath.c_str());
+
+    // Write COBJ data from loaded OBJ to tmpCObjAsset
     AssetMesh tmpCObjAsset("tmpcobjfile.cobj");
+    const std::string tmpCObjAssetPath(FileUtil::prefixPath(tmpCObjAsset));
     {
-      std::ofstream ssCObjData(tmpCObjAsset.path());
+      std::ofstream ssCObjData(tmpCObjAssetPath);
       CObjUtil::writeCompressedObj(ssCObjData, cube);
     }
 
+    // Load COBJ data from tmpCObjAsset
     const std::vector<tinyobj::shape_t> cubeFromCObj =
       ObjUtil::read(tmpCObjAsset);
 
@@ -105,8 +114,8 @@ class TestObjUtil : public CxxTest::TestSuite
                           cubeFromCObj[0].material.ambient, 3);
     }
 
-    TS_ASSERT(std::remove(tmpObjFile.c_str()) == 0);
-    TS_ASSERT(std::remove(tmpCObjAsset.path().c_str()) == 0);
+    TS_ASSERT(std::remove(tmpCObjAssetPath.c_str()) == 0);
+    TS_ASSERT(std::remove(tmpObjAssetPath.c_str()) == 0);
   }
 
 

@@ -6,6 +6,7 @@
 #include <graphics/SDL_image.h>
 #include <math/MathUtil.h>
 #include <util/Assert.h>
+#include <util/FileUtil.h>
 
 
 Surface::Surface(SDL_Surface* surface)
@@ -48,7 +49,7 @@ void Surface::releaseResources()
 
 void Surface::loadImage(const AssetImage& imagefile)
 {
-  const std::string path = imagefile.path();
+  const std::string path = FileUtil::prefixPath(imagefile);
   log_.d() << "Loading image: " << path << Log::end;
 
   releaseResources();
@@ -58,6 +59,9 @@ void Surface::loadImage(const AssetImage& imagefile)
     log_.e() << "Failed to load image " << path << Log::end;
     log_.e() << SDL_GetError() << Log::end;
   } else {
+    log_.d() << "Image loaded ("
+             << surface_->w << ", " << surface_->h
+             << "): " << path << Log::end;
     imageRect_ = Rect(0, 0, surface_->w, surface_->h);
   }
 }

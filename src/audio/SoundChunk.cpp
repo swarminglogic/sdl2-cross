@@ -1,11 +1,11 @@
-
 #include <audio/SoundChunk.h>
 
 #include <math/MathUtil.h>
+#include <util/FileUtil.h>
 
 
 SoundChunk::SoundChunk(const AssetSound& soundfile)
-  : sound_(Mix_LoadWAV(soundfile.path().c_str()))
+    : sound_(Mix_LoadWAV(FileUtil::prefixPath(soundfile).c_str()))
 {
 }
 

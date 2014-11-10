@@ -2,6 +2,7 @@
 
 #include <functional>
 
+#include <util/Assert.h>
 #include <util/File.h>
 #include <util/StringUtil.h>
 
@@ -48,8 +49,9 @@ void ShaderProgram::clear()
 
 void ShaderProgram::setShader(ShaderType type, const AssetShader& shaderfile)
 {
-  shaders_[type] = File(shaderfile.path());
+  shaders_[type] = File(shaderfile.path(), FileInfo::TYPE_ASSET);
   isShaderInformationModified_ = true;
+  shaders_[type].update();
 }
 
 void ShaderProgram::setShader(const std::map<ShaderType, AssetShader>& shaders)
@@ -88,11 +90,11 @@ void ShaderProgram::guard_isShaderModified()
 
 bool ShaderProgram::compile()
 {
-  log_.i("Creating shader program from shader files.");
   for (auto& shader : shaders_) {
     if (!shader.second.exists())
       return false;
   }
+  log_.i("Creating shader program from shader files.");
 
   GLuint newProgramId = glCreateProgram();
 
@@ -168,6 +170,7 @@ void ShaderProgram::deleteProgram()
 GLuint ShaderProgram::prepareShader(ShaderType type,
                                     const std::string& source) const
 {
+  assert(!source.empty() && "Trying to prepare empty shader data");
 #ifdef USE_OPENGLES
   std::string preprocessed = "#version 300 es\n";
   preprocessed.append(StringUtil::processIfEndif(source, "ES"));
@@ -175,7 +178,6 @@ GLuint ShaderProgram::prepareShader(ShaderType type,
   std::string preprocessed = "#version 430 core\n";
   preprocessed.append(StringUtil::processIfEndif(source, "GL"));
 #endif
-
   GLenum glShaderType = shaderType2GLEnum(type);
   const GLchar* shader_source = preprocessed.c_str();
   GLuint shaderId = glCreateShader(glShaderType);

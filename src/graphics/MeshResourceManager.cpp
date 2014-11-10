@@ -20,7 +20,7 @@ MeshShPtr MeshResourceManager::load(const AssetMesh& mesh)
   log_.d() << "Trying to load mesh: " << mesh.path() << Log::end;
   MeshShPtr resource = loadedMeshes_[mesh];
   if (!resource) {
-    if (!FileUtil::exists(mesh.path())) {
+    if (!FileUtil::exists(mesh)) {
       resource.reset();
     } else {
       resource.reset(new Mesh(mesh));

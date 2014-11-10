@@ -41,8 +41,6 @@ class Asset
   std::string filename() const;
 
 
-  static std::string getBasePath();
-
   friend inline bool operator<(const Asset& lhs, const Asset& rhs);
   friend inline bool operator==(const Asset& lhs, const Asset& rhs);
   friend inline bool operator!=(const Asset& lhs, const Asset& rhs);
