@@ -29,10 +29,10 @@ The framework relies on the following libraries
 
 | Library    | Version                | Description                                             |
 | :--------- | :--------------------- | :------------------------------------------------------ |
-| SDL2       | `2.0.4 (9ecf775ead1b)` | OpenGL glue, touch/gesture and keyboard input, and more |
+| SDL2       | `2.0.4 (1cb6ac648db7)` | OpenGL glue, touch/gesture and keyboard input, and more |
 | SDL_image  | `2.0.0 (e8573815cc1f)` | png/jpg loading                                         |
 | SDL_mixer  | `2.0.0 (9599bb0ff844)` | ogg loading, sound playback                             |
-| SDL_ttf    | `2.0.12 (e6ea74f184f0)`| ttf loading                                             |
+| SDL_ttf    | `2.0.12 (f28f7b0f72ae)`| ttf loading                                             |
 | bullet     | `2.82-r2704`           | physics                                                 |
 | GLM        | `0.9.5.2`              | math library similar to GLSL (headers only)             |
 | boost      | `1.55`                 | boost (headers only)                                    |
