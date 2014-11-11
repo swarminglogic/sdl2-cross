@@ -4,7 +4,7 @@
 ; underscore delimiter keys with assigned values.
 ;
 ; Although not a requirement by the INFO format, single word strings should
-; still be defined withing quotes.
+; still be defined withing quotes, unless it represents an enum.
 ;
 
 
@@ -25,4 +25,12 @@ Graphics
     is_vsync true
     is_fullscreen false
     is_opengl_debug_enabled false
+}
+
+Logger
+{
+    ;; Valid values: DEBUG > INFO > WARN > ERROR > NONE
+    stream_level DEBUG
+    file_level   DEBUG
+    file_filename "runtime.log"
 }

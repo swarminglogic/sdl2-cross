@@ -25,27 +25,28 @@
 
 
 MainManager::MainManager()
-    : log_("MainManager"),
-      preferences_(FileInfo("default_preferences.info",
-                            FileInfo::TYPE_ASSET),
-                   FileInfo(
+: log_("MainManager"),
+  preferences_(FileInfo("default_preferences.info",
+                        FileInfo::TYPE_ASSET),
+               FileInfo(
 #ifdef __ANDROID__
-                            "android_preferences.info",
+                   "android_preferences.info",
 #else
-                            "linux_preferences.info",
+                   "linux_preferences.info",
 #endif
-                            FileInfo::TYPE_ASSET),
-                   FileInfo("user_preferences.info",
-                            FileInfo::TYPE_WRITABLE)),
+                   FileInfo::TYPE_ASSET),
+               FileInfo("user_preferences.info",
+                        FileInfo::TYPE_WRITABLE)),
   audioResources_(new AudioResourceManager),
   graphics_(nullptr),
   imageRenderer_(nullptr),
   imageResources_(new ImageResourceManager),
-      runtime_(new Timer),
+  runtime_(new Timer),
   isRunning_(true),
   testImage_(nullptr),
   fpsCounter_(30)
 {
+  initLogger();
   initSDL();
   initSDLimg();
   initSDLttf();
@@ -218,6 +219,59 @@ void MainManager::handleEvent(const SDL_Event& event)
   }
 }
 
+namespace {
+LogManager::LogLevel stringToLogLevel(const std::string& txt) {
+  if (txt == "DEBUG")
+    return LogManager::LEVEL_DEBUG;
+  else if (txt == "INFO")
+    return LogManager::LEVEL_INFO;
+  else if (txt == "WARN")
+    return LogManager::LEVEL_WARNING;
+  else if (txt == "ERROR")
+    return LogManager::LEVEL_ERROR;
+  else if (txt == "NONE")
+    return LogManager::LEVEL_NONE;
+  else
+    throw Exception("Bad log level in preference file: " + txt);
+}
+}
+
+void MainManager::initLogger()
+{
+#ifndef __ANDROID__
+  LogManager::instance().setStreamTarget(std::cout);
+#endif
+
+  // Setting logger levels
+  std::string streamLevelTxt = "";
+  std::string fileLevelTxt = "";
+  try {
+    streamLevelTxt = preferences_.get<std::string>("Logger.stream_level");
+    fileLevelTxt = preferences_.get<std::string>("Logger.file_level");
+    LogManager::LogLevel streamLevel =
+        ::stringToLogLevel(streamLevelTxt);
+    LogManager::LogLevel fileLevel =
+        ::stringToLogLevel(fileLevelTxt);
+    LogManager::instance().setFileLogLevel(fileLevel);
+    LogManager::instance().setStreamLogLevel(streamLevel);
+  }
+  catch (const Exception& e) {
+    LogManager::instance().setStreamLogLevel(LogManager::LEVEL_DEBUG);
+    LogManager::instance().logColumnHeaders();
+    throw e;
+  }
+  // Setting file log filename
+  const std::string filelogFilename =
+      preferences_.get("Logger.file_filename", std::string(""));
+  LogManager::instance().setLogfileName(filelogFilename);
+
+  // Outputing log columns headers
+  LogManager::instance().logColumnHeaders();
+
+  // Logging the specified log level
+  log_.i() << "LogLevel (file):   " << fileLevelTxt  << Log::end;
+  log_.i() << "LogLevel (stream): " << streamLevelTxt  << Log::end;
+}
 
 void MainManager::initSDL()
 {
@@ -318,7 +372,8 @@ void MainManager::initSDLmixer()
 void MainManager::initFlite()
 {
   log_.i("Initializing flite TTS");
-  log_.d() << "flite Version (Compiled): " << FLITE_PROJECT_VERSION << Log::end;
+  log_.d() << "flite Version (Compiled): "
+           << FLITE_PROJECT_VERSION << Log::end;
 
   flite_init();
 }

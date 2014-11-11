@@ -58,6 +58,7 @@ class MainManager
   MainManager();
   void handleEvent(const SDL_Event& event);
 
+  void initLogger();
   void initSDL();
   void initSDLimg();
   void initSDLttf();
@@ -72,7 +73,6 @@ class MainManager
                      const SDL_version& compiled,
                      const SDL_version& linked,
                      std::string revision);
-
 
   // NonCopyable
   MainManager(const MainManager& c);

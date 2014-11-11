@@ -45,25 +45,18 @@ int main(int argc, char *argv[]) {
   (void)argc;
   (void)argv;
 
-  // Initialize logger system
-  LogManager& lm = LogManager::instance();
-#ifndef __ANDROID__
-  lm.setStreamTarget(std::cout);
-#endif
-  lm.setLogfileName("runtime.log");
-  lm.logColumnHeaders();
-
-  Log log("main");
   try {
     MainManager& mainManager = MainManager::instance();
     mainManager.initialize();
     mainManager.run();
   }
   catch (Exception e) {
+    Log log("main-exception");
     log.e(std::string("Terminating early due to exception: ") + e.what());
     quit(EXIT_FAILURE);
   }
   catch (...) {
+    Log log("main-exception");
     log.e(std::string("Terminating early due to unhandled exception"));
     quit(EXIT_FAILURE);
   }

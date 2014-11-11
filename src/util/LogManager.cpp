@@ -51,13 +51,17 @@ void LogManager::logColumnHeaders() const
   const std::string separator =
     "--------+-------+----------+---------+------------------+"
     "--------------------------------------";
-  log2Stream(LEVEL_INFO, separator);
-  log2Stream(LEVEL_INFO, header);
-  log2Stream(LEVEL_INFO, separator);
+  if (streamLogLevel_ < LEVEL_NONE) {
+    log2Stream(LEVEL_INFO, "\n" + separator);
+    log2Stream(LEVEL_INFO, header);
+    log2Stream(LEVEL_INFO, separator);
+  }
 
-  log2File(separator);
-  log2File(header);
-  log2File(separator);
+  if (fileLogLevel_ < LEVEL_NONE) {
+    log2File(separator);
+    log2File(header);
+    log2File(separator);
+  }
 }
 
 
@@ -185,7 +189,7 @@ void LogManager::setLogfileName(std::string logfileName)
 {
   // If file already exists, remove it.
   File logFile(logfileName, FileInfo::TYPE_WRITABLE);
-  if (logFile.exists())
+  if (logFile.exists() && fileLogLevel_ < LEVEL_NONE)
     logFile.remove();
   logfileName_ = logfileName;
 }

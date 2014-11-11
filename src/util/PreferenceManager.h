@@ -72,6 +72,16 @@ class PreferenceManager
       throw Exception("Could not read preference: " + key);
   }
 
+  template <class T>
+  T get(const std::string& key, T defaultValue) const {
+    boost::optional<T> ret = PreferenceManager::getOptional<T>(key);
+    if (ret)
+      return ret.get();
+    else
+      return defaultValue;
+  }
+
+
   /**
    * Calls the put function for UserPref PropertyFile
    *
