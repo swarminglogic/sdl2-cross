@@ -1,5 +1,4 @@
 #include <cstdlib>
-#include <iostream>
 #include <memory>
 #include <string>
 
@@ -48,13 +47,13 @@ int main(int argc, char *argv[]) {
 
   // Initialize logger system
   LogManager& lm = LogManager::instance();
+#ifndef __ANDROID__
   lm.setStreamTarget(std::cout);
-#ifdef __ANDROID__
-  lm.setLogfilePath("runtime.log");
 #endif
+  lm.setLogfileName("runtime.log");
   lm.logColumnHeaders();
-  Log log("main");
 
+  Log log("main");
   try {
     MainManager& mainManager = MainManager::instance();
     mainManager.initialize();

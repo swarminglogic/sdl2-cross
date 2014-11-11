@@ -13,7 +13,6 @@
 #include <util/Assert.h>
 #include <util/gitrev.h>
 
-
 #ifdef __ANDROID__
 #include <android/log.h>
 #endif
