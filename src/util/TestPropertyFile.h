@@ -1,10 +1,12 @@
 #ifndef UTIL_TESTPROPERTYFILE_H
 #define UTIL_TESTPROPERTYFILE_H
 
+#include <boost/optional.hpp>
 #include <boost/property_tree/exceptions.hpp>
 #include <boost/property_tree/ptree.hpp>
 
 #include <util/Exception.h>
+#include <util/File.h>
 #include <util/FileInfo.h>
 #include <util/FileUtil.h>
 #include <util/PropertyFile.h>
@@ -66,7 +68,7 @@ class TestPropertyFile : public CxxTest::TestSuite
     PropertyFile pf(file.getFileInfo());
     TS_ASSERT(!file.exists());
 
-    const int prop1 = 5412;
+    const int         prop1 = 5412;
     const std::string prop1Key("prop1");
     {
       // Checking when property is <int>
@@ -108,9 +110,9 @@ class TestPropertyFile : public CxxTest::TestSuite
                        boost::property_tree::ptree_bad_data);
     }
 
-    const double prop3 = 124.56122;
+    const double      prop3  = 124.56122;
     const std::string prop3Key("other.prop3");
-    const double prop3b = 124.0;
+    const double      prop3b = 124.0;
     const std::string prop3bKey("other.prop3b");
     {
       // Checking when property is <double>
@@ -215,6 +217,80 @@ class TestPropertyFile : public CxxTest::TestSuite
 
 
     // Cleanup
+    TS_ASSERT(file.remove());
+  }
+
+  void testGetOptional() {
+    File file(FileInfo("temppropertyfile.conf",
+                       FileInfo::TYPE_WRITABLE));
+
+    PropertyFile pf(file.getFileInfo());
+    TS_ASSERT(!file.exists());
+
+    const int         prop1 = 5412;
+    const std::string prop1Key("prop1");
+    {
+      // Checking when property is <int>
+      // Integers can be read as int, float, double, and string.
+      pf.put(prop1Key, prop1);
+      TS_ASSERT(pf.getOptional<double>(prop1Key));
+      TS_ASSERT(pf.getOptional<int>(prop1Key));
+      TS_ASSERT(pf.getOptional<std::string>(prop1Key));
+      TS_ASSERT_EQUALS(pf.getOptional<int>(prop1Key).get(), prop1);
+      TS_ASSERT_EQUALS(pf.getOptional<std::string>(prop1Key).get(), "5412");
+      TS_ASSERT_DELTA(pf.getOptional<float>(prop1Key).get(), 5412.0f, 0.00001f);
+      TS_ASSERT_DELTA(pf.getOptional<double>(prop1Key).get(), 5412.0, 0.00001);
+    }
+
+    const std::string prop2("Nah man, it ain't worth it");
+    const std::string prop2Key("other.prop2");
+    {
+      // Checking when property is <string>
+      // Strings can only be read as strings, (unless they represent a number)
+      pf.put(prop2Key, prop2);
+      TS_ASSERT(!pf.getOptional<double>(prop2Key));
+      TS_ASSERT(!pf.getOptional<int>(prop2Key));
+      TS_ASSERT(pf.getOptional<std::string>(prop2Key));
+      TS_ASSERT_THROWS(pf.get<int>(prop2Key),
+                       boost::property_tree::ptree_bad_data);
+      TS_ASSERT(!pf.getOptional<int>("other.nonexistant"));
+      TS_ASSERT_EQUALS(pf.getOptional<std::string>(prop2Key).get(), prop2);
+      TS_ASSERT(!pf.getOptional<float>(prop2Key));
+      TS_ASSERT(!pf.getOptional<double>(prop2Key));
+    }
+  }
+
+  void testSampleInfoFromFile() {
+    const std::string content = R"(; This is a comment
+
+Graphics
+{
+    ScreenResolution
+    {
+        w 1196
+        h 768
+    }
+}
+)";
+    File file("tmpinfo.info", FileInfo::TYPE_WRITABLE);
+    TS_ASSERT(file.safeWrite(content));
+    TS_ASSERT(file.exists());
+
+    PropertyFile pf(file.getFileInfo());
+    TS_ASSERT(!pf.hasEntry("Graphics"));
+    TS_ASSERT(!pf.hasEntry("Graphics.ScreenResolution"));
+    TS_ASSERT(!pf.hasEntry("Graphics.ScreenResolution.w"));
+    TS_ASSERT(!pf.hasEntry("Graphics.ScreenResolution.h"));
+    pf.load();
+    TS_ASSERT(pf.hasEntry("Graphics"));
+    TS_ASSERT(pf.hasEntry("Graphics.ScreenResolution"));
+    TS_ASSERT(pf.hasEntry("Graphics.ScreenResolution.w"));
+    TS_ASSERT(pf.hasEntry("Graphics.ScreenResolution.h"));
+    TS_ASSERT(!pf.hasEntry("Graphics.ScreenResolution.z"));
+
+    TS_ASSERT_EQUALS(pf.get<int>("Graphics.ScreenResolution.w"), 1196);
+    TS_ASSERT_EQUALS(pf.get<int>("Graphics.ScreenResolution.h"), 768);
+
     TS_ASSERT(file.remove());
   }
 };

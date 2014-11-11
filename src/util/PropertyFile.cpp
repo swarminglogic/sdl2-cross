@@ -55,3 +55,4 @@ bool PropertyFile::hasEntry(const std::string& key) const
 
   return isValidPath;
 }
+

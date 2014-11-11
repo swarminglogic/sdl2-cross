@@ -80,17 +80,17 @@ class PropertyFile
   }
 
   template <class T>
-  T get(const std::string& key) {
+  T get(const std::string& key) const {
     return properties_.get<T>(key);
   }
 
   template <class T>
-  T get(const std::string& key, T defaultValue) {
+  T get(const std::string& key, T defaultValue) const {
     return properties_.get(key, defaultValue);
   }
 
   template <class T>
-  boost::optional<T> getOptional(const std::string& key) {
+  boost::optional<T> getOptional(const std::string& key) const {
     return properties_.get_optional<T>(key);
   }
 
