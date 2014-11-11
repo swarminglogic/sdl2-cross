@@ -293,6 +293,50 @@ Graphics
 
     TS_ASSERT(file.remove());
   }
+
+  void testInfoDuplicateEntry() {
+    // This test shows that duplicate keys are ignored at the highest level
+    // If root "graphics" node exists, any entry after that is ignored.
+    // No merging of key values.
+
+    const std::string content = R"(; This is a comment
+
+Graphics
+{
+    ScreenResolution
+    {
+        w 640
+        h 480
+    }
+}
+Graphics
+{
+    ScreenResolution
+    {
+        w 1196
+        h 768
+        z 1337
+    }
+    OtherNode
+    {
+        key true
+    }
+}
+)";
+
+    File file("tmpinfo.info", FileInfo::TYPE_WRITABLE);
+    TS_ASSERT(file.safeWrite(content));
+    TS_ASSERT(file.exists());
+
+    PropertyFile pf(file.getFileInfo());
+    pf.load();
+
+    TS_ASSERT_EQUALS(pf.get<int>("Graphics.ScreenResolution.w"), 640);
+    TS_ASSERT_EQUALS(pf.get<int>("Graphics.ScreenResolution.h"), 480);
+    TS_ASSERT(!pf.hasEntry("Graphics.ScreenResolution.z"));
+    TS_ASSERT(!pf.hasEntry("Graphics.OtherNode.key"));
+    TS_ASSERT(file.remove());
+  }
 };
 
 #endif  // UTIL_TESTPROPERTYFILE_H

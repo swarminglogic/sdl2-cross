@@ -49,7 +49,7 @@ gccWarningLevel = [
    '-Winline', '-Winvalid-pch', '-Wlong-long',
    '-Wmissing-format-attribute', '-Wmissing-include-dirs',
    '-Wmissing-noreturn', '-Wpacked', '-Wpointer-arith',
-   '-Wredundant-decls', '-Wshadow', '-Wstack-protector',
+   '-Wredundant-decls', '-Wshadow',
    '-Wstrict-aliasing=2', '-Wunreachable-code',
    '-Wunused',
    '-Wvariadic-macros', '-Wwrite-strings', '-pedantic',
@@ -58,6 +58,7 @@ gccWarningLevel = [
    # # Clang unsupported flags.
    # '-fpermissive',
    # -Wunsafe-loop-optimizations'
+   # '-Wstack-protector',
 ]
 
 # CPPFLAGS

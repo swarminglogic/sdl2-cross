@@ -83,12 +83,13 @@ LOCAL_CPPFLAGS += -Wall -Wextra -Wcast-align -Wcast-qual \
      -Winline -Winvalid-pch -Wlong-long \
      -Wmissing-format-attribute -Wmissing-include-dirs \
      -Wmissing-noreturn -Wpacked -Wpointer-arith \
-     -Wredundant-decls -Wshadow -Wstack-protector \
+     -Wredundant-decls -Wshadow \
      -Wstrict-aliasing=2 -Wunreachable-code \
      -Wunsafe-loop-optimizations -Wunused \
      -Wvariadic-macros -Wwrite-strings -pedantic \
      -pedantic-errors -Woverloaded-virtual \
      -Wswitch-enum
+#  -Wstack-protector
 
 include $(BUILD_SHARED_LIBRARY)
 
