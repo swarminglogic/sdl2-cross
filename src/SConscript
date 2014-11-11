@@ -7,6 +7,7 @@ target = '#/bin/main'
 
 # List of unit test files to prune away
 unitTests = set(Glob('Test*.cpp') + Glob('*/Test*.cpp') + Glob('*/*/Test*.cpp'))
+flymakeFiles = set(Glob('*/*_flymake.cpp') + Glob('*/*/*_flymake.cpp'))
 env.Append(CPPPATH   = c.sourcepaths)
 env.Append(LIBPATH   = c.libpaths)
 env.Append(CPPFLAGS  = c.cppflags)
@@ -17,7 +18,7 @@ env.Append(LINKFLAGS = c.linkflags)
 # SHARED MATH LIBRARY
 #######################
 mathFiles = [list(set(Glob('math/*.cpp') +
-                      Glob('math/*/*.cpp')) - unitTests)]
+                      Glob('math/*/*.cpp')) - unitTests - flymakeFiles)]
 mathLib = env.SharedLibrary('#/lib/swl-math',
                             mathFiles,
                             LIBS    = [],
@@ -29,7 +30,7 @@ Default(mathLib)
 # SHARED EXTERNAL LIBRARY
 #######################
 externFiles = [list(set(Glob('extern/*.cpp') +
-                        Glob('extern/*/*.cpp')) - unitTests)]
+                        Glob('extern/*/*.cpp')) - unitTests - flymakeFiles)]
 externLib = env.SharedLibrary('#/lib/swl-extern',
                               externFiles,
                               LIBS     = [],
@@ -41,7 +42,7 @@ Default(externLib)
 # SHARED UTIL LIBRARY
 #######################
 utilFiles = [list(set(Glob('util/*.cpp') +
-                      Glob('util/*/*.cpp')) - unitTests)]
+                      Glob('util/*/*.cpp')) - unitTests - flymakeFiles)]
 utilLib = env.SharedLibrary('#/lib/swl-util',
                             utilFiles,
                             LIBS = mathLib + externLib + c.lSDL);
@@ -52,7 +53,7 @@ Default(utilLib)
 # SHARED AUDIO LIBRARY
 #######################
 audioFiles = [list(set(Glob('audio/*.cpp') +
-                       Glob('audio/*/*.cpp')) - unitTests)]
+                       Glob('audio/*/*.cpp')) - unitTests - flymakeFiles)]
 audioLib = env.SharedLibrary('#/lib/swl-audio',
                              audioFiles,
                              LIBS = c.lSDL + c.lSDLmixer + mathLib + utilLib);
@@ -63,7 +64,7 @@ Default(audioLib)
 # SHARED GRAPHICS LIBRARY
 #######################
 graphicsFiles = [list(set(Glob('graphics/*.cpp') +
-                          Glob('graphics/*/*.cpp')) - unitTests)]
+                          Glob('graphics/*/*.cpp')) - unitTests - flymakeFiles)]
 graphicsLib = env.SharedLibrary('#/lib/swl-graphics',
                              graphicsFiles,
                              LIBS = mathLib + utilLib + externLib +
@@ -76,7 +77,7 @@ Default(graphicsLib)
 # SHARED IO LIBRARY
 #######################
 ioFiles = [list(set(Glob('io/*.cpp') +
-                    Glob('io/*/*.cpp')) - unitTests)]
+                    Glob('io/*/*.cpp')) - unitTests - flymakeFiles)]
 ioLib = env.SharedLibrary('#/lib/swl-io',
                              ioFiles,
                              LIBS = utilLib + c.lSDL + mathLib);
@@ -87,7 +88,7 @@ Default(ioLib)
 # SHARED MODEL LIBRARY
 #######################
 modelFiles = [list(set(Glob('model/*.cpp') +
-                       Glob('model/*/*.cpp')) - unitTests)]
+                       Glob('model/*/*.cpp')) - unitTests - flymakeFiles)]
 modelLib = env.SharedLibrary('#/lib/swl-model',
                              modelFiles,
                              LIBS = mathLib + utilLib + c.lSDL + c.lBullet);
@@ -98,7 +99,7 @@ Default(modelLib)
 # SHARED CORE LIBRARY
 #######################
 coreFiles = [list(set(Glob('core/*.cpp') +
-                       Glob('core/*/*.cpp')) - unitTests)]
+                       Glob('core/*/*.cpp')) - unitTests - flymakeFiles)]
 coreLib = env.SharedLibrary('#/lib/swl-core',
                              coreFiles,
                              LIBS = mathLib + utilLib + externLib +
