@@ -26,16 +26,16 @@
 
 MainManager::MainManager()
 : log_("MainManager"),
-  preferences_(FileInfo("default_preferences.info",
+  preferences_(FileInfo("preferences_default.info",
                         FileInfo::TYPE_ASSET),
                FileInfo(
 #ifdef __ANDROID__
-                   "android_preferences.info",
+                   "preferences_android.info",
 #else
-                   "linux_preferences.info",
+                   "preferences_linux.info",
 #endif
                    FileInfo::TYPE_ASSET),
-               FileInfo("user_preferences.info",
+               FileInfo("preferences_user.info",
                         FileInfo::TYPE_WRITABLE)),
   audioResources_(new AudioResourceManager),
   graphics_(nullptr),
