@@ -1,5 +1,5 @@
-#ifndef UTIL_PREFERENCEHELPER_H
-#define UTIL_PREFERENCEHELPER_H
+#ifndef UTIL_PREFERENCEMANAGER_H
+#define UTIL_PREFERENCEMANAGER_H
 
 #include <boost/optional.hpp>
 
@@ -10,15 +10,15 @@
 
 
 /**
- * PreferenceHelper class.
+ * PreferenceManager class.
  *
  * @author SwarmingLogic
  */
-class PreferenceHelper
+class PreferenceManager
 {
  public:
   /**
-   * Helper class to query values stored in configuration files.
+   * Manager class to query values stored in configuration files.
    *
    * It checks all three preference files, tries to return the
    * preference in the order of first occurence:
@@ -37,11 +37,11 @@ class PreferenceHelper
    * @param systemPrefences The system preference file.
    * @param userPrefences The user preference file.
    */
-  PreferenceHelper(const FileInfo& defaultPrefFileInfo,
-                   const FileInfo& systemPrefFileInfo,
-                   const FileInfo& userPrefFileInfo);
+  PreferenceManager(const FileInfo& defaultPrefFileInfo,
+                    const FileInfo& systemPrefFileInfo,
+                    const FileInfo& userPrefFileInfo);
 
-  virtual ~PreferenceHelper();
+  virtual ~PreferenceManager();
 
 
   /**
@@ -65,7 +65,7 @@ class PreferenceHelper
 
   template <class T>
   T get(const std::string& key) const {
-    boost::optional<T> ret = PreferenceHelper::getOptional<T>(key);
+    boost::optional<T> ret = PreferenceManager::getOptional<T>(key);
     if (ret)
       return ret.get();
     else
@@ -105,4 +105,4 @@ class PreferenceHelper
   PropertyFile userPref_;
 };
 
-#endif  // UTIL_PREFERENCEHELPER_H
+#endif  // UTIL_PREFERENCEMANAGER_H

@@ -1,0 +1,28 @@
+; Default system configuration file
+;
+; Notation style is to upper CamelCase grouping keys, and to lower case and
+; underscore delimiter keys with assigned values.
+;
+; Although not a requirement by the INFO format, single word strings should
+; still be defined withing quotes.
+;
+
+
+Application
+{
+    title "SDL Game"
+    is_resizable false
+}
+
+
+Graphics
+{
+    ScreenResolution
+    {
+        w 1196
+        h 768
+    }
+    is_vsync true
+    is_fullscreen false
+    is_opengl_debug_enabled false
+}

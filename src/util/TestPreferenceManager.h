@@ -1,22 +1,22 @@
-#ifndef UTIL_TESTPREFERENCEHELPER_H
-#define UTIL_TESTPREFERENCEHELPER_H
+#ifndef UTIL_TESTPREFERENCEMANAGER_H
+#define UTIL_TESTPREFERENCEMANAGER_H
 
 #include <math/Size.h>
 #include <util/Exception.h>
 #include <util/FileInfo.h>
 #include <util/FileUtil.h>
-#include <util/PreferenceHelper.h>
+#include <util/PreferenceManager.h>
 #include <util/PropertyFile.h>
 
 #include <cxxtest/TestSuite.h>
 
 
 /**
- * Test for the PreferenceHelper class.
+ * Test for the PreferenceManager class.
  *
  * @author SwarmingLogic
  */
-class TestPreferenceHelper : public CxxTest::TestSuite
+class TestPreferenceManager : public CxxTest::TestSuite
 {
  public:
   void testBasic() {
@@ -43,7 +43,7 @@ class TestPreferenceHelper : public CxxTest::TestSuite
     TS_ASSERT(FileUtil::exists(defaultPrefsInfo));
     TS_ASSERT(FileUtil::exists(systemPrefsInfo));
     TS_ASSERT(!FileUtil::exists(userPrefsInfo));
-    PreferenceHelper ph(defaultPrefsInfo, systemPrefsInfo, userPrefsInfo);
+    PreferenceManager ph(defaultPrefsInfo, systemPrefsInfo, userPrefsInfo);
 
     // Empty userprefs file should have been created.
     TS_ASSERT(FileUtil::exists(userPrefsInfo));
@@ -136,4 +136,4 @@ Graphics
 };
 
 
-#endif  // UTIL_TESTPREFERENCEHELPER_H
+#endif  // UTIL_TESTPREFERENCEMANAGER_H

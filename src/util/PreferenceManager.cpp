@@ -1,14 +1,14 @@
-#include <util/PreferenceHelper.h>
+#include <util/PreferenceManager.h>
 
 #include <util/Assert.h>
 #include <util/FileInfo.h>
 #include <util/FileUtil.h>
 
 
-PreferenceHelper::PreferenceHelper(const FileInfo& defaultPrefFileInfo,
-                                   const FileInfo& systemPrefFileInfo,
-                                   const FileInfo& userPrefFileInfo)
-    : log_("PreferenceHelper"),
+PreferenceManager::PreferenceManager(const FileInfo& defaultPrefFileInfo,
+                                     const FileInfo& systemPrefFileInfo,
+                                     const FileInfo& userPrefFileInfo)
+    : log_("PreferenceManager"),
       defaultPrefFileInfo_(defaultPrefFileInfo),
       defaultPref_(defaultPrefFileInfo_),
       systemPrefFileInfo_(systemPrefFileInfo),
@@ -28,12 +28,12 @@ PreferenceHelper::PreferenceHelper(const FileInfo& defaultPrefFileInfo,
 }
 
 
-PreferenceHelper::~PreferenceHelper()
+PreferenceManager::~PreferenceManager()
 {
 }
 
 
-bool PreferenceHelper::hasEntry(const std::string& key) const
+bool PreferenceManager::hasEntry(const std::string& key) const
 {
   return (userPref_.hasEntry(key) ||
           systemPref_.hasEntry(key) ||
@@ -41,13 +41,13 @@ bool PreferenceHelper::hasEntry(const std::string& key) const
 }
 
 
-void PreferenceHelper::load()
+void PreferenceManager::load()
 {
   userPref_.load();
 }
 
 
-bool PreferenceHelper::save()
+bool PreferenceManager::save()
 {
   return userPref_.save();
 }
