@@ -1,6 +1,5 @@
 #include <core/MainManager.h>
 
-#include <cassert>
 #include <sstream>
 
 #include <audio/AudioPlayback.h>
@@ -16,6 +15,7 @@
 #include <graphics/SDL_image.h>
 #include <graphics/SDL_opengl.h>
 #include <graphics/SDL_ttf.h>
+#include <util/Assert.h>
 #include <util/CharMap.h>
 #include <util/Log.h>
 #include <util/LogUtil.h>
@@ -25,15 +25,26 @@
 
 
 MainManager::MainManager()
-  : log_("MainManager"),
-    audioResources_(new AudioResourceManager),
-    graphics_(nullptr),
-    imageRenderer_(nullptr),
-    imageResources_(new ImageResourceManager),
-    runtime_(new Timer),
-    isRunning_(true),
-    testImage_(nullptr),
-    fpsCounter_(30)
+    : log_("MainManager"),
+      preferences_(FileInfo("default_preferences.info",
+                            FileInfo::TYPE_ASSET),
+                   FileInfo(
+#ifdef __ANDROID__
+                            "android_preferences.info",
+#else
+                            "linux_preferences.info",
+#endif
+                            FileInfo::TYPE_ASSET),
+                   FileInfo("user_preferences.info",
+                            FileInfo::TYPE_WRITABLE)),
+  audioResources_(new AudioResourceManager),
+  graphics_(nullptr),
+  imageRenderer_(nullptr),
+  imageResources_(new ImageResourceManager),
+      runtime_(new Timer),
+  isRunning_(true),
+  testImage_(nullptr),
+  fpsCounter_(30)
 {
   initSDL();
   initSDLimg();
@@ -57,7 +68,7 @@ MainManager& MainManager::instance()
 void MainManager::initialize()
 {
   log_.i("Initializing resources.");
-  graphics_.reset(new GraphicsManager);
+  graphics_.reset(new GraphicsManager(preferences_));
 
   testImage_ = imageResources_->loadImage("uv_colorgrid.png");
   testImage_->setIsMaxFiltering(true);
@@ -159,7 +170,6 @@ void MainManager::run() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     textRenderer_->render(runtime_->getSeconds());
     // imageRenderer_->render(Point(0, 0), 0);
-
     graphics_->swapBuffers();
     ++frameNumber;
 

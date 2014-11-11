@@ -1,1 +1,10 @@
 ; Android specific preferences
+
+Graphics
+{
+    ScreenResolution
+    {
+        w 1794
+        h 1080
+    }
+}

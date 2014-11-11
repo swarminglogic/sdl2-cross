@@ -7,6 +7,7 @@
 #include <graphics/Surface.h>
 #include <util/FpsCounter.h>
 #include <util/Log.h>
+#include <util/PreferenceManager.h>
 #include <util/SDL.h>
 #include <util/SDL_Event_fwd.h>
 
@@ -63,7 +64,6 @@ class MainManager
   void initSDLmixer();
   void initFlite();
 
-
   void logSDLVersion(const std::string& what,
                      const SDL_version& compiled,
                      const SDL_version& linked);
@@ -79,6 +79,8 @@ class MainManager
   MainManager& operator=(const MainManager& c);
 
   Log log_;
+  PreferenceManager preferences_;
+
   std::unique_ptr<AudioResourceManager> audioResources_;
   std::unique_ptr<GraphicsManager> graphics_;
   std::unique_ptr<Renderer2dImage> imageRenderer_;

@@ -8,6 +8,7 @@
 
 
 class ViewConfig;
+class PreferenceManager;
 
 /**
  * GraphicsManager class.
@@ -17,7 +18,7 @@ class ViewConfig;
 class GraphicsManager
 {
  public:
-  GraphicsManager();
+  GraphicsManager(const PreferenceManager& preferences);
   virtual ~GraphicsManager();
 
   void swapBuffers();

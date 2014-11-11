@@ -2,13 +2,14 @@
 
 #include <graphics/ViewConfig.h>
 #include <util/Assert.h>
+#include <util/PreferenceManager.h>
 
 
 #ifdef __ANDROID__
 #define USE_OPENGLES
 #endif
 
-GraphicsManager::GraphicsManager()
+GraphicsManager::GraphicsManager(const PreferenceManager& prefs)
   : log_("GraphicsManager"),
     window_(nullptr),
     screenSize_(0, 0),
@@ -18,12 +19,13 @@ GraphicsManager::GraphicsManager()
     isOpenGlDebugEnabled_(false),
     vertexArrayObject_(0u)
 {
-  // TODO swarminglogic, 2014-04-16: Move this out somehow.
-  // Either to MainManager, and/or configuration file.
-  ViewConfig viewConfig(Size(1196, 768), "SDL Game");
-  viewConfig.setIsFullScreen(false);
-  viewConfig.setIsResizeable(false);
-  viewConfig.setIsVSync(true);
+  const Size screenSize(prefs.get<int>("Graphics.ScreenResolution.w"),
+                        prefs.get<int>("Graphics.ScreenResolution.h"));
+  const std::string title(prefs.get<std::string>("Application.title"));
+  ViewConfig viewConfig(screenSize, title);
+  viewConfig.setIsResizeable(prefs.get<bool>("Application.is_resizable"));
+  viewConfig.setIsFullScreen(prefs.get<bool>("Graphics.is_fullscreen"));
+  viewConfig.setIsVSync(prefs.get<bool>("Graphics.is_vsync"));
 
   isFullScreen_ = viewConfig.isFullScreen();
   initalizeOpenGL(viewConfig);
