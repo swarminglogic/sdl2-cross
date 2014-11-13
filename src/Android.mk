@@ -47,6 +47,7 @@ LOCAL_SRC_FILES += $(wildcard $(JNI_PATH)/src/$(SWL_ANDROID_MAIN_FILE))
 LOCAL_SHARED_LIBRARIES := SDL2 SDL2_image SDL2_mixer SDL2_ttf \
 	                        noise \
 	                        PolyVoxCore PolyVoxUtil \
+	                        bullet \
 	                        flite_cmu_us_awb flite_cmu_us_rms \
 	                        flite_voice_list flite_cmulex flite_usenglish flite
 
