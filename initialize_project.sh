@@ -499,7 +499,7 @@ function findOrGetGlslangValidator {
             writeStatus "  - glslangValidator script not found in PATH, downloading" 1
             echo $GRAY
             local url="https://cvs.khronos.org/svn/repos/ogl/"\
-              "trunk/ecosystem/public/sdk/tools/glslang/Install/Linux/glslangValidator"
+"trunk/ecosystem/public/sdk/tools/glslang/Install/Linux/glslangValidator"
             wget $url -O utils/scripts/glslangValidator && \
                 chmod +x utils/scripts/glslangValidator
             echo $NORMAL
