@@ -11,9 +11,10 @@ This isn't a game engine (at least not in its current state), but serves as a go
 * Project initialization script for detecting required dependencies. [screenshot](https://raw.githubusercontent.com/swarminglogic/sdl2-cross/master/doc/initialize_project.png)
 * Utility for common development tasks (building android/linux, android logcat, unit testing, etc)
 * `CxxTest` based unit-testing (both linux and android)
-* Combined OpenGL/GLES files with #ifdef ES, #else, #endif directives.
+* Combined OpenGL/GLES files with `#ifdef ES`, `#else`, `#endif` directives.
 * Several libraries with android build files (bullet, flite, libnoise, polyvox)
 * Script for generating html code coverage report.
+* Windows 64-bit [cross-compilation](http://swarminglogic.com/article/2014_11_crosscompile2) using `mingw-w64-x86-64`
 * ...
 
 ### Future Features:
@@ -21,7 +22,6 @@ This isn't a game engine (at least not in its current state), but serves as a go
 * AngelScript based scripting language
 * Add external library SDL_net
 * `emscriptem` based HTML5 compilation
-* `g++-mingw-w64-x86-64` based Windows cross-compilation
 
 
 ### External Libraries (not included):
@@ -29,7 +29,7 @@ The framework relies on the following libraries
 
 | Library    | Version                | Description                                             |
 | :--------- | :--------------------- | :------------------------------------------------------ |
-| SDL2       | `2.0.4 (1cb6ac648db7)` | OpenGL glue, touch/gesture and keyboard input, and more |
+| SDL2       | `2.0.4 (bc074eca6597)` | OpenGL glue, touch/gesture and keyboard input, and more |
 | SDL_image  | `2.0.0 (e8573815cc1f)` | png/jpg loading                                         |
 | SDL_mixer  | `2.0.0 (9599bb0ff844)` | ogg loading, sound playback                             |
 | SDL_ttf    | `2.0.12 (f28f7b0f72ae)`| ttf loading                                             |
@@ -146,7 +146,6 @@ desktop build, but will soon also be used for android.
     |                                                      |
     +––––––––––––––––––––––––––––––––––––––––––––––––––––––+
 ```
-
 
 ### Compilation & Special Files
 * Special files:
