@@ -24,8 +24,6 @@ lAll      = c.lAll
 
 Import('env')
 
-target = '#/bin/main'
-
 # List of unit test files to prune away
 unitTests = set(Glob('Test*.cpp') + Glob('*/Test*.cpp') + Glob('*/*/Test*.cpp'))
 flymakeFiles = set(Glob('*/*_flymake.cpp') + Glob('*/*/*_flymake.cpp'))
@@ -36,6 +34,8 @@ env.Append(CPPPATH   = sourcepaths)
 env.Append(LINKFLAGS = linkflags)
 
 swlMain = os.getenv('SWL_MAIN_FILE', 'main.cpp')
+swlTargetSuffix = os.getenv('SWL_TARGET_SUFFIX', '')
+target = '#/bin/main' + swlTargetSuffix
 
 if GetOption('win64'):
     #############################################

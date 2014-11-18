@@ -6,6 +6,8 @@ Possible targets:
     a, android
     android-tests
     l, linux
+    w, windows
+    windows-tests
     utils
     all          (build each of the above, if possible)
 
@@ -79,7 +81,7 @@ while test $# -gt 0; do
             ;;
         -t|--tests)
             shift
-            runTests=yes
+            buildTests=yes
             ;;
         a|android)
             shift
@@ -93,6 +95,15 @@ while test $# -gt 0; do
         l|linux)
             shift
             linux=yes
+            ;;
+        w|windows)
+            shift
+            windows=yes
+            ;;
+        windows-tests)
+            shift
+            windows=yes
+            windowsTests=yes
             ;;
         utils)
             shift
@@ -115,7 +126,7 @@ while test $# -gt 0; do
 done
 
 # $1: Runner filename
-function create_android_unit_test_main_file {
+function create_unit_test_main_file {
     local main=$1
     local testlist=$(cd src/ && find . -name 'Test*.h' | \
         grep -Ev '_flymake.*' | grep -v 'TestEmpty')
@@ -160,10 +171,10 @@ if [[ $android ]] ; then
 
     if [[ $androidTests ]] ; then
         # Configure to build
-        export SWL_ANDROID_MAIN_FILE=main_android_tests.cpp
-        create_android_unit_test_main_file $SWL_ANDROID_MAIN_FILE
+        export SWL_MAIN_FILE=main_unit_tests.cpp
+        create_unit_test_main_file $SWL_MAIN_FILE
     else
-        export SWL_ANDROID_MAIN_FILE=main.cpp
+        export SWL_MAIN_FILE=main.cpp
     fi
 
     if [[ $cleanTarget ]] ; then
@@ -189,13 +200,33 @@ if [[ $linux ]] ; then
         scons -c;
     else
         prepareGitRevHeader
-        if [[ $runTests ]] ; then
+        if [[ $buildTests ]] ; then
             nice scons $serial --tests
         else
             nice scons $serial
         fi
     fi
 fi
+
+
+if [[ $windows ]] ; then
+    if [[ $cleanTarget ]] ; then
+        echo "Cleaning Windows build ..."
+        scons --win64 -c;
+    else
+       prepareGitRevHeader
+        if [[ $buildTests ]] ; then
+            export SWL_TARGET_SUFFIX=-unittests
+            export SWL_MAIN_FILE=main_unit_tests.cpp
+            create_unit_test_main_file $SWL_MAIN_FILE
+            nice scons $serial --win64
+        else
+            nice scons $serial --win64
+            export SWL_MAIN_FILE=main.cpp
+        fi
+    fi
+fi
+
 
 function buildUtil {
     target=$1

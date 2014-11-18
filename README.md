@@ -10,7 +10,7 @@ This isn't a game engine (at least not in its current state), but serves as a go
 ### Platform Features (summary):
 * Project initialization script for detecting required dependencies. [screenshot](https://raw.githubusercontent.com/swarminglogic/sdl2-cross/master/doc/initialize_project.png)
 * Utility for common development tasks (building android/linux, android logcat, unit testing, etc)
-* `CxxTest` based unit-testing (both linux and android)
+* `CxxTest` based unit-testing (both linux, windows and android)
 * Combined OpenGL/GLES files with `#ifdef ES`, `#else`, `#endif` directives.
 * Several libraries with android build files (bullet, flite, libnoise, polyvox)
 * Script for generating html code coverage report.

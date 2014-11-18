@@ -34,7 +34,7 @@ LOCAL_SRC_FILES := $(SDL_PATH)/src/main/android/SDL_android_main.c \
 	 $(wildcard $(JNI_PATH)/src/model/*.cpp) \
 	 $(wildcard $(JNI_PATH)/src/util/*.cpp)
 
-LOCAL_SRC_FILES += $(wildcard $(JNI_PATH)/src/$(SWL_ANDROID_MAIN_FILE))
+LOCAL_SRC_FILES += $(wildcard $(JNI_PATH)/src/$(SWL_MAIN_FILE))
 
 #  $(shell find $(JNI_PATH)/src/ -name "*.cpp")
 
