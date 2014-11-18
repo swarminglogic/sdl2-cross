@@ -1,6 +1,8 @@
 #ifndef GRAPHICS_GRAPHICSMANAGER_H
 #define GRAPHICS_GRAPHICSMANAGER_H
 
+#include <string>
+
 #include <graphics/SDL_opengl.h>
 #include <math/Size.h>
 #include <util/Log.h>
@@ -28,9 +30,10 @@ class GraphicsManager
 
  private:
   void initalizeOpenGL(const ViewConfig& viewConfig);
+  void initalizeGlew();
 
   // Debug function for logging graphics driver information
-  void logAcquiredGlVersion(const std::string& glName) const;
+  void logAcquiredGlVersion() const;
   void logGraphicsDriverInfo() const;
   void logOpenGLContextInfo() const;
   void logStaticOpenGLInfo() const;
@@ -42,7 +45,7 @@ class GraphicsManager
   bool isFullScreen_;
   bool isVSync_;
   bool isOpenGlDebugEnabled_;
-
+  std::string glName_;
   GLuint vertexArrayObject_;
 
   // NonCopyable

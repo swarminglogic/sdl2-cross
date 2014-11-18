@@ -1,5 +1,6 @@
 import os, re, imp
-import common_build as c
+
+from utils import linux_build as c
 
 Import('env')
 

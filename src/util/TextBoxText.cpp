@@ -126,11 +126,11 @@ void TextBoxText::buildFormatted()
   // Checking each line against width
   for (const auto& line : lines) {
     std::string fline("");  // formatted line
-    uint flineWidth = 0;
+    uint32_t flineWidth = 0;
 
     StringVector words = StringUtil::split(line, ' ');
     for (const auto& word : words) {
-      const uint wordWidth = textWidth(word);
+      const uint32_t wordWidth = textWidth(word);
       // word fits in current line
       if (flineWidth + wordWidth <= boxWidth_) {
         fline      += word + " ";

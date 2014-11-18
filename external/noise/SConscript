@@ -3,7 +3,14 @@ common_env = Environment(ENV = {'PATH' : os.environ['PATH'],
                                 'HOME' : os.environ['HOME'],
                                 'TERM' : 'xterm'})
 
+if GetOption('win64'):
+    common_env.Tool('crossmingw', toolpath = ['../../utils/scripts/'])
+    vardir='#/build/win/external/noise'
+else:
+    vardir='#/build/linux/external/noise'
+
 common_env.Append(CPPPATH = ['#/external/noise/include/'])
 
-common_env.VariantDir('#/build/noise/src', 'src')
-common_env.SConscript('#/build/noise/src/SConscript', {'env': common_env})
+common_env.VariantDir(vardir + '/src', 'src')
+common_env.SConscript(vardir + '/src/SConscript', {'env': common_env})
+

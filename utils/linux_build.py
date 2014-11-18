@@ -13,8 +13,8 @@ lSDL      = ['SDL2']
 lSDLimage = ['SDL2_image']
 lSDLmixer = ['SDL2_mixer']
 lSDLttf   = ['SDL2_ttf']
-lBullet   = ['BulletCollision', 'BulletDynamics', 'LinearMath']
-lGL       = ['GL', 'GLU']
+lBullet   = ['BulletDynamics', 'BulletCollision', 'LinearMath']
+lGL       = ['GLEW', 'GL', 'GLU']
 lFlite    = ['flite_voice_list',
              'flite_cmu_us_awb',
              'flite_cmu_us_rms',
@@ -24,14 +24,15 @@ lFlite    = ['flite_voice_list',
 lNoise    = ['noise']
 lPolyVox  = ['PolyVoxCore', 'PolyVoxUtil']
 lOther    = ['m', 'dl', 'rt']
-lAll  = (lSDL + lSDLimage + lSDLmixer + lSDLttf +
-         lBullet + lGL +
-         lFlite + lNoise + lPolyVox +
-         lOther)
 
 libpaths = ['#/lib/',
             pathSdl    + '/lib',
             pathBullet + '/lib']
+
+lAll  = (lOther + lGL +
+         lSDL + lSDLimage + lSDLmixer + lSDLttf +
+         lBullet +
+         lFlite + lNoise + lPolyVox)
 
 # Macros definitions
 macroDefinitions = [
@@ -91,9 +92,9 @@ if 'LDFLAGS' in os.environ:
 
 sourcepaths = [
    base,
-   '../external/',
-   '../external/polyvox/library/PolyVoxCore/include/',
-   '../external/polyvox/library/PolyVoxUtil/include/',
+   '#/external/',
+   '#/external/polyvox/library/PolyVoxCore/include/',
+   '#/external/polyvox/library/PolyVoxUtil/include/',
    pathBoost  + '/include',
    pathGlm,
    pathBullet + '/include/bullet/',

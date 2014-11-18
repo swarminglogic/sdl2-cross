@@ -41,7 +41,7 @@ class TimedExecution
    * @param nExecutions Number of times to execute. -1 for unlimited.
    */
   TimedExecution(std::function<void(void)> fun,
-                 uint timeout,
+                 uint32_t timeout,
                  int nExecutions = -1);
 
   bool exec();
@@ -57,7 +57,7 @@ class TimedExecution
 
  private:
   std::function<void(void)> fun_;
-  uint  timeout_;
+  uint32_t timeout_;
   int   nExecutions_;
   Timer timer_;
 

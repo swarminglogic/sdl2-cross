@@ -3,11 +3,17 @@ common_env = Environment(ENV = {'PATH' : os.environ['PATH'],
                                 'HOME' : os.environ['HOME'],
                                 'TERM' : 'xterm'})
 
+if GetOption('win64'):
+    common_env.Tool('crossmingw', toolpath = ['../../utils/scripts/'])
+    vardir='#/build/win/external/polyvox'
+else:
+    vardir='#/build/linux/external/polyvox'
+
 common_env.Append(CPPPATH = ['#/external/polyvox/library/PolyVoxCore/include',
-                         '#/external/polyvox/library/PolyVoxUtil/include'])
+                             '#/external/polyvox/library/PolyVoxUtil/include'])
 
-common_env.VariantDir('#/build/polyvox/PolyVoxCore', 'library/PolyVoxCore')
-common_env.SConscript('#/build/polyvox/PolyVoxCore/SConscript', {'env': common_env})
+common_env.VariantDir(vardir + '/PolyVoxCore', 'library/PolyVoxCore')
+common_env.SConscript(vardir + '/PolyVoxCore/SConscript', {'env': common_env})
 
-common_env.VariantDir('#/build/polyvox/PolyVoxUtil', 'library/PolyVoxUtil')
-common_env.SConscript('#/build/polyvox/PolyVoxUtil/SConscript', {'env': common_env})
+common_env.VariantDir(vardir + '/PolyVoxUtil', 'library/PolyVoxUtil')
+common_env.SConscript(vardir + '/PolyVoxUtil/SConscript', {'env': common_env})

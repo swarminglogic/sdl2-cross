@@ -4,7 +4,7 @@
 
 
 TimedExecution::TimedExecution(std::function<void(void)> fun,
-                               uint timeout,
+                               uint32_t timeout,
                                int nExecutions)
   : fun_(fun),
     timeout_(timeout),

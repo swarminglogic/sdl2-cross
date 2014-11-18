@@ -31,7 +31,7 @@ class TestException : public CxxTest::TestSuite
     TS_ASSERT_EQUALS(exc.toString(), msg);
 
     // What()
-    TS_ASSERT_SAME_DATA(exc.what(), msg.c_str(), (uint)msg.size());
+    TS_ASSERT_SAME_DATA(exc.what(), msg.c_str(), (uint32_t)msg.size());
 
     // What() extended.
     const std::string msgCopy(exc.what());

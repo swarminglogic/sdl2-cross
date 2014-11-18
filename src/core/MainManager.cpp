@@ -241,6 +241,9 @@ void MainManager::initLogger()
 #ifndef __ANDROID__
   LogManager::instance().setStreamTarget(std::cout);
 #endif
+#ifdef __WIN32__
+  LogManager::instance().setStreamColorMode(LogManager::COLORMODE_NONE);
+#endif
 
   // Setting logger levels
   std::string streamLevelTxt = "";
@@ -339,7 +342,7 @@ void MainManager::initSDLmixer()
   if (nMusicDecoders > 0)
     ss << Mix_GetMusicDecoder(0);
   for (int i = 1 ; i < nMusicDecoders ; ++i) {
-    ss << ", " << Mix_GetMusicDecoder(i) << Log::end;
+    ss << ", " << Mix_GetMusicDecoder(i);
   }
   log_.d() << "Music decoders (" << nMusicDecoders << "): "
            << ss.str() << Log::end;
@@ -351,7 +354,7 @@ void MainManager::initSDLmixer()
   if (nChunkDecoders > 0)
     ss << Mix_GetChunkDecoder(0);
   for (int i = 1 ; i < nChunkDecoders ; ++i) {
-    ss << ", " << Mix_GetChunkDecoder(i) << Log::end;
+    ss << ", " << Mix_GetChunkDecoder(i);
   }
   log_.d() << "Audio decoders (" << nChunkDecoders << "): "
            << ss.str() << Log::end;

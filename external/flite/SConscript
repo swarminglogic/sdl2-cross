@@ -3,13 +3,21 @@ common_env = Environment(ENV = {'PATH' : os.environ['PATH'],
                                 'HOME' : os.environ['HOME'],
                                 'TERM' : 'xterm'})
 
+
+if GetOption('win64'):
+    common_env.Tool('crossmingw', toolpath = ['../../utils/scripts/'])
+    common_env['CCFLAGS'].append('-DCST_NO_SOCKETS -DUNDER_WINDOWS -DWIN32')
+    vardir='#/build/win/external/flite'
+else:
+    vardir='#/build/linux/external/flite'
+
 common_env.Append(CPPPATH = ['#/external/flite/include/'])
 
-common_env.VariantDir('#/build/flite/src', 'src')
-common_env.SConscript('#/build/flite/src/SConscript', {'env': common_env})
+common_env.VariantDir(vardir + '/src', 'src')
+common_env.SConscript(vardir + '/src/SConscript', {'env': common_env})
 
-common_env.VariantDir('#/build/flite/lang', 'lang')
-common_env.SConscript('#/build/flite/lang/SConscript', {'env': common_env})
+common_env.VariantDir(vardir + '/lang', 'lang')
+common_env.SConscript(vardir + '/lang/SConscript', {'env': common_env})
 
-common_env.VariantDir('#/build/flite/main', 'main')
-common_env.SConscript('#/build/flite/main/SConscript', {'env': common_env})
+common_env.VariantDir(vardir + '/main', 'main')
+common_env.SConscript(vardir + '/main/SConscript', {'env': common_env})

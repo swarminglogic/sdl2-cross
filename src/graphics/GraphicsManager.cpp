@@ -17,6 +17,7 @@ GraphicsManager::GraphicsManager(const PreferenceManager& prefs)
     isFullScreen_(false),
     isVSync_(true),
     isOpenGlDebugEnabled_(false),
+    glName_(""),
     vertexArrayObject_(0u)
 {
   const Size screenSize(prefs.get<int>("Graphics.ScreenResolution.w"),
@@ -29,6 +30,12 @@ GraphicsManager::GraphicsManager(const PreferenceManager& prefs)
 
   isFullScreen_ = viewConfig.isFullScreen();
   initalizeOpenGL(viewConfig);
+  initalizeGlew();
+
+  logAcquiredGlVersion();
+  logStaticOpenGLInfo();
+  logGraphicsDriverInfo();
+  logOpenGLContextInfo();
 
   // Create required OpenGL state configurations
   glGenVertexArrays(1, &vertexArrayObject_);
@@ -89,18 +96,18 @@ void GraphicsManager::initalizeOpenGL(const ViewConfig& viewConfig)
      {{3, 1}, {3, 0},
       {2, 0}, {1, 1}
     };
-  const std::string glName = "OpenGL ES";
+  glName_ = "OpenGL ES";
 #else
   const std::pair<int, int> glVersions[11]
      {{4, 4}, {4, 3}, {4, 2}, {4, 1}, {4, 0},
       {3, 3}, {3, 2}, {3, 1}, {3, 0},
       {2, 1}, {2, 0}
     };
-  const std::string glName = "OpenGL";
+  glName_ = "OpenGL";
 #endif
 
   for (auto& glVersion : glVersions) {
-    log_.d() << "Trying to create " << glName << " " << glVersion.first << "."
+    log_.d() << "Trying to create " << glName_ << " " << glVersion.first << "."
              << glVersion.second << " context" << Log::end;
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, glVersion.first);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, glVersion.second);
@@ -121,21 +128,24 @@ void GraphicsManager::initalizeOpenGL(const ViewConfig& viewConfig)
 
   // // Make it the current context
   SDL_GL_MakeCurrent(window_.get(), *context_);
-
-  logAcquiredGlVersion(glName);
-  logStaticOpenGLInfo();
-  logGraphicsDriverInfo();
-  logOpenGLContextInfo();
 }
 
+void GraphicsManager::initalizeGlew() {
+#ifndef __ANDROID__
+  log_.i() << "Initializing GLEW" << Log::end;
+  glewExperimental = true;
+  if (glewInit() != GLEW_OK)
+    throw log_.exception("Failed to initialize GLEW");
+#endif
+}
 
-void GraphicsManager::logAcquiredGlVersion(const std::string& glName) const
+void GraphicsManager::logAcquiredGlVersion() const
 {
   int minorVersion = 0;
   int majorVersion = 0;
   glGetIntegerv(GL_MINOR_VERSION, &minorVersion);
   glGetIntegerv(GL_MAJOR_VERSION, &majorVersion);
-  log_.d() << "Created " << glName << " context: "
+  log_.d() << "Created " << glName_ << " context: "
            << majorVersion << "." << minorVersion << Log::end;
 }
 

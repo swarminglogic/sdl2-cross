@@ -220,9 +220,9 @@ void Mesh::computeTangentBasis(MeshData& shape)
   // std::vector<glm::vec3> tan2(vertexCount, glm::vec3(0.0f,0.0f,0.0f));
 
   for (size_t a = 0 ; a < triangleCount ; ++a) {
-    const uint& i1 = vTriangles[a].x;
-    const uint& i2 = vTriangles[a].y;
-    const uint& i3 = vTriangles[a].z;
+    const uint32_t& i1 = vTriangles[a].x;
+    const uint32_t& i2 = vTriangles[a].y;
+    const uint32_t& i3 = vTriangles[a].z;
 
     assert(i1 < 3 * shape.positions.size());
     assert(i2 < 3 * shape.positions.size());

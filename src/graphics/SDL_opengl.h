@@ -17,13 +17,11 @@
 
 #else
 // DESKTOP SPECIFICS
-
-#define NO_SDL_GLEXT
-#include <SDL2/SDL_opengl.h>
-#ifdef NO_SDL_GLEXT
-#include <GL/glext.h>
-#endif
-
+#  ifdef __WIN32__
+#    define GLEW_STATIC
+#  endif
+#include <GL/glew.h>
+#include <SDL2/SDL_opengl_glext.h>
 #endif
 
 #endif  // GRAPHICS_SDL_OPENGL_H

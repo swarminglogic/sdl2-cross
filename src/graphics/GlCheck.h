@@ -19,7 +19,7 @@ class GlCheck
 
 
 // Define this variable if a CHECKGL error should trigger an assert
-#define GL_ASSERT_ERROR
+// #define GL_ASSERT_ERROR
 
 #ifndef CHECKGL
   #ifndef NDEBUG

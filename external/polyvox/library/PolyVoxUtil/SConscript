@@ -1,6 +1,8 @@
 Import('env')
 
-env['CXXFLAGS'].append('-fPIC')
+if not GetOption('win64'):
+    env['CXXFLAGS'].append('-fPIC')
+
 env['CXXFLAGS'].append('-std=c++11')
 env['CXXFLAGS'].append('-DPolyVoxUtil_EXPORTS')
 env['CXXFLAGS'].append('-DPOLYVOX_SHARED_EXPORTS')

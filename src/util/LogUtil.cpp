@@ -120,10 +120,10 @@ void LogUtil::logKeyEvent(Log& logger,
 
   assert(event.key.state == SDL_PRESSED || event.key.state == SDL_RELEASED);
   logger << "Key [" << SDL_GetScancodeName(event.key.keysym.scancode)
-         << ", #" << (uint)event.key.keysym.scancode << "] "
+         << ", #" << (uint32_t)event.key.keysym.scancode << "] "
          << ((event.key.state == SDL_PRESSED)? "pressed" : "released")
          << ", mapping ["  << SDL_GetKeyName(event.key.keysym.sym)
-         << ", #" << (uint)event.key.keysym.sym << "] "
+         << ", #" << (uint32_t)event.key.keysym.sym << "] "
          << (event.key.repeat ? " [repeat]" : "");
   if (event.key.keysym.mod | KMOD_NONE) {
     logger << " modifiers: [";

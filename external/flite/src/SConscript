@@ -1,6 +1,8 @@
 Import('env')
 
-env['CCFLAGS'].append('-fPIC')
+if not GetOption('win64'):
+    env['CCFLAGS'].append('-fPIC')
+
 objs = []
 for subdir in ['cg', 'synth', 'wavesynth', 'utils', 'stats', 'speech'
                ,'regex', 'lexicon', 'hrg', 'audio']:
