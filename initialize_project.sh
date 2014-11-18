@@ -380,7 +380,7 @@ function findBulletSource {
 
 
 function findSDL2Source {
-    message "${GREEN}[sdl2 source]${NORMAL}"
+    message "${GREEN}[SDL2 source]${NORMAL}"
     TMPSDL2_SRC_DIR=
     if ! validateEnvironmentVariable SDL2_SRC_DIR ; then
         if [[ ! $TMPSDL2_SRC_DIR ]] ; then
@@ -535,8 +535,56 @@ function findOrGetCxxTest {
     pathStatusCode=0
     [[ ! -x $TMPCXXTEST/bin/cxxtestgen ]] && pathStatusCode=2
     writeStatus "  - Checking CxxTest path ($TMPCXXTEST)" $pathStatusCode
+
+    if ! validateEnvironmentVariable CXXTEST ; then
+        setEnvVariable "CxxTest" "CXXTEST" $(pwd)/$TMPCXXTEST
+    fi
 }
 
+function checkXToolset {
+    message "${GREEN}[Cross-compiler]${NORMAL}"
+    if command -v $1-g++ > /dev/null ; then
+        writeStatus "  - $1-g++ compiler found in PATH" 0
+
+       ver=$($1-g++ -dumpversion)
+        major=${ver/.*/}
+        minor=${ver/*./}
+        if [ $minor -ge 7 ] || [ $major -gt 4 ] ; then
+            writeStatus "  - $1-g++ version $ver >= 4.7 " 0
+        else
+            writeStatus "  - $1-g++ version $ver >= 4.7 " 2
+            hasFailed=true
+        fi
+    else
+        writeStatus "  - $1-g++ compiler not found in PATH" 2
+        hasFailed=true
+        echo " ${YELLOW}consider:${NORMAL} sudo apt-get install "\
+"g++-mingw-w64 mingw-w64-{tools,x86-64-dev}"
+    fi
+
+    if ! validateEnvironmentVariable CROSS_TOOLS_DIR ; then
+        setEnvVariable "Cross-compilation dir should be" "CROSS_TOOLS_DIR" \
+            /usr/local/cross-tools/$1/
+    fi
+}
+
+function findXStatic {
+    message "${GREEN}[$1 Static Libs]${NORMAL}"
+    script="./utils/scripts/crosscompile_libs.sh"
+    isAnyBad=no
+    for i in ${@:3} ; do
+        if [ -f $CROSS_TOOLS_DIR/lib/$i ] ; then
+            writeStatus "  - Static lib $i" 0
+        else
+            writeStatus "  - Missing static lib $i" 2
+            isAnyBad=yes
+        fi
+    done
+    if [ "$isAnyBad" == "yes" ] ; then
+        echo " ${YELLOW}consider:${NORMAL} $script $2"
+        hasFailed=true
+    fi
+}
 
 # Create utils/scripts forlder if it doesn't already exist
 if [ ! -d utils/scripts ] ; then mkdir utils/scripts ; fi
@@ -569,6 +617,18 @@ findSDL2Source
 findSDL2UtilSource image IMG.c Android.mk
 findSDL2UtilSource mixer mixer.c Android.mk
 findSDL2UtilSource ttf showfont.c Android.mk
+
+
+message "\n"
+message "${TEAL}-------------------------------------${NORMAL}"
+message "${TEAL}Checking win64 x-compile dependencies${NORMAL}"
+message "${TEAL}-------------------------------------${NORMAL}"
+checkXToolset x86_64-w64-mingw32
+findXStatic SDL2       --x-comp-sdl libSDL2.a libSDL2main.a
+findXStatic SDL2_image --x-comp-sdl-image libSDL2_image.a libpng.a libjpeg.a libz.a
+findXStatic SDL2_mixer --x-comp-sdl-mixer libSDL2_mixer.a libogg.a libvorbis.a libvorbisfile.a
+findXStatic SDL2_ttf   --x-comp-sdl-ttf libSDL2_ttf.a   libfreetype.a
+findXStatic Bullet     --x-comp-bullet libBulletDynamics.a libBulletCollision.a libLinearMath.a
 
 message "\n"
 
