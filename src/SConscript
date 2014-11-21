@@ -54,7 +54,8 @@ if GetOption('win64'):
     app = env.Program(target, cppFiles,
                       LIBPATH = libpaths,
                       CPPFLAGS = cppflags,
-                      LINKFLAGS = '--static -Wl,--no-undefined -static-libgcc',
+                      LINKFLAGS = ('--static -Wl,--no-undefined ' +
+                                   '-static-libgcc -static-libstdc++'),
                       LIBS = (lSDL + lSDLmixer + lSDLttf + lSDLimage +
                               lNoise + lPolyVox + lFlite + lBullet +
                               lGL + lOther))

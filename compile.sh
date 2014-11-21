@@ -215,7 +215,7 @@ if [[ $windows ]] ; then
         scons --win64 -c;
     else
        prepareGitRevHeader
-        if [[ $buildTests ]] ; then
+        if [[ $windowsTests ]] ; then
             export SWL_TARGET_SUFFIX=-unittests
             export SWL_MAIN_FILE=main_unit_tests.cpp
             create_unit_test_main_file $SWL_MAIN_FILE
