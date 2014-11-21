@@ -153,6 +153,7 @@ class TestFile : public CxxTest::TestSuite
     TS_ASSERT(!file.exists());
   }
 
+
   void testRenameOverrite() {
     const FileInfo fileInfo("foobarfile.txt", FileInfo::TYPE_WRITABLE);
     const FileInfo tempFileInfo("foobarfile.txt.tmp", FileInfo::TYPE_WRITABLE);
@@ -185,7 +186,6 @@ class TestFile : public CxxTest::TestSuite
     TS_ASSERT(file.remove());
     TS_ASSERT(!file.exists());
   }
-
 
   void testReadToLocal()
   {

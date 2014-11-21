@@ -51,34 +51,6 @@ class TestFileUtil : public CxxTest::TestSuite
     TS_ASSERT(FileUtil::remove(filename, fileType));
   }
 
-  void testSafeWrite() {
-    // Hard to test that it fails correctly.
-    const FileInfo::FileType ft = FileInfo::TYPE_WRITABLE;
-    const std::string fn("somefile.txt");
-    const FileInfo fi(fn, ft);
-    TS_ASSERT(!FileUtil::exists(fi));
-    TS_ASSERT(FileUtil::safeWrite(fi, "Foo was written"));
-    TS_ASSERT(FileUtil::exists(fi));
-    TS_ASSERT_EQUALS(FileUtil::read(fi), "Foo was written");
-
-    TS_ASSERT(FileUtil::safeWrite(fi, "And it was good"));
-    TS_ASSERT_EQUALS(FileUtil::read(fi), "And it was good");
-    TS_ASSERT(FileUtil::remove(fi));
-    TS_ASSERT(!FileUtil::exists(fi));
-    TS_ASSERT(!FileUtil::exists(fn + ".tmp", ft));
-  }
-
-
-  void testExistsRemove()
-  {
-    const std::string filename("./certainlythisdoesnotexist.txt");
-    const FileInfo::FileType fileType = FileInfo::TYPE_WRITABLE;
-    TS_ASSERT(!FileUtil::exists(filename, fileType));
-    FileUtil::write(filename, "foo", fileType);
-    TS_ASSERT(FileUtil::exists(filename, fileType));
-    TS_ASSERT(FileUtil::remove(filename, fileType));
-    TS_ASSERT(!FileUtil::exists(filename, fileType));
-  }
 
   void testRename()
   {
@@ -112,6 +84,53 @@ class TestFileUtil : public CxxTest::TestSuite
     TS_ASSERT(FileUtil::remove(newFilename, fileType));
     TS_ASSERT(!FileUtil::exists(filename, fileType));
     TS_ASSERT(!FileUtil::exists(newFilename, fileType));
+  }
+
+  void testExistsRemove()
+  {
+    const std::string filename("./certainlythisdoesnotexist.txt");
+    const FileInfo::FileType fileType = FileInfo::TYPE_WRITABLE;
+    TS_ASSERT(!FileUtil::exists(filename, fileType));
+    FileUtil::write(filename, "foo", fileType);
+    TS_ASSERT(FileUtil::exists(filename, fileType));
+    TS_ASSERT(FileUtil::remove(filename, fileType));
+    TS_ASSERT(!FileUtil::exists(filename, fileType));
+  }
+
+
+  void testSafeWrite() {
+    // Hard to test that it fails correctly.
+    const FileInfo::FileType ft = FileInfo::TYPE_WRITABLE;
+    const std::string fn("somefile.txt");
+    const FileInfo fi(fn, ft);
+    TS_ASSERT(!FileUtil::exists(fi));
+    TS_ASSERT(FileUtil::safeWrite(fi, "Foo was written"));
+    TS_ASSERT(FileUtil::exists(fi));
+    TS_ASSERT_EQUALS(FileUtil::read(fi), "Foo was written");
+
+    TS_ASSERT(FileUtil::safeWrite(fi, "And it was good"));
+    TS_ASSERT_EQUALS(FileUtil::read(fi), "And it was good");
+    TS_ASSERT(FileUtil::remove(fi));
+    TS_ASSERT(!FileUtil::exists(fi));
+    TS_ASSERT(!FileUtil::exists(fn + ".tmp", ft));
+  }
+
+
+  void testRenameOverrite() {
+    const FileInfo fileInfo("foobarfile.txt", FileInfo::TYPE_WRITABLE);
+    const FileInfo tempFileInfo("foobarfile.txt.tmp", FileInfo::TYPE_WRITABLE);
+    TS_ASSERT(!FileUtil::exists(fileInfo));
+    TS_ASSERT(!FileUtil::exists(tempFileInfo));
+
+    FileUtil::write(fileInfo, "Content of old file.");
+    FileUtil::write(tempFileInfo, "New data in the file.");
+    FileUtil::rename(tempFileInfo, fileInfo);
+
+    TS_ASSERT_EQUALS(FileUtil::read(fileInfo),
+                     "New data in the file.");
+    TS_ASSERT(!FileUtil::exists(tempFileInfo));
+    TS_ASSERT(FileUtil::remove(fileInfo));
+    TS_ASSERT(!FileUtil::exists(fileInfo));
   }
 
 

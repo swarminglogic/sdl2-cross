@@ -158,7 +158,6 @@ bool FileUtil::safeWrite(const std::string& filename,
   // Double check cleanup
   if (!isDataOk && FileUtil::exists(tmpFilename, ft))
     FileUtil::remove(tmpFilename, ft);
-
   return isDataOk;
 }
 
@@ -257,10 +256,22 @@ bool FileUtil::rename(const std::string& filename,
 {
   std::string pFilename = prefixPath(filename, ft);
   std::string pNewFilename = prefixPath(newFilename, ft);
-  if (pFilename == pNewFilename)
+  if (pFilename == pNewFilename) {
     return false;
-  else
+  } else {
+    // If file to rename doesn't exist
+    if (!FileUtil::exists(filename, ft))
+      return false;
+
+    // For windows, we need to remove the file,
+    // as std::rename doesn't override
+#ifdef __WIN32__
+    if (FileUtil::exists(newFilename, ft))
+      assert(FileUtil::remove(newFilename, ft));
+#endif
+
     return std::rename(pFilename.c_str(), pNewFilename.c_str()) == 0;
+  }
 }
 
 
