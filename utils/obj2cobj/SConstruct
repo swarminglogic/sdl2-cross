@@ -6,10 +6,26 @@ env = Environment(ENV = {'PATH' : os.environ['PATH'],
                   CXX='g++',
                   tools=['default'], toolpath=[''])
 
-VariantDir('build', 'utils')
+AddOption('--win64',
+          action='store_true',
+          help='cross-compiles for windows',
+          default=False)
+
+if GetOption('win64'):
+    env.Tool('crossmingw', toolpath = ['./utils/scripts/'])
+    vardir='build/win/utils'
+    targetsuffix='.exe'
+    linkflags=('--static -Wl,--no-undefined ' +
+               '-static-libgcc -static-libstdc++')
+else:
+    vardir='build/linux/utils'
+    targetsuffix=''
+    linkflags=''
+
+VariantDir(vardir, 'utils')
 
 base ='#/src'
-target = '#/bin/obj2cobj'
+target = '#/bin/obj2cobj' + targetsuffix
 
 gccWarningLevel = [
    '-Wall', '-Wextra', '-Wcast-align', '-Wcast-qual',
@@ -53,6 +69,7 @@ cppMain = [Glob('utils/obj2cobj/obj2cobj.cpp') +
 
 app = env.Program(target, cppMain,
                   LIBS = libs,
+                  LINKFLAGS = linkflags,
                   LIBPATH  = libpaths,
                   CPPFLAGS = cppflags,
                   CPPPATH  = sourcepaths);
