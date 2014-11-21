@@ -161,7 +161,9 @@ while test $# -gt 0; do
                 -name '[!\.]*.tpp' -or \
                 -name 'SConscript*' -or \
                 -name 'SConstruct' \
-               | grep -Ev '_flymake.*' | xargs cat | md5sum" -e ./compile.sh l $@
+               | grep -Ev '_flymake.*' \
+               | grep -Ev 'main_.*' \
+               | xargs cat | md5sum" -e ./compile.sh l $@
              exit
              ;;
         ws)
@@ -213,6 +215,7 @@ while test $# -gt 0; do
             ;;
         rtestl)
             shift
+            LD_LIBRARY_PATH=./lib/linux/:$LD_LIBRARY_PATH
             failAccumFile=/tmp/.sdl2-cross.alltest.failure
             echo "" > $failAccumFile;
             tests=$(find ./bin/tests/ -executable -type f)
@@ -231,7 +234,7 @@ while test $# -gt 0; do
         testl)
             shift
             ./compile.sh l -t
-            LD_LIBRARY_PATH=./lib/:$LD_LIBRARY_PATH
+            LD_LIBRARY_PATH=./lib/linux/:$LD_LIBRARY_PATH
             if [[ $? ]] ; then
                 for t in ./bin/tests/* ; do
                     ./$t

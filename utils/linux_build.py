@@ -25,7 +25,7 @@ lNoise    = ['noise']
 lPolyVox  = ['PolyVoxCore', 'PolyVoxUtil']
 lOther    = ['m', 'dl', 'rt']
 
-libpaths = ['#/lib/',
+libpaths = ['#/lib/linux/',
             pathSdl    + '/lib',
             pathBullet + '/lib']
 

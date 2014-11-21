@@ -1,7 +1,10 @@
 Import('env')
 
-if not GetOption('win64'):
+if GetOption('win64'):
+    target='win'
+else:
     env['CXXFLAGS'].append('-fPIC')
+    target='linux'
 
 env['CXXFLAGS'].append('-std=c++11')
 env['CXXFLAGS'].append('-DPolyVoxCore_EXPORTS')
@@ -13,5 +16,5 @@ for obj in Glob('source/*.cpp'):
 for obj in Glob('source/Impl/*.cpp'):
     objs.append(env.Object(obj))
 
-polyvoxCoreLib = env.StaticLibrary('#/lib/PolyVoxCore', objs)
+polyvoxCoreLib = env.StaticLibrary('#/lib/' + target + '/PolyVoxCore', objs)
 Default(polyvoxCoreLib)

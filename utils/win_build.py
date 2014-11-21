@@ -38,7 +38,7 @@ pathBoost      = os.environ["BOOST_DIR"];
 pathGlm        = os.environ["GLM_DIR"];
 pathCxxTest    = os.environ["CXXTEST"];
 
-libpaths = ['#/lib/',
+libpaths = ['#/lib/win/',
             pathCrossTools + '/lib']
 
 # Macros definitions

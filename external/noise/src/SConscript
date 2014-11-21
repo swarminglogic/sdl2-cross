@@ -1,7 +1,10 @@
 Import('env')
 
-if not GetOption('win64'):
+if GetOption('win64'):
+    target='win'
+else:
     env['CXXFLAGS'].append('-fPIC')
+    target='linux'
 
 env['CXXFLAGS'].append('-fomit-frame-pointer')
 
@@ -13,5 +16,5 @@ for obj in Glob('model/*.cpp'):
 for obj in Glob('module/*.cpp'):
     objs.append(env.Object(obj))
 
-noiseLib = env.StaticLibrary('#/lib/noise', objs)
+noiseLib = env.StaticLibrary('#/lib/' + target +  '/noise', objs)
 Default(noiseLib)

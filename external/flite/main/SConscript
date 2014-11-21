@@ -1,4 +1,10 @@
 Import('env')
 
-voicelistLib = env.StaticLibrary('#/lib/flite_voice_list', 'flite_voice_list.c')
+if GetOption('win64'):
+    target='win'
+else:
+    target='linux'
+
+voicelistLib = env.StaticLibrary('#/lib/' + target +  '/flite_voice_list',
+                                 'flite_voice_list.c')
 Default(voicelistLib)
