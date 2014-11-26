@@ -8,6 +8,7 @@ pathSdl     = os.environ["SDL2_DIR"];
 pathGlm     = os.environ["GLM_DIR"];
 pathBullet  = os.environ["BULLET_DIR"];
 pathCxxTest = os.environ["CXXTEST"];
+pathAngelScript = os.environ["ANGELSCRIPT_DIR"];
 
 lSDL      = ['SDL2']
 lSDLimage = ['SDL2_image']
@@ -23,16 +24,19 @@ lFlite    = ['flite_voice_list',
              'flite']
 lNoise    = ['noise']
 lPolyVox  = ['PolyVoxCore', 'PolyVoxUtil']
-lOther    = ['m', 'dl', 'rt']
+lAngelScript = ['angelscript']
+lOther    = ['pthread', 'm', 'dl', 'rt']
 
 libpaths = ['#/lib/linux/',
             pathSdl    + '/lib',
             pathBullet + '/lib']
 
-lAll  = (lOther + lGL +
+lAll  = (lBullet +
+         lAngelScript +
+         lFlite + lNoise + lPolyVox +
          lSDL + lSDLimage + lSDLmixer + lSDLttf +
-         lBullet +
-         lFlite + lNoise + lPolyVox)
+         lGL + lOther)
+
 
 # Macros definitions
 macroDefinitions = [
@@ -75,6 +79,8 @@ cppflags.extend(['-isystem', pathBoost  + '/include',
                  '-isystem', pathGlm,
                  '-isystem', 'external/',
                  '-isystem', pathCxxTest,
+                 '-isystem', pathAngelScript + '/include',
+                 '-isystem', pathAngelScript + '/add_on',
                  '-isystem', 'external/polyvox/library/PolyVoxCore/include',
                  '-isystem', pathBullet + '/include/bullet'])
 cppflags.extend(gccWarningLevel)
@@ -98,5 +104,7 @@ sourcepaths = [
    pathBoost  + '/include',
    pathGlm,
    pathBullet + '/include/bullet/',
+   pathAngelScript + '/include',
+   pathAngelScript + '/add_on',
    pathCxxTest,
    pathSdl    + "/include/"]

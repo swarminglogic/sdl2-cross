@@ -21,6 +21,7 @@ lNoise    = c.lNoise
 lPolyVox  = c.lPolyVox
 lOther    = c.lOther
 lAll      = c.lAll
+lAngelScript  = c.lAngelScript
 
 Import('env')
 
@@ -58,6 +59,7 @@ if GetOption('win64'):
                                    '-static-libgcc -static-libstdc++'),
                       LIBS = (lSDL + lSDLmixer + lSDLttf + lSDLimage +
                               lNoise + lPolyVox + lFlite + lBullet +
+                              lAngelScript +
                               lGL + lOther))
     Default(app)
 

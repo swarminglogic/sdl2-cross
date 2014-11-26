@@ -33,6 +33,10 @@ SConscript('external/noise/SConscript')
 # Build libnoise external library
 SConscript('external/polyvox/SConscript')
 
+# Build angelscript external library
+SConscript('external/angelscript/SConscript')
+
+
 if GetOption('win64'):
     env.Tool('crossmingw', toolpath = ['./utils/scripts/'])
     vardir='build/win/src'

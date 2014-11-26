@@ -15,6 +15,8 @@ LOCAL_C_INCLUDES := $(LOCAL_PATH)/$(SDL_PATH)/include \
   $(EXTERNAL_LIB_PATH) \
   $(EXTERNAL_LIB_PATH)/polyvox/library/PolyVoxCore/include \
   $(EXTERNAL_LIB_PATH)/polyvox/library/PolyVoxUtil/include \
+  $(EXTERNAL_LIB_PATH)/angelscript/include \
+  $(EXTERNAL_LIB_PATH)/angelscript/add_on \
   $(LOCAL_PATH)/$(SDL_IMAGE_PATH) \
   $(LOCAL_PATH)/$(SDL_MIXER_PATH) \
   $(LOCAL_PATH)/$(SDL_TTF_PATH) \
@@ -48,6 +50,7 @@ LOCAL_SHARED_LIBRARIES := SDL2 SDL2_image SDL2_mixer SDL2_ttf \
 	                        noise \
 	                        PolyVoxCore PolyVoxUtil \
 	                        bullet \
+	                        angelscript \
 	                        flite_cmu_us_awb flite_cmu_us_rms \
 	                        flite_voice_list flite_cmulex flite_usenglish flite
 

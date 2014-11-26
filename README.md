@@ -45,6 +45,7 @@ The framework relies on the following libraries
 | libnoise   | `1.0.0`                | noise generation library                                |
 | polyvox    | `0.2.1`                | voxel library                                           |
 | CxxTest    | `4.4`                  | unit test code generation utility                       |
+| angelscrip | `2.29.2`               | scripting engine                                        |
 
 
 ### Project Structure
@@ -190,6 +191,10 @@ android/jni/bullet-src
 android/jni/flite
 android/jni/noise
 android/jni/polyvox
+android/jni/angelscript
+external/angelscript/add_on/
+external/angelscript/include/
+external/angelscript/source/
 src/util/gitrev.h
 html/
 utils/cxxtest

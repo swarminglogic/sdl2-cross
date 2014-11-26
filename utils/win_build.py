@@ -26,7 +26,9 @@ lFlite    = ['flite_voice_list',
              'flite']
 lNoise    = ['noise']
 lPolyVox  = ['PolyVoxCore', 'PolyVoxUtil']
+lAngelScript = ['angelscript']
 lAll  = (lBullet +
+         lAngelScript +
          lFlite + lNoise + lPolyVox +
          lSDL + lSDLimage + lSDLmixer + lSDLttf +
          lGL + lOther)
@@ -37,6 +39,7 @@ pathCrossTools = os.environ["CROSS_TOOLS_DIR"];
 pathBoost      = os.environ["BOOST_DIR"];
 pathGlm        = os.environ["GLM_DIR"];
 pathCxxTest    = os.environ["CXXTEST"];
+pathAngelScript = os.environ["ANGELSCRIPT_DIR"];
 
 libpaths = ['#/lib/win/',
             pathCrossTools + '/lib']
@@ -87,6 +90,8 @@ cppflags.extend(['-isystem', pathBoost  + '/include',
                  '-isystem', 'external/',
                  '-isystem', pathGlm,
                  '-isystem', 'external/polyvox/library/PolyVoxCore/include',
+                 '-isystem', pathAngelScript + '/include',
+                 '-isystem', pathAngelScript + '/add_on',
                  '-isystem', pathCxxTest])
 cppflags.extend(gccWarningLevel)
 for macro in macroDefinitions:
@@ -111,6 +116,8 @@ sourcepaths = [
    '#/external/polyvox/library/PolyVoxUtil/include/',
    pathCrossTools + '/include',
    pathCrossTools + '/include/bullet/',
+   pathAngelScript + '/include',
+   pathAngelScript + '/add_on',
    pathBoost  + '/include',
    pathGlm,
    pathCxxTest]
