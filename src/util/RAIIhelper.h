@@ -5,47 +5,18 @@
 
 
 /**
- * RAII helper macro wrappers using std::unique_pointer
- *
- * example:
- *   CREATE_RAII_UP(MyClass*, destructorFunction) MyClassPtr
- *   Creates a typedef of MyClassPtr, which is a unique_ptr<MyClass>,
- *   that class destructorFunction upon deletion.
- *
- * @author SwarmingLogic (Roald Fernandez)
+ * RAII helper class for allowing deleter to be part of a shared_ptr type.
  */
-#define CREATE_RAII_UP(OBJ, DEST)                           \
-  struct OBJ ## Deleter {                                \
-    void operator()( OBJ* ptr ) { if (ptr) DEST( ptr );} \
-  };                                                     \
-  typedef std::unique_ptr<OBJ, OBJ ## Deleter>
+template<class T, class D = std::default_delete<T>>
+struct shared_ptr_with_deleter : public std::shared_ptr<T>
+{
+  explicit shared_ptr_with_deleter(T* t = nullptr)
+      : std::shared_ptr<T>(t, D()) {}
 
-
-// Same as above, but with shared ptr.
-#define CREATE_RAII_SP(OBJ, DEST)                           \
-  struct OBJ ## Deleter {                                \
-    void operator()( OBJ* ptr ) { if (ptr) DEST( ptr );} \
-  };                                                     \
-  typedef std::shared_ptr<OBJ, OBJ ## Deleter>
-
-
-/**
- * RAII helper macro wrappers using std::unique_pointer
- *
- * For destructors that take reference, rather than pointer.
- *
- * example:
- *   CREATE_RAII_UP(MyClass*, destructorFunction) MyClassPtr
- *   Creates a typedef of MyClassPtr, which is a unique_ptr<MyClass>,
- *   that class destructorFunction upon deletion.
- *
- * @author SwarmingLogic (Roald Fernandez)
- */
-#define CREATE_RAII2_UP(OBJ, DEST)                           \
-  struct OBJ ## Deleter {                                 \
-    void operator()( OBJ* ptr ) { if (ptr) DEST( *ptr );} \
-  };                                                      \
-  typedef std::unique_ptr<OBJ, OBJ ## Deleter>
+  void reset(T* t = nullptr) {
+    std::shared_ptr<T>::reset(t, D());
+  }
+};
 
 
 #endif  // UTIL_RAIIHELPER_H

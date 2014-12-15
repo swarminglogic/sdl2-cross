@@ -1,6 +1,7 @@
 #ifndef AUDIO_SDL_MIXER_H
 #define AUDIO_SDL_MIXER_H
 
+#include <memory>
 
 #if defined(__ANDROID__)
 #include <SDL_mixer.h>
@@ -16,8 +17,16 @@
  * @author SwarmingLogic (Roald Fernandez)
  */
 namespace sdl {
-  CREATE_RAII_UP(Mix_Music, Mix_FreeMusic)  MusicPtr;
-  CREATE_RAII_UP(Mix_Chunk, Mix_FreeChunk)  SoundPtr;
+struct Mix_Deleter {
+  void operator()(Mix_Music* ptr) { if (ptr) Mix_FreeMusic(ptr); }
+  void operator()(Mix_Chunk* ptr) { if (ptr) Mix_FreeChunk(ptr); }
+};
+
+using MusicPtr = std::unique_ptr<Mix_Music, Mix_Deleter>;
+using SoundPtr = std::unique_ptr<Mix_Chunk, Mix_Deleter>;
+
+using MusicShPtr = shared_ptr_with_deleter<Mix_Music, Mix_Deleter>;
+using SoundShPtr = shared_ptr_with_deleter<Mix_Chunk, Mix_Deleter>;
 }
 
 #endif  // AUDIO_SDL_MIXER_H
