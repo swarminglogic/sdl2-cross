@@ -23,23 +23,29 @@
 template <class T>
 class SharedPool
 {
- public:
-  using ptr_type = std::unique_ptr<T, std::function<void(T*)> >;
+ private:
+  struct External_Deleter {
+    explicit External_Deleter(std::weak_ptr<SharedPool<T>* > pool)
+        : pool_(pool) {}
 
-  SharedPool()
-      : is_valid_(new bool(true)),
-        external_count_(new size_t(0))
-  {}
-  virtual ~SharedPool(){
-    *is_valid_ = false;
-    if (*external_count_ == 0) {
-      delete is_valid_;
-      is_valid_ = nullptr;
-
-      delete external_count_;
-      external_count_ = nullptr;
+    void operator()(T* ptr) {
+      if (auto pool_ptr = pool_.lock()) {
+        try {
+          (*pool_ptr.get())->add(std::unique_ptr<T>{ptr});
+          return;
+        } catch(...) {}
+      }
+      std::default_delete<T>{}(ptr);
     }
-  }
+   private:
+    std::weak_ptr<SharedPool<T>* > pool_;
+  };
+
+ public:
+  using ptr_type = std::unique_ptr<T, External_Deleter >;
+
+  SharedPool() : this_ptr_(new SharedPool<T>*(this)) {}
+  virtual ~SharedPool(){}
 
   void add(std::unique_ptr<T> t) {
     pool_.push(std::move(t));
@@ -47,23 +53,8 @@ class SharedPool
 
   ptr_type acquire() {
     assert(!pool_.empty());
-    const auto is_valid_tmp_ptr = is_valid_;
-    const auto external_count_tmp_ptr = external_count_;
     ptr_type tmp(pool_.top().release(),
-                 [this, is_valid_tmp_ptr, external_count_tmp_ptr](T* ptr) {
-                   if (*is_valid_tmp_ptr) {
-                     this->re_add(std::unique_ptr<T>(ptr));
-                   }
-                   else {
-                     std::default_delete<T>()(ptr);
-                     --*external_count_tmp_ptr;
-                     if (*external_count_tmp_ptr == 0) {
-                       delete external_count_tmp_ptr;
-                       delete is_valid_tmp_ptr;
-                     }
-                   }
-                 });
-    ++*external_count_;
+                 External_Deleter{std::weak_ptr<SharedPool<T>*>{this_ptr_}});
     pool_.pop();
     return std::move(tmp);
   }
@@ -77,14 +68,8 @@ class SharedPool
   }
 
  private:
-  void re_add(std::unique_ptr<T> t) {
-    pool_.push(std::move(t));
-    --*external_count_;
-  }
-
+  std::shared_ptr<SharedPool<T>* > this_ptr_;
   std::stack<std::unique_ptr<T> > pool_;
-  bool* is_valid_;
-  size_t* external_count_;
 };
 
 #endif  // UTIL_SHAREDPOOL_H
