@@ -172,6 +172,34 @@ class TestSharedPool : public CxxTest::TestSuite
     TS_ASSERT(pool.empty());
   }
 
+  // Objects in the pool should not be created/destroyed
+  // due to usage in and out of the pool.
+  //
+  void testLeakOfNonReturnedItems() {
+    std::unique_ptr< SharedPool<_TestSharedPool::Widget> >
+        pool(new SharedPool<_TestSharedPool::Widget>);
+
+    pool->add(std::unique_ptr<_TestSharedPool::Widget> (
+        new _TestSharedPool::Widget(42)));
+    pool->add(std::unique_ptr<_TestSharedPool::Widget> (
+        new _TestSharedPool::Widget(84)));
+    pool->add(std::unique_ptr<_TestSharedPool::Widget> (
+        new _TestSharedPool::Widget(1024)));
+    pool->add(std::unique_ptr<_TestSharedPool::Widget> (
+        new _TestSharedPool::Widget(1337)));
+
+    auto v1 = pool->acquire();
+    auto v2 = pool->acquire();
+
+    // All items originally in pool should be cleaned up
+    pool.reset(nullptr);
+    v1.reset(nullptr);
+    v2.reset(nullptr);
+
+    // Verify this by counting the number of cleared items as 4
+    TS_ASSERT_EQUALS(_TestSharedPool::counter, 4);
+    TS_ASSERT_DIFFERS(_TestSharedPool::lastValueDeleted, -1);
+  }
 };
 
 #endif  // UTIL_TESTSHAREDPOOL_H
