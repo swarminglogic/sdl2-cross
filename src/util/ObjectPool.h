@@ -1,5 +1,5 @@
-#ifndef UTIL_SHAREDPOOL_H
-#define UTIL_SHAREDPOOL_H
+#ifndef UTIL_OBJECTPOOL_H
+#define UTIL_OBJECTPOOL_H
 
 #include <memory>
 #include <stack>
@@ -9,7 +9,7 @@
 
 
 /**
- * SharedPool class.
+ * ObjectPool class.
  *
  * LIFO (last-in-first-out) pool of objects.
  * Objects are added using add(),
@@ -21,11 +21,11 @@
  * @author SwarmingLogic
  */
 template <class T>
-class SharedPool
+class ObjectPool
 {
  private:
   struct External_Deleter {
-    explicit External_Deleter(std::weak_ptr<SharedPool<T>* > pool)
+    explicit External_Deleter(std::weak_ptr<ObjectPool<T>* > pool)
         : pool_(pool) {}
 
     void operator()(T* ptr) {
@@ -38,14 +38,14 @@ class SharedPool
       std::default_delete<T>{}(ptr);
     }
    private:
-    std::weak_ptr<SharedPool<T>* > pool_;
+    std::weak_ptr<ObjectPool<T>* > pool_;
   };
 
  public:
   using ptr_type = std::unique_ptr<T, External_Deleter >;
 
-  SharedPool() : this_ptr_(new SharedPool<T>*(this)) {}
-  virtual ~SharedPool(){}
+  ObjectPool() : this_ptr_(new ObjectPool<T>*(this)) {}
+  virtual ~ObjectPool(){}
 
   void add(std::unique_ptr<T> t) {
     pool_.push(std::move(t));
@@ -54,7 +54,7 @@ class SharedPool
   ptr_type acquire() {
     assert(!pool_.empty());
     ptr_type tmp(pool_.top().release(),
-                 External_Deleter{std::weak_ptr<SharedPool<T>*>{this_ptr_}});
+                 External_Deleter{std::weak_ptr<ObjectPool<T>*>{this_ptr_}});
     pool_.pop();
     return std::move(tmp);
   }
@@ -68,8 +68,8 @@ class SharedPool
   }
 
  private:
-  std::shared_ptr<SharedPool<T>* > this_ptr_;
+  std::shared_ptr<ObjectPool<T>* > this_ptr_;
   std::stack<std::unique_ptr<T> > pool_;
 };
 
-#endif  // UTIL_SHAREDPOOL_H
+#endif  // UTIL_OBJECTPOOL_H

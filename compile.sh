@@ -32,12 +32,21 @@ function echoerr() {
 
 
 function writeGitRevHeader() {
+tmpfile=$(tempfile)
+gitrevfile=src/util/gitrev.h
+
 echo "#ifndef UTIL_GITREV_H
 #define UTIL_GITREV_H
 
 #define CURRENT_GIT_REV \"$1\"
 
-#endif  // UTIL_GITREV_H" > src/util/gitrev.h
+#endif  // UTIL_GITREV_H" > $tmpfile
+
+if cmp --silent $tmpfile $gitrev ; then
+    mv $tmpfile $gitrev
+else
+    rm $tmpfile
+fi
 }
 
 function prepareGitRevHeader() {
