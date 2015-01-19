@@ -15,6 +15,12 @@
  */
 class TestAverager : public CxxTest::TestSuite
 {
+ private:
+  float _getRandFloat() {
+    return (static_cast<float>(rand()) /
+            static_cast<float>(RAND_MAX));
+  }
+
  public:
   void testSingleValue()
   {
@@ -27,7 +33,7 @@ class TestAverager : public CxxTest::TestSuite
 
     // 10 different random values
     for (size_t i = 0 ; i < 10 ; ++i) {
-      const float val = static_cast<float>(rand())/RAND_MAX;
+      const float val = _getRandFloat();
       averager.insertValue(val);
       TS_ASSERT_DELTA(averager.getAverage(), val, delta);
     }
@@ -73,7 +79,7 @@ class TestAverager : public CxxTest::TestSuite
     std::vector<float> vals;
     float sum = 0.0f;
     for (size_t i = 0 ; i < 100000 ; ++i) {
-      const float val = static_cast<float>(rand()/RAND_MAX);
+      const float val = _getRandFloat();
       averager.insertValue(val);
       sum += val;
       TS_ASSERT_DELTA(averager.getAverage(),
