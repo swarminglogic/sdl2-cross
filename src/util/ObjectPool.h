@@ -20,41 +20,42 @@
  *
  * @author SwarmingLogic
  */
-template <class T>
+template <class T, class Deleter = std::default_delete<T> >
 class ObjectPool
 {
  private:
   struct External_Deleter {
-    explicit External_Deleter(std::weak_ptr<ObjectPool<T>* > pool)
+    explicit External_Deleter(std::weak_ptr<ObjectPool<T, Deleter>* > pool)
         : pool_(pool) {}
 
     void operator()(T* ptr) {
       if (auto pool_ptr = pool_.lock()) {
         try {
-          (*pool_ptr.get())->add(std::unique_ptr<T>{ptr});
+          (*pool_ptr.get())->add(std::unique_ptr<T, Deleter>{ptr});
           return;
         } catch(...) {}
       }
-      std::default_delete<T>{}(ptr);
+      Deleter{}(ptr);
     }
    private:
-    std::weak_ptr<ObjectPool<T>* > pool_;
+    std::weak_ptr<ObjectPool<T, Deleter>* > pool_;
   };
 
  public:
   using ptr_type = std::unique_ptr<T, External_Deleter >;
 
-  ObjectPool() : this_ptr_(new ObjectPool<T>*(this)) {}
+  ObjectPool() : this_ptr_(new ObjectPool<T, Deleter>*(this)) {}
   virtual ~ObjectPool(){}
 
-  void add(std::unique_ptr<T> t) {
+  void add(std::unique_ptr<T, Deleter> t) {
     pool_.push(std::move(t));
   }
 
   ptr_type acquire() {
     assert(!pool_.empty());
     ptr_type tmp(pool_.top().release(),
-                 External_Deleter{std::weak_ptr<ObjectPool<T>*>{this_ptr_}});
+                 External_Deleter(
+                     std::weak_ptr<ObjectPool<T, Deleter>*>{this_ptr_}));
     pool_.pop();
     return std::move(tmp);
   }
@@ -68,8 +69,8 @@ class ObjectPool
   }
 
  private:
-  std::shared_ptr<ObjectPool<T>* > this_ptr_;
-  std::stack<std::unique_ptr<T> > pool_;
+  std::shared_ptr<ObjectPool<T, Deleter>* > this_ptr_;
+  std::stack<std::unique_ptr<T, Deleter> > pool_;
 };
 
 #endif  // UTIL_OBJECTPOOL_H

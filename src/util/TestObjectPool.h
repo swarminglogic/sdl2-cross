@@ -9,6 +9,9 @@
 namespace _TestObjectPool {
 int counter;
 int lastValueDeleted;
+int customDeleterCount;
+
+
 
 class Widget
 {
@@ -22,6 +25,13 @@ class Widget
   int val_;
 };
 
+struct CustomWidgetDeleter {
+  void operator()(Widget* widget){
+    ++customDeleterCount;
+    delete widget;
+    widget = nullptr;
+  }
+};
 }
 
 /**
@@ -39,6 +49,7 @@ class TestObjectPool : public CxxTest::TestSuite
   void setUp() {
     _TestObjectPool::counter = 0;
     _TestObjectPool::lastValueDeleted = -1;
+    _TestObjectPool::customDeleterCount = 0;
   }
 
 
@@ -200,6 +211,76 @@ class TestObjectPool : public CxxTest::TestSuite
     // Verify this by counting the number of cleared items as 4
     TS_ASSERT_EQUALS(_TestObjectPool::counter, 4);
     TS_ASSERT_DIFFERS(_TestObjectPool::lastValueDeleted, -1);
+  }
+
+  void testCustomDeleterItems() {
+    using WidgetPtr = std::unique_ptr<_TestObjectPool::Widget,
+                                      _TestObjectPool::CustomWidgetDeleter>;
+    WidgetPtr tst(new _TestObjectPool::Widget(42));
+    TS_ASSERT_EQUALS(_TestObjectPool::counter, 0);
+    TS_ASSERT_EQUALS(_TestObjectPool::lastValueDeleted, -1);
+    TS_ASSERT_EQUALS(_TestObjectPool::customDeleterCount, 0);
+    tst.reset(nullptr);
+    TS_ASSERT_EQUALS(_TestObjectPool::counter, 1);
+    TS_ASSERT_EQUALS(_TestObjectPool::lastValueDeleted, 42);
+    TS_ASSERT_EQUALS(_TestObjectPool::customDeleterCount, 1);
+  }
+
+  void testCustomDeleterInPool() {
+    using PoolType =
+        ObjectPool<_TestObjectPool::Widget,
+                   _TestObjectPool::CustomWidgetDeleter>;
+    using PoolTypePtrType =
+        std::unique_ptr<_TestObjectPool::Widget,
+                        _TestObjectPool::CustomWidgetDeleter>;
+
+    std::unique_ptr<PoolType> pool{new PoolType};
+    pool->add(PoolTypePtrType{new _TestObjectPool::Widget(42)});
+    pool->add(PoolTypePtrType{new _TestObjectPool::Widget(84)});
+    pool->add(PoolTypePtrType{new _TestObjectPool::Widget(1024)});
+    pool->add(PoolTypePtrType{new _TestObjectPool::Widget(1337)});
+
+    auto v1 = pool->acquire();
+    auto v2 = pool->acquire();
+    TS_ASSERT_EQUALS(_TestObjectPool::customDeleterCount, 0);
+    TS_ASSERT_EQUALS(v1->val_, 1337);
+    TS_ASSERT_EQUALS(v2->val_, 1024);
+
+    // Returni
+    /// 42, 84
+    v1 = pool->acquire();
+    TS_ASSERT_EQUALS(v1->val_, 84);
+    TS_ASSERT_EQUALS(pool->size(), 2);
+
+    auto v3 = pool->acquire();
+    TS_ASSERT_EQUALS(v3->val_, 1337);
+    TS_ASSERT_EQUALS(pool->size(), 1);
+
+    /// 42, 1337
+    TS_ASSERT_EQUALS(_TestObjectPool::customDeleterCount, 0);
+    TS_ASSERT_EQUALS(_TestObjectPool::counter, 0);
+    TS_ASSERT_EQUALS(_TestObjectPool::lastValueDeleted, -1);
+
+    // All items originally in pool should be cleaned up
+    pool.reset(nullptr);
+    TS_ASSERT_EQUALS(_TestObjectPool::customDeleterCount, 1);
+    TS_ASSERT_EQUALS(_TestObjectPool::counter, 1);
+    TS_ASSERT_EQUALS(_TestObjectPool::lastValueDeleted, 42);
+
+    v1.reset(nullptr);
+    TS_ASSERT_EQUALS(_TestObjectPool::customDeleterCount, 2);
+    TS_ASSERT_EQUALS(_TestObjectPool::counter, 2);
+    TS_ASSERT_EQUALS(_TestObjectPool::lastValueDeleted, 84);
+
+    v2.reset(nullptr);
+    TS_ASSERT_EQUALS(_TestObjectPool::customDeleterCount, 3);
+    TS_ASSERT_EQUALS(_TestObjectPool::counter, 3);
+    TS_ASSERT_EQUALS(_TestObjectPool::lastValueDeleted, 1024);
+
+    v3.reset(nullptr);
+    TS_ASSERT_EQUALS(_TestObjectPool::customDeleterCount, 4);
+    TS_ASSERT_EQUALS(_TestObjectPool::counter, 4);
+    TS_ASSERT_EQUALS(_TestObjectPool::lastValueDeleted, 1337);
   }
 };
 
