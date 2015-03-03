@@ -8,7 +8,6 @@ pathSdl     = os.environ["SDL2_DIR"];
 pathGlm     = os.environ["GLM_DIR"];
 pathBullet  = os.environ["BULLET_DIR"];
 pathCxxTest = os.environ["CXXTEST"];
-pathAngelScript = os.environ["ANGELSCRIPT_DIR"];
 
 lSDL      = ['SDL2']
 lSDLimage = ['SDL2_image']
@@ -62,7 +61,6 @@ gccWarningLevel = [
    #'-pedantic', '-pedantic-errors',
    '-Woverloaded-virtual',
    '-Wswitch-enum', '-Werror',
-   
    # # Clang unsupported flags.
    # '-fpermissive',
    # -Wunsafe-loop-optimizations'
@@ -83,8 +81,8 @@ cppflags.extend(['-isystem', pathBoost  + '/include',
                  '-isystem', pathGlm,
                  '-isystem', 'external/',
                  '-isystem', pathCxxTest,
-                 '-isystem', pathAngelScript + '/include',
-                 '-isystem', pathAngelScript + '/add_on',
+                 '-isystem', 'external/angelscript/include',
+                 '-isystem', 'external/angelscript/add_on',
                  '-isystem', 'external/polyvox/library/PolyVoxCore/include',
                  '-isystem', 'external/umundo/src',
                  '-isystem', 'external/umundo/src/include_linux',
@@ -115,7 +113,5 @@ sourcepaths = [
    pathBoost  + '/include',
    pathGlm,
    pathBullet + '/include/bullet/',
-   pathAngelScript + '/include',
-   pathAngelScript + '/add_on',
    pathCxxTest,
    pathSdl    + "/include/"]

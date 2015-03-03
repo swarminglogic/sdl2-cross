@@ -572,37 +572,37 @@ function findOrGetCxxTest {
     fi
 }
 
-
 function findOrGetAngelScript {
     message "${GREEN}[AngelScript]${NORMAL}"
     local file="include/angelscript.h"
     local path="external/angelscript"
-    if ! validateEnvironmentVariable ANGELSCRIPT_DIR ; then
+    if [ ! -f "${path}/${file}" ] ; then
+        writeStatus "  - AngelScript not found in external/, downloading" 1
+        echo $MODEST
+        wget http://www.angelcode.com/angelscript/sdk/files/angelscript_2.29.2.zip && \
+            echo "Unzipping angelscript download and cleaning up" && \
+            unzip angelscript_2.29.2.zip -d external/ > /dev/null && \
+            mv external/{sdk/{add_on,angelscript/{include,source}},angelscript/}  && \
+            rm -rf external/sdk && rm angelscript_2.29.2.zip
+        echo $NORMAL
         if [ -f "${path}/${file}" ] ; then
-            setEnvVariable "AngelScript" "ANGELSCRIPT_DIR" $(pwd)/external/angelscript
-        else
-            writeStatus "  - AngelScript not found in external/, downloading" 1
-            echo $MODEST
-            wget http://www.angelcode.com/angelscript/sdk/files/angelscript_2.29.2.zip && \
-                echo "Unzipping angelscript download and cleaning up" && \
-                unzip angelscript_2.29.2.zip -d external/ > /dev/null && \
-                mv external/{sdk/{add_on,angelscript/{include,source}},angelscript/}  && \
-                rm -rf external/sdk && rm angelscript_2.29.2.zip
-            echo $NORMAL
-            if [ -f "${path}/${file}" ] ; then
-                setEnvVariable "AngelScript" "ANGELSCRIPT_DIR" $(pwd)/${path}
-            else
-                writeStatus "  - AngelScript download failed" 2
-            fi
+            writeStatus "  - AngelScript download failed" 2
         fi
     fi
 
     pathStatusCode=0
-    if [[ ! -f $ANGELSCRIPT_DIR/$file ]] ; then
+    if [ ! -f "${path}/${file}" ] ; then
         pathStatusCode=2
         hasFailed=true
+    else
+        if [ ! -f ${path}/add_on/SConscript ] ; then
+            ln -s ../SConscript_add_on ${path}/add_on/SConscript
+        fi
+        if [ ! -f ${path}/source/SConscript ] ; then
+            ln -s ../SConscript_source ${path}/source/SConscript
+        fi
     fi
-    writeStatus "  - Checking AngelScript path ($ANGELSCRIPT_DIR)" $pathStatusCode
+    writeStatus "  - Checking AngelScript path (${path})" $pathStatusCode
 }
 
 

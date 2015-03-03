@@ -1,0 +1,31 @@
+import os
+
+Import('env')
+
+addons = [
+    # 'autowrapper',
+    # 'contextmgr',
+    # 'debugger',
+    # 'scriptany',
+    # 'scriptarray',
+    'scriptbuilder',
+    # 'scriptdictionary',
+    # 'scriptfile',
+    # 'scriptgrid',
+    # 'scripthandle',
+    # 'scripthelper',
+    # 'scriptmath',
+    'scriptstdstring'
+    # 'serializer',
+    # 'weakref'
+]
+
+objs = []
+for addon in addons:
+    objs.append(env.Object(
+        Glob(addon + '/*.cpp') +
+        Glob(addon + '/*/*.cpp'),
+        CPPPATH='#/external/angelscript/include'
+    ))
+
+Return('objs')
