@@ -619,6 +619,22 @@ function prepareUmundoScript {
     fi
 }
 
+function prepareGitrev {
+    message "${GREEN}[Checking src/util/gitrev.h]${NORMAL}"
+    if [ -f src/util/gitrev.h ] ; then
+        writeStatus "  - gitrev.h already created " 0
+    else
+        writeStatus "  - generating gitrev.h " 1
+        source ./utils/scripts/write_gitrev_header.sh
+        prepareGitRevHeader > /dev/null
+        if [ -f src/util/gitrev.h ] ; then
+            writeStatus "  - gitrev.h successfully created " 0
+        else
+            writeStatus "  - gitrev.h failure " 2
+        fi
+    fi
+}
+
 function checkXToolset {
     message "${GREEN}[Cross-compiler]${NORMAL}"
     if command -v $1-g++ > /dev/null ; then
@@ -675,6 +691,7 @@ findOrGetGlslangValidator
 findOrGetCxxTest
 findOrGetAngelScript
 prepareUmundoScript
+prepareGitrev
 
 message "\n"
 message "${TEAL}-----------------------------------${NORMAL}"
