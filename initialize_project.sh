@@ -1,4 +1,7 @@
 #!/bin/bash
+
+
+disableInteractive=
 hasFailed=
 isQuiet=
 targetAndroidPlatform=android-18
@@ -52,6 +55,26 @@ function message {
         echo -e "$1"
     fi
 }
+
+
+# $1: Command to execute
+function interactiveOptional {
+    if [[ $disableInteractive ]] ; then return ; fi
+
+    while true; do
+        read -p "    Do this now? [y/n] " yn
+        case $yn in
+            [Yy]* )
+                eval "$1";
+                return 0
+                ;;
+            [Nn]* )
+                return 1;;
+            * ) echo "Please answer yes or no.";;
+        esac
+    done
+}
+
 
 # $1:=environment-variable
 function validateEnvironmentVariable {
@@ -142,7 +165,14 @@ function findBoost {
             setEnvVariable "Boost library" "BOOST_DIR"
         else
             writeStatus "  - Failed to find boost library" 2
-            hasFailed=true
+            echo " ${YELLOW}consider:${NORMAL} sudo apt-get install "\
+"libboost-all-dev && sudo updatedb"
+            if interactiveOptional "sudo apt-get install libboost-all-dev" ; then
+                echo "Done. Make sure to re-run script for detection."
+            else
+                hasFailed=true
+            fi
+
             return
         fi
     fi
