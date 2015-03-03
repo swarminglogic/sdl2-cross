@@ -1,0 +1,48 @@
+Import('env')
+
+local_env = env.Clone()
+
+cppflags = [
+    '-fwrapv',
+    '-fno-strict-aliasing',
+    '-W',
+    '-Wall',
+    '-DPID_FILE=\\"/var/run/mdnsd.pid\\"',
+    '-DMDNS_UDS_SERVERPATH=\\"/var/run/mdnsd\\"',
+    '-DTARGET_OS_LINUX',
+    '-DNOT_HAVE_SA_LEN',
+    '-DHAVE_LINUX',
+    '-DUSES_NETLINK',
+    # '-DANONYMOUS_DISABLED',
+    '-DUNICAST_DISABLED',
+    '-DDNSSEC_DISABLED',
+    '-fpic',
+    '-Wdeclaration-after-statement',
+#    '-Os',
+    '-DMDNS_DEBUGMSGS=0'
+    '-O0', '-g', '-gdwarf-2'
+]
+
+local_env.Append(CPPFLAGS = cppflags)
+
+files = ['mDNSShared/dnssd_clientshim.c',
+         'mDNSPosix/mDNSPosix.c',
+         'mDNSCore/mDNS.c',
+         'mDNSCore/DNSCommon.c',
+         'mDNSShared/mDNSDebug.c',
+         'mDNSShared/GenLinkedList.c',
+         'mDNSCore/uDNS.c',
+         'mDNSShared/PlatformCommon.c',
+         'mDNSPosix/mDNSUNP.c',
+         'mDNSCore/DNSDigest.c']
+
+local_env.Append(CPPPATH = ['#/external/umundo/mDNSResponder-333.10/mDNSCore/'])
+local_env.Append(CPPPATH = ['#/external/umundo/mDNSResponder-333.10/mDNSShared/'])
+
+objs = []
+for f in files:
+    objs.append(local_env.Object(f))
+
+objLib = local_env.StaticLibrary('#/lib/' + local_env['target'] + '/mDNSEmbedded', objs)
+Default(objLib)
+

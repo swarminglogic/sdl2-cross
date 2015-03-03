@@ -1,0 +1,49 @@
+import os
+Import('env')
+
+isShared = False
+
+cppflags = [
+'-Wall', '-Wmissing-declarations', '-Wmissing-prototypes', '-Wstrict-prototypes',
+'-Wbad-function-cast', '-Wsign-compare', '-Wnested-externs', '-Wshadow',
+'-Waggregate-return', '-Wcast-align', '-Wextra', '-Wold-style-definition',
+'-Wdeclaration-after-statement',
+'-O0', '-g',
+'-fPIC',
+'-DLINUX', '-DOS=\\"linux\\"', '-std=c99', '-pedantic', '-DARCH=\\"x86_64\\"',
+#'-DUSE_OPENSSL',
+'-DUSE_TLS',
+'-DUSE_ZLIB', '-DHAVE_PTHREAD', '-DHAVE_GETIFADDRS', '-DHAVE_STRERROR_R',
+'-DHAVE_GETOPT', '-DHAVE_INTTYPES_H', '-DHAVE_NET_ROUTE_H',
+'-DHAVE_STDBOOL_H', '-DHAVE_INET6', '-DHAVE_LIBRESOLV',
+'-DHAVE_SYSLOG', '-DHAVE_FORK', '-DHAVE_INET_NTOP',
+'-DHAVE_PWD_H', '-DHAVE_POLL',
+'-DHAVE_INET_PTON',
+'-DHAVE_SELECT', '-DHAVE_SELECT_H', '-DHAVE_SETRLIMIT', '-DHAVE_SIGNAL',
+'-DHAVE_SYS_TIME_H', '-DHAVE_UNAME', '-DHAVE_UNISTD_H', '-DHAVE_STRINGS_H',
+'-DHAVE_GAI_STRERROR',
+'-DVERSION=\\"0.4.7\\"',
+#'-Iinclude',
+'-DHAVE_ROUTE_LIST',
+'-DUSE_OPENSSL_DTLS=1'
+]
+
+local_env = env.Clone()
+local_env.Append(CPPFLAGS = cppflags)
+local_env.Append(CPPPATH = ['#/external/umundo/re-0.4.7/include/'])
+
+reFiles = ['sip/addr.c', 'sip/auth.c', 'sip/cseq.c', 'sip/ctrans.c', 'sip/dialog.c', 'sip/keepalive.c', 'sip/keepalive_udp.c', 'sip/msg.c', 'sip/param.c', 'sip/reply.c', 'sip/request.c', 'sip/sip.c', 'sip/strans.c', 'sip/transp.c', 'sip/via.c', 'sipevent/listen.c', 'sipevent/msg.c', 'sipevent/notify.c', 'sipevent/subscribe.c', 'sipreg/reg.c', 'sipsess/sess.c', 'sipsess/accept.c', 'sipsess/ack.c', 'sipsess/close.c', 'sipsess/connect.c', 'sipsess/info.c', 'sipsess/listen.c', 'sipsess/modify.c', 'sipsess/reply.c', 'sipsess/request.c', 'uri/uri.c', 'uri/ucmp.c', 'uri/uric.c', 'http/auth.c', 'http/msg.c', 'http/server.c', 'httpauth/digest.c', 'stun/addr.c', 'stun/attr.c', 'stun/ctrans.c', 'stun/dnsdisc.c', 'stun/hdr.c', 'stun/ind.c', 'stun/keepalive.c', 'stun/msg.c', 'stun/rep.c', 'stun/req.c', 'stun/stun.c', 'stun/stunstr.c', 'turn/chan.c', 'turn/perm.c', 'turn/turnc.c', 'ice/cand.c', 'ice/candpair.c', 'ice/chklist.c', 'ice/comp.c', 'ice/connchk.c', 'ice/gather.c', 'ice/ice.c', 'ice/icem.c', 'ice/icesdp.c', 'ice/icestr.c', 'ice/stunsrv.c', 'ice/util.c', 'natbd/filtering.c', 'natbd/genalg.c', 'natbd/hairpinning.c', 'natbd/lifetime.c', 'natbd/mapping.c', 'natbd/natstr.c', 'rtp/fb.c', 'rtp/member.c', 'rtp/ntp.c', 'rtp/pkt.c', 'rtp/rr.c', 'rtp/rtcp.c', 'rtp/rtp.c', 'rtp/sdes.c', 'rtp/sess.c', 'rtp/source.c', 'sdp/attr.c', 'sdp/format.c', 'sdp/media.c', 'sdp/msg.c', 'sdp/session.c', 'sdp/str.c', 'jbuf/jbuf.c', 'telev/telev.c', 'dns/client.c', 'dns/cstr.c', 'dns/dname.c', 'dns/hdr.c', 'dns/ns.c', 'dns/rr.c', 'dns/rrlist.c', 'dns/res.c', 'md5/wrap.c', 'hmac/hmac_sha1.c', 'base64/b64.c', 'udp/udp.c', 'udp/mcast.c', 'sa/ntop.c', 'sa/printaddr.c', 'sa/pton.c', 'sa/sa.c', 'net/if.c', 'net/net.c', 'net/netstr.c', 'net/rt.c', 'net/sock.c', 'net/sockopt.c', 'net/posix/pif.c', 'net/linux/rt.c', 'net/ifaddrs.c', 'tcp/tcp.c', 'tcp/tcp_high.c', 'tls/openssl/tls.c', 'tls/openssl/tls_tcp.c', 'tls/openssl/tls_udp.c', 'list/list.c', 'mbuf/mbuf.c', 'hash/hash.c', 'hash/func.c', 'fmt/ch.c', 'fmt/hexdump.c', 'fmt/pl.c', 'fmt/print.c', 'fmt/prm.c', 'fmt/regex.c', 'fmt/str.c', 'fmt/str_error.c', 'fmt/time.c', 'tmr/tmr.c', 'main/init.c', 'main/main.c', 'main/method.c', 'mem/mem.c', 'dbg/dbg.c', 'sys/daemon.c', 'sys/endian.c', 'sys/fs.c', 'sys/rand.c', 'sys/sleep.c', 'sys/sys.c', 'lock/rwlock.c', 'mqueue/mqueue.c', 'mod/mod.c', 'mod/dl.c', 'conf/conf.c', 'bfcp/attr.c', 'bfcp/conn.c', 'bfcp/msg.c', 'bfcp/reply.c', 'bfcp/request.c']
+
+objs = []
+for f in reFiles:
+    if isShared:
+        objs.append(local_env.SharedObject('src/' + f))
+    else:
+        objs.append(local_env.StaticObject('src/' + f))
+
+if isShared:
+    reLib = local_env.SharedLibrary('#/lib/' + local_env['target'] + '/re', objs)
+else:
+    reLib = local_env.StaticLibrary('#/lib/' + local_env['target'] + '/re', objs)
+
+Default(reLib)

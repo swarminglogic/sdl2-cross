@@ -25,8 +25,8 @@ lFlite    = ['flite_voice_list',
 lNoise    = ['noise']
 lPolyVox  = ['PolyVoxCore', 'PolyVoxUtil']
 lAngelScript = ['angelscript']
+lmdns  = ['libumundocore64', 'zmq', 're', 'mDNSEmbedded', 'pthread', 'rt']
 lOther    = ['pthread', 'm', 'dl', 'rt']
-
 libpaths = ['#/lib/linux/',
             pathSdl    + '/lib',
             pathBullet + '/lib']
@@ -35,6 +35,7 @@ lAll  = (lBullet +
          lAngelScript +
          lFlite + lNoise + lPolyVox +
          lSDL + lSDLimage + lSDLmixer + lSDLttf +
+         lmdns  +
          lGL + lOther)
 
 
@@ -57,9 +58,11 @@ gccWarningLevel = [
    '-Wredundant-decls', '-Wshadow',
    '-Wstrict-aliasing=2', '-Wunreachable-code',
    '-Wunused',
-   '-Wvariadic-macros', '-Wwrite-strings', '-pedantic',
-   '-pedantic-errors', '-Woverloaded-virtual',
-   '-Wswitch-enum', '-Werror'
+   '-Wvariadic-macros', '-Wwrite-strings',
+   #'-pedantic', '-pedantic-errors',
+   '-Woverloaded-virtual',
+   '-Wswitch-enum', '-Werror',
+   
    # # Clang unsupported flags.
    # '-fpermissive',
    # -Wunsafe-loop-optimizations'
@@ -71,6 +74,7 @@ gccWarningLevel = [
 cppflags = ['-O0', '-g', '-gdwarf-2']
 #cppflags = ['-O3']
 cppflags.extend(['-fno-strict-aliasing',
+                 '-fdiagnostics-color=always',
                  '-std=c++11',
                  '-D_REENTRANT',
                  '-DGLM_FORCE_RADIANS'])
@@ -82,6 +86,13 @@ cppflags.extend(['-isystem', pathBoost  + '/include',
                  '-isystem', pathAngelScript + '/include',
                  '-isystem', pathAngelScript + '/add_on',
                  '-isystem', 'external/polyvox/library/PolyVoxCore/include',
+                 '-isystem', 'external/umundo/src',
+                 '-isystem', 'external/umundo/src/include_linux',
+                 '-isystem', 'external/umundo/mDNSResponder-333.10/mDNSCore',
+                 '-isystem', 'external/umundo/mDNSResponder-333.10/mDNSPosix',
+                 '-isystem', 'external/umundo/mDNSResponder-333.10/mDNSShared',
+                 '-isystem', 'external/umundo/re-0.4.7/include',
+                 '-isystem', 'external/umundo/zeromq-4.1.0/include',
                  '-isystem', pathBullet + '/include/bullet'])
 cppflags.extend(gccWarningLevel)
 for macro in macroDefinitions:

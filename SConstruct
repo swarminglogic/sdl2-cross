@@ -11,7 +11,7 @@ OPTIONS:
 env = Environment(ENV = {'PATH' : os.environ['PATH'],
                          'HOME' : os.environ['HOME'],
                          'TERM' : 'xterm'},
-                  CXX='g++',
+                  CXX='g++-4.9',
                   tools=['default'], toolpath=[''])
 
 AddOption('--win64',
@@ -23,6 +23,9 @@ AddOption('--tests',
           action='store_true',
           help='compile and run unit tests',
           default=False)
+
+# Build uMundo external library
+SConscript('external/umundo/SConscript')
 
 # Build flite external library
 SConscript('external/flite/SConscript')

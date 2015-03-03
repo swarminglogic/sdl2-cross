@@ -1,0 +1,27 @@
+import os
+common_env = Environment(ENV = {'PATH' : os.environ['PATH'],
+                                'HOME' : os.environ['HOME'],
+                                'TERM' : 'xterm'})
+
+if GetOption('win64'):
+    common_env.Tool('crossmingw', toolpath = ['../../utils/scripts/'])
+    vardir='#/build/win/external/umundo'
+    common_env['target']='win'
+else:
+    vardir='#/build/linux/external/umundo'
+    common_env['target']='linux'
+
+
+
+common_env.VariantDir(vardir + '/mDNSEmbedded', 'mDNSResponder-333.10')
+common_env.SConscript(vardir + '/mDNSEmbedded/SConscript', {'env': common_env})
+
+common_env.VariantDir(vardir + '/re', 're-0.4.7')
+common_env.SConscript(vardir + '/re/SConscript', {'env': common_env})
+
+common_env.VariantDir(vardir + '/zeromq', 'zeromq-4.1.0')
+common_env.SConscript(vardir + '/zeromq/SConscript', {'env': common_env})
+
+common_env.VariantDir(vardir + '/src', 'src')
+common_env.SConscript(vardir + '/src/SConscript', {'env': common_env})
+
