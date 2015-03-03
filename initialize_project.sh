@@ -606,6 +606,19 @@ function findOrGetAngelScript {
 }
 
 
+function prepareUmundoScript {
+    message "${GREEN}[Umundo Setup]${NORMAL}"
+    if  [ ! -d external/umundo/fastlz ]  || \
+        [ ! -d external/umundo/re-0.4.7 ] || \
+        [ ! -d external/umundo/mDNSResponder-333.10 ] || \
+        [ ! -d external/umundo/zeromq-4.1.0 ] ; then
+        writeStatus "  - Umundo not configured. Running script now." 1
+        ./utils/scripts/prepare_umundo_dependencies.sh
+    else
+        writeStatus "  - Umundo already configured " 0
+    fi
+}
+
 function checkXToolset {
     message "${GREEN}[Cross-compiler]${NORMAL}"
     if command -v $1-g++ > /dev/null ; then
@@ -661,7 +674,7 @@ findOrGetWatchfile
 findOrGetGlslangValidator
 findOrGetCxxTest
 findOrGetAngelScript
-
+prepareUmundoScript
 
 message "\n"
 message "${TEAL}-----------------------------------${NORMAL}"
