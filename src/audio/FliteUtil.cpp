@@ -108,9 +108,9 @@ bool FliteUtil::writeWaveData(const cst_wave *w, SDL_RWops* out)
     d_int = (cst_wave_num_channels(w) * cst_wave_num_samples(w) * 2);
     SDL_RWwrite(out, &d_int, 4, 1);
 
-    int n = SDL_RWwrite(out, cst_wave_samples(w), 2,
-                        cst_wave_num_channels(w) * cst_wave_num_samples(w));
+    size_t n = SDL_RWwrite(out, cst_wave_samples(w), 2,
+                           cst_wave_num_channels(w) * cst_wave_num_samples(w));
 
     SDL_RWseek(out, 0, RW_SEEK_SET);
-    return n == (cst_wave_num_channels(w) * cst_wave_num_samples(w));
+    return n == static_cast<size_t>(cst_wave_num_channels(w) * cst_wave_num_samples(w));
   }
