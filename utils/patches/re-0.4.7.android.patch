@@ -1,0 +1,16 @@
+diff --git a/re-0.4.7/include/re_types.h b/re-0.4.7/include/re_types.h
+index f43cd4e..0520d8f 100644
+--- a/re-0.4.7/include/re_types.h
++++ b/re-0.4.7/include/re_types.h
+@@ -54,9 +54,11 @@ typedef long     ssize_t;
+ 
+ 
+ #ifndef WIN32
++#ifndef ANDROID
+ typedef uint32_t socklen_t;
+ #endif
+ #endif
++#endif
+ 
+ 
+ /*

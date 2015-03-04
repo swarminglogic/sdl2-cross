@@ -78,6 +78,13 @@ say_done
 get_source re-0.4.7 \
 "wget http://creytiv.com/pub/re-0.4.7.tar.gz"
 unpack "re-0.4.7.tar.gz"
+if [ -e re-0.4.7/.patched ] ; then
+    echo " - Already patched. ${YELLOW}Skipping${NORMAL}"
+else
+    echo "${TEAL} - patching ${NORMAL}"
+    patch -p1 < ../../utils/patches/re-0.4.7.android.patch
+    touch re-0.4.7/.patched
+fi
 add_build_script "SCons" SConscript_re "re-0.4.7/SConscript"
 add_build_script "Makefile" Makefile_re_onlystatic "re-0.4.7/Makefile_static"
 add_build_script "Android.mk" Android_re.mk "re-0.4.7/Android.mk"
