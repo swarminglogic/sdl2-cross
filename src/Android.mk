@@ -36,28 +36,28 @@ LOCAL_SRC_FILES := $(SDL_PATH)/src/main/android/SDL_android_main.c \
 	 $(wildcard $(JNI_PATH)/src/model/*.cpp) \
 	 $(wildcard $(JNI_PATH)/src/util/*.cpp)
 
+# TODO: uncomment/add in commit that adds umundo
+#	 $(wildcard $(JNI_PATH)/src/net/*.cpp)
+
 LOCAL_SRC_FILES += $(wildcard $(JNI_PATH)/src/$(SWL_MAIN_FILE))
 
-#  $(shell find $(JNI_PATH)/src/ -name "*.cpp")
-
-# Alternative way to wildcard-include files.
-#  $(wildcard $(JNI_PATH)/src/*.cpp)
-
-# To view variables use:
-#$(warning $(LOCAL_SRC_FILES))
 
 LOCAL_SHARED_LIBRARIES := SDL2 SDL2_image SDL2_mixer SDL2_ttf \
 	                        noise \
 	                        PolyVoxCore PolyVoxUtil \
 	                        bullet \
 	                        angelscript \
+	                        zmq re mDNSEmbedded \
 	                        flite_cmu_us_awb flite_cmu_us_rms \
 	                        flite_voice_list flite_cmulex flite_usenglish flite
 
-# bullet
+# TODO: uncomment/add in commit that adds umundo
+# libumundocore64
+
+# Required by bullet
 LOCAL_STATIC_LIBRARIES := cpufeatures
 
-LOCAL_LDLIBS := -llog -lGLESv3 -lEGL
+LOCAL_LDLIBS += -llog -lGLESv3 -lEGL
 LOCAL_CFLAGS := -fno-strict-aliasing -D_REENTRANT -DGLM_FORCE_RADIANS
 LOCAL_CFLAGS += -isystem $(JNI_PATH)/src/../external
 LOCAL_CFLAGS += -isystem $(GLM_DIR)
@@ -65,7 +65,12 @@ LOCAL_CFLAGS += -isystem $(BOOST_DIR)/include
 LOCAL_CFLAGS += -isystem $(LOCAL_PATH)/$(SDL_PATH)/include
 LOCAL_CFLAGS += -isystem $(BULLET_DIR)/include/bullet
 LOCAL_CFLAGS += -isystem $(CXXTEST)
-
+LOCAL_CFLAGS += -isystem $(JNI_PATH)/src/../external/umundo/src
+LOCAL_CFLAGS += -isystem $(JNI_PATH)/src/../external/umundo/re-0.4.7/include
+LOCAL_CFLAGS += -isystem $(JNI_PATH)/src/../external/umundo/zeromq-4.1.0/include
+LOCAL_CFLAGS += -isystem $(JNI_PATH)/src/../external/umundo/mDNSResponder-333.10/mDNSCore/
+LOCAL_CFLAGS += -isystem $(JNI_PATH)/src/../external/umundo/mDNSResponder-333.10/mDNSPosix/
+LOCAL_CFLAGS += -isystem $(JNI_PATH)/src/../external/umundo/mDNSResponder-333.10/mDNSShared/
 
 # Android ndk and stl include paths
 LOCAL_CFLAGS += -isystem $(NDK_PLATFORMS_ROOT)/$(APP_PLATFORM)/arch-$(TARGET_ARCH)/usr/include
@@ -73,14 +78,14 @@ LOCAL_CFLAGS += -isystem $(NDK_ROOT)/sources/cxx-stl/llvm-libc++/libcxx/include/
 LOCAL_CFLAGS += -isystem $(NDK_ROOT)/sources/cxx-stl/gabi++/include
 
 # Application specific defines
-LOCAL_CPPFLAGS += -DUSING_SDL
-LOCAL_CPPFLAGS += -DLOG_SDL_EVENTS_VERBOSELY
+LOCAL_CXXFLAGS += -DUSING_SDL
+LOCAL_CXXFLAGS += -DLOG_SDL_EVENTS_VERBOSELY
 # LOCAL_CPPFLAGS += -DLOGGING_DISABLED    # Disables all logging
 # LOCAL_CPPFLAGS += -DLOG2STREAM_DISABLED # Disables logging to stream
 # LOCAL_CPPFLAGS += -DLOG2FILE_DISABLED   # Disables logging to file
 
-LOCAL_CPPFLAGS += -std=c++11
-LOCAL_CPPFLAGS += -Wall -Wextra -Wcast-align -Wcast-qual \
+LOCAL_CXXFLAGS += -std=c++11
+LOCAL_CXXFLAGS += -Wall -Wextra -Wcast-align -Wcast-qual \
      -fpermissive \
      -Wdisabled-optimization \
      -Wfloat-equal -Wformat=2 -Wimport -Winit-self \

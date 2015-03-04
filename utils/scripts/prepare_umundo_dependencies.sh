@@ -70,6 +70,7 @@ unpack "zeromq-4.1.0-rc1.tar.gz"
 add_build_script "SCons" SConscript_zeromq "zeromq-4.1.0/SConscript"
 add_build_script "header file" zmq_platform_linux.hpp \
     "zeromq-4.1.0/include_linux/platform.hpp"
+add_build_script "Android.mk" Android_zmq.mk "zeromq-4.1.0/Android.mk"
 say_done
 
 
@@ -78,6 +79,8 @@ get_source re-0.4.7 \
 "wget http://creytiv.com/pub/re-0.4.7.tar.gz"
 unpack "re-0.4.7.tar.gz"
 add_build_script "SCons" SConscript_re "re-0.4.7/SConscript"
+add_build_script "Makefile" Makefile_re_onlystatic "re-0.4.7/Makefile_static"
+add_build_script "Android.mk" Android_re.mk "re-0.4.7/Android.mk"
 say_done
 
 
@@ -97,6 +100,7 @@ fi
 add_build_script "SCons" SConscript_mDNSResponder "${mdir}/SConscript"
 add_build_script "header file" umundo_linux_config.h \
     "src/include_linux/umundo/config.h"
+add_build_script "Android.mk" Android_mdnsembedded.mk "${mdir}/Android.mk"
 say_done
 
 
