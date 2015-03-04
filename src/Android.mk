@@ -34,10 +34,8 @@ LOCAL_SRC_FILES := $(SDL_PATH)/src/main/android/SDL_android_main.c \
 	 $(wildcard $(JNI_PATH)/src/io/*.cpp) \
 	 $(wildcard $(JNI_PATH)/src/math/*.cpp) \
 	 $(wildcard $(JNI_PATH)/src/model/*.cpp) \
+	 $(wildcard $(JNI_PATH)/src/net/*.cpp) \
 	 $(wildcard $(JNI_PATH)/src/util/*.cpp)
-
-# TODO: uncomment/add in commit that adds umundo
-#	 $(wildcard $(JNI_PATH)/src/net/*.cpp)
 
 LOCAL_SRC_FILES += $(wildcard $(JNI_PATH)/src/$(SWL_MAIN_FILE))
 
@@ -63,6 +61,7 @@ LOCAL_CFLAGS += -isystem $(LOCAL_PATH)/$(SDL_PATH)/include
 LOCAL_CFLAGS += -isystem $(BULLET_DIR)/include/bullet
 LOCAL_CFLAGS += -isystem $(CXXTEST)
 LOCAL_CFLAGS += -isystem $(JNI_PATH)/src/../external/umundo/src
+LOCAL_CFLAGS += -isystem $(JNI_PATH)/src/../external/umundo/src/include_android
 LOCAL_CFLAGS += -isystem $(JNI_PATH)/src/../external/umundo/re-0.4.7/include
 LOCAL_CFLAGS += -isystem $(JNI_PATH)/src/../external/umundo/zeromq-4.1.0/include
 LOCAL_CFLAGS += -isystem $(JNI_PATH)/src/../external/umundo/mDNSResponder-333.10/mDNSCore/

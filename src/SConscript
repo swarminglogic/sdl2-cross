@@ -19,6 +19,7 @@ lGL       = c.lGL
 lFlite    = c.lFlite
 lNoise    = c.lNoise
 lPolyVox  = c.lPolyVox
+lmdns     = c.lmdns
 lOther    = c.lOther
 lAll      = c.lAll
 lAngelScript  = c.lAngelScript
@@ -51,6 +52,7 @@ if GetOption('win64'):
                 Glob('model/*.cpp') +
                 Glob('core/*.cpp') +
                 Glob('graphics/*.cpp') +
+                Glob('net/*.cpp') +
                 Glob('math/*.cpp')]
     app = env.Program(target, cppFiles,
                       LIBPATH = libpaths,
@@ -139,6 +141,17 @@ else:
 
 
     ######################
+    # SHARED NET LIBRARY
+    #######################
+    netFiles = [list(set(Glob('net/*.cpp') +
+                         Glob('net/*/*.cpp')) - unitTests - flymakeFiles)]
+    netLib = env.StaticLibrary('#/lib/linux/swl-net',
+                               netFiles,
+                               LIBS = lmdns);
+    Default(netLib)
+
+
+    ######################
     # SHARED MODEL LIBRARY
     #######################
     modelFiles = [list(set(Glob('model/*.cpp') +
@@ -169,6 +182,6 @@ else:
     app = env.Program(target, cppMain,
                       LIBPATH  = libpaths,
                       CPPFLAGS = cppflags,
-                      LIBS = lAll + mathLib + utilLib + externLib +
+                      LIBS = netLib + lAll + mathLib + utilLib + externLib +
                       audioLib + modelLib + ioLib + graphicsLib + coreLib)
     Default(app)
