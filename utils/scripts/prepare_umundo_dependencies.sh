@@ -131,9 +131,9 @@ if  [ -f re-0.4.7/.patched ] && \
         read -p " Do you want to build static android libraries now? [y/n] " yn
         case $yn in
             [Yy]* )
-                build_static_android re-0.4.7 build-libre-android.sh
-                build_static_android zeromq-4.1.0 build-zeromq-android.sh
-                build_static_android mDNSResponder-333.10 build-mDNSEmbedded-android.sh
+                build_static_android re-0.4.7             android-build-libre.sh
+                build_static_android zeromq-4.1.0         android-build-zeromq.sh
+                build_static_android mDNSResponder-333.10 android-build-mDNSEmbedded.sh
                 break;
                 ;;
             [Nn]* )
