@@ -110,4 +110,36 @@ add_build_script "Android.mk" Android_mdnsembedded.mk "${mdir}/Android.mk"
 say_done
 
 
+function build_static_android {
+    echo "${GREEN}[ Building static ${BOLD}$1${NORMAL}${GREEN} for android]${NORMAL}"
+    ../../utils/build_scripts/umundo/$2
+    say_done
+}
 
+# Check all dependencies, ask to compile everything
+if  [ -f re-0.4.7/.patched ] && \
+    [ -f mDNSResponder-333.10/.patched ] && \
+    [ -d zeromq-4.1.0 ] && \
+    [ -d fastlz ] && \
+    [ ! -e ../../android/libs/*/libre.a ] && \
+    [ ! -e ../../android/libs/*/libzmq.a ] && \
+    [ ! -e ../../android/libs/*/libmDNSEmbedded.a ] ; then
+
+    echo "
+ ${GREEN}All dependencies met.${NORMAL}"
+    while true; do
+        read -p " Do you want to build static android libraries now? [y/n] " yn
+        case $yn in
+            [Yy]* )
+                build_static_android re-0.4.7 build-libre-android.sh
+                build_static_android zeromq-4.1.0 build-zeromq-android.sh
+                build_static_android mDNSResponder-333.10 build-mDNSEmbedded-android.sh
+                break;
+                ;;
+            [Nn]* )
+                break;
+                ;;
+            * ) echo "Please answer yes or no.";;
+        esac
+    done
+fi
