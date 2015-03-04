@@ -30,6 +30,4 @@ Files added (Swarming Logic MIT license):
 ```
  `SCons` based build files, named `SConscript`.
  `Android` based build flies. named `Android.mk`.
- prepare_dependencies.sh
-
 ```
