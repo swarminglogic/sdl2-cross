@@ -15,7 +15,7 @@
 
 // suppress warnings with already define -DANDROID macro
 #ifndef ANDROID
-/* #undef ANDROID */
+#define ANDROID
 #endif
 
 #define PATH_SEPERATOR '/'
@@ -52,6 +52,7 @@
 
 /** miscellaneous */
 #define PROJECT_SOURCE_DIR "#"
+
 /* #undef DIST_PREPARE */
 #define HAVE_STDBOOL_H 1
 

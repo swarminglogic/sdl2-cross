@@ -47,12 +47,9 @@ LOCAL_SHARED_LIBRARIES := SDL2 SDL2_image SDL2_mixer SDL2_ttf \
 	                        PolyVoxCore PolyVoxUtil \
 	                        bullet \
 	                        angelscript \
-	                        zmq re mDNSEmbedded \
+	                        libumundocore64 zmq re mDNSEmbedded \
 	                        flite_cmu_us_awb flite_cmu_us_rms \
 	                        flite_voice_list flite_cmulex flite_usenglish flite
-
-# TODO: uncomment/add in commit that adds umundo
-# libumundocore64
 
 # Required by bullet
 LOCAL_STATIC_LIBRARIES := cpufeatures

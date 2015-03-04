@@ -95,11 +95,10 @@ else
     echo "${TEAL} - patching ${NORMAL}"
     patch -p0 < ../../utils/patches/mDNSResponder-333.10.umundo.patch
     patch -p1 < ../../utils/patches/mDNSResponder-333.10.reuseport.patch
+    patch -p1 < ../../utils/patches/mDNSResponder-333.10.android.patch
     touch ${mdir}/.patched
 fi
 add_build_script "SCons" SConscript_mDNSResponder "${mdir}/SConscript"
-add_build_script "header file" umundo_linux_config.h \
-    "src/include_linux/umundo/config.h"
 add_build_script "Android.mk" Android_mdnsembedded.mk "${mdir}/Android.mk"
 say_done
 

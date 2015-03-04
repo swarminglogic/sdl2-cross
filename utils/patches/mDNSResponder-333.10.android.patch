@@ -1,0 +1,12 @@
+diff --git a/mDNSResponder-333.10/mDNSPosix/mDNSPosix.h b/mDNSResponder-333.10/mDNSPosix/mDNSPosix.h
+index 7ba6527..fea38e4 100755
+--- a/mDNSResponder-333.10/mDNSPosix/mDNSPosix.h
++++ b/mDNSResponder-333.10/mDNSPosix/mDNSPosix.h
+@@ -26,6 +26,7 @@
+ #endif
+ 
+ #ifdef TARGET_OS_ANDROID
++#include <sys/select.h>
+ #include <fcntl.h>
+ #endif
+ 
