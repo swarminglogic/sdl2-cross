@@ -494,6 +494,26 @@ function findSDL2UtilSource {
     [[ ! $pathStatusCode -eq 0 ]] && hasFailed=true
 }
 
+
+function findUmundoAndroidStatics {
+    message "${GREEN}[Umundo]${NORMAL}"
+    missingUmundoLib=no
+    for i in ${@} ; do
+        if [ -e  android/libs/*/$i ] ; then
+            writeStatus "  - Static lib $i" 0
+        else
+            writeStatus "  - Missing static lib $i" 2
+            missingUmundoLib=yes
+        fi
+    done
+
+    if [ "$missingUmundoLib" == "yes" ] ; then
+        echo " ${YELLOW}consider:${NORMAL} \
+./utils/scripts/prepare_umundo_dependencies.sh"
+    fi
+}
+
+
 function findOrGetWatchfile {
     message "${GREEN}[watchfile]${NORMAL}"
     if command -v watchfile > /dev/null ; then
@@ -713,7 +733,7 @@ findSDL2Source
 findSDL2UtilSource image IMG.c Android.mk
 findSDL2UtilSource mixer mixer.c Android.mk
 findSDL2UtilSource ttf showfont.c Android.mk
-
+findUmundoAndroidStatics libre.a libzmq.a libmDNSEmbedded.a
 
 message "\n"
 message "${TEAL}-------------------------------------${NORMAL}"
