@@ -22,7 +22,7 @@
 #include "umundo/config.h"
 
 #ifdef WIN32
-#include <WS2tcpip.h>
+#include <ws2tcpip.h>
 #endif
 
 /** from dns_sd.h:kDNSServiceFlagsShareConnection

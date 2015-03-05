@@ -51,7 +51,9 @@
 
 #ifdef __GNUC__
 #ifndef ANDROID
+#ifndef WIN32
 #define HAVE_EXECINFO
+#endif
 #endif
 #endif
 

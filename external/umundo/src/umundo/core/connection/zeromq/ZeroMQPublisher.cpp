@@ -19,9 +19,9 @@
 
 #ifdef WIN32
 #include <time.h>
-#include <WinSock2.h>
+#include <winsock2.h>
 #include <ws2tcpip.h>
-#include <Windows.h>
+#include <windows.h>
 #endif
 
 #include "umundo/core/connection/zeromq/ZeroMQPublisher.h"

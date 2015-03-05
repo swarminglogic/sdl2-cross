@@ -36,7 +36,7 @@
 #endif
 
 #ifdef WIN32
-#include <WS2tcpip.h>
+#include <ws2tcpip.h>
 #endif
 
 #include <boost/lexical_cast.hpp>

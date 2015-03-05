@@ -21,8 +21,8 @@
 #include "umundo/config.h"
 
 #ifdef WIN32
-#include <Winsock2.h>
-#include <Iphlpapi.h>
+#include <winsock2.h>
+#include <iphlpapi.h>
 #endif
 
 #ifdef UNIX

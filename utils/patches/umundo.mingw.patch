@@ -1,0 +1,80 @@
+diff --git a/external/umundo/src/umundo/core/Debug.h b/external/umundo/src/umundo/core/Debug.h
+index b2c6375..a7876f0 100644
+--- a/external/umundo/src/umundo/core/Debug.h
++++ b/external/umundo/src/umundo/core/Debug.h
+@@ -51,9 +51,11 @@
+ 
+ #ifdef __GNUC__
+ #ifndef ANDROID
++#ifndef WIN32
+ #define HAVE_EXECINFO
+ #endif
+ #endif
++#endif
+ 
+ namespace umundo {
+ 
+diff --git a/external/umundo/src/umundo/core/Host.cpp b/external/umundo/src/umundo/core/Host.cpp
+index 443e7f5..f13e4d7 100644
+--- a/external/umundo/src/umundo/core/Host.cpp
++++ b/external/umundo/src/umundo/core/Host.cpp
+@@ -21,8 +21,8 @@
+ #include "umundo/config.h"
+ 
+ #ifdef WIN32
+-#include <Winsock2.h>
+-#include <Iphlpapi.h>
++#include <winsock2.h>
++#include <iphlpapi.h>
+ #endif
+ 
+ #ifdef UNIX
+diff --git a/external/umundo/src/umundo/core/connection/zeromq/ZeroMQNode.cpp b/external/umundo/src/umundo/core/connection/zeromq/ZeroMQNode.cpp
+index 9249321..23546f5 100644
+--- a/external/umundo/src/umundo/core/connection/zeromq/ZeroMQNode.cpp
++++ b/external/umundo/src/umundo/core/connection/zeromq/ZeroMQNode.cpp
+@@ -36,7 +36,7 @@
+ #endif
+ 
+ #ifdef WIN32
+-#include <WS2tcpip.h>
++#include <ws2tcpip.h>
+ #endif
+ 
+ #include <boost/lexical_cast.hpp>
+diff --git a/external/umundo/src/umundo/core/connection/zeromq/ZeroMQPublisher.cpp b/external/umundo/src/umundo/core/connection/zeromq/ZeroMQPublisher.cpp
+index e297ec2..d7e32f4 100644
+--- a/external/umundo/src/umundo/core/connection/zeromq/ZeroMQPublisher.cpp
++++ b/external/umundo/src/umundo/core/connection/zeromq/ZeroMQPublisher.cpp
+@@ -19,9 +19,9 @@
+ 
+ #ifdef WIN32
+ #include <time.h>
+-#include <WinSock2.h>
++#include <winsock2.h>
+ #include <ws2tcpip.h>
+-#include <Windows.h>
++#include <windows.h>
+ #endif
+ 
+ #include "umundo/core/connection/zeromq/ZeroMQPublisher.h"
+@@ -319,4 +319,4 @@ void ZeroMQPublisher::send(Message* msg) {
+ }
+ 
+ 
+-}
+\ No newline at end of file
++}
+diff --git a/external/umundo/src/umundo/core/discovery/mdns/bonjour/BonjourDiscoverer.cpp b/external/umundo/src/umundo/core/discovery/mdns/bonjour/BonjourDiscoverer.cpp
+index 7120640..34f255c 100644
+--- a/external/umundo/src/umundo/core/discovery/mdns/bonjour/BonjourDiscoverer.cpp
++++ b/external/umundo/src/umundo/core/discovery/mdns/bonjour/BonjourDiscoverer.cpp
+@@ -22,7 +22,7 @@
+ #include "umundo/config.h"
+ 
+ #ifdef WIN32
+-#include <WS2tcpip.h>
++#include <ws2tcpip.h>
+ #endif
+ 
+ /** from dns_sd.h:kDNSServiceFlagsShareConnection
