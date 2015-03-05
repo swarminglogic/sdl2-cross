@@ -24,7 +24,7 @@ lFlite    = ['flite_voice_list',
 lNoise    = ['noise']
 lPolyVox  = ['PolyVoxCore', 'PolyVoxUtil']
 lAngelScript = ['angelscript']
-lmdns  = ['libumundocore64', 'zmq', 're', 'mDNSEmbedded', 'pthread', 'rt']
+lUmundo  = ['libumundocore64', 'zmq', 're', 'mDNSEmbedded', 'pthread', 'rt']
 lOther    = ['pthread', 'm', 'dl', 'rt']
 libpaths = ['#/lib/linux/',
             pathSdl    + '/lib',
@@ -34,7 +34,7 @@ lAll  = (lBullet +
          lAngelScript +
          lFlite + lNoise + lPolyVox +
          lSDL + lSDLimage + lSDLmixer + lSDLttf +
-         lmdns  +
+         lUmundo  +
          lGL + lOther)
 
 

@@ -19,7 +19,7 @@ lGL       = c.lGL
 lFlite    = c.lFlite
 lNoise    = c.lNoise
 lPolyVox  = c.lPolyVox
-lmdns     = c.lmdns
+lUmundo   = c.lUmundo
 lOther    = c.lOther
 lAll      = c.lAll
 lAngelScript  = c.lAngelScript
@@ -52,7 +52,7 @@ if GetOption('win64'):
                 Glob('model/*.cpp') +
                 Glob('core/*.cpp') +
                 Glob('graphics/*.cpp') +
-                Glob('net/*.cpp') +
+#                Glob('net/*.cpp') +
                 Glob('math/*.cpp')]
     app = env.Program(target, cppFiles,
                       LIBPATH = libpaths,
@@ -62,6 +62,7 @@ if GetOption('win64'):
                       LIBS = (lSDL + lSDLmixer + lSDLttf + lSDLimage +
                               lNoise + lPolyVox + lFlite + lBullet +
                               lAngelScript +
+                              lUmundo +
                               lGL + lOther))
     Default(app)
 
@@ -147,7 +148,7 @@ else:
                          Glob('net/*/*.cpp')) - unitTests - flymakeFiles)]
     netLib = env.StaticLibrary('#/lib/linux/swl-net',
                                netFiles,
-                               LIBS = lmdns);
+                               LIBS = lUmundo);
     Default(netLib)
 
 
