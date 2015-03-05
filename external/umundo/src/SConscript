@@ -1,5 +1,6 @@
 import os
 Import('env')
+local_env = env.Clone()
 
 isShared = False
 
@@ -16,28 +17,34 @@ cppflags = [
 '-Wno-unused-value',
 '-Wno-unused-function',
 '-Wno-sign-compare',
-
 '-O0', '-g', '-gdwarf-2'
 ]
 
 if isShared:
     cppflags.extend(['-DCOMPILING_DLL', '-Dumundocore_EXPORTS'])
 else:
-    cppflags.extend(['-DUMUNDO_STATIC'])
+    cppflags.extend(['-DUMUNDO_STATIC', '-DZMQ_STATIC'])
 
 pathBoost   = os.environ["BOOST_DIR"];
 cppflags.extend(['-isystem', pathBoost  + '/include']);
 
-env.Append(CPPPATH = ['#/external/umundo/src',
-                      '#/external/umundo/src/include_linux',
-                      '#/external/umundo/fastlz',
-                      '#/external/umundo/zeromq-4.1.0/include',
-                      '#/external/umundo/mDNSResponder-333.10/mDNSCore',
-                      '#/external/umundo/mDNSResponder-333.10/mDNSPosix',
-                      '#/external/umundo/mDNSResponder-333.10/mDNSShared',
-                      '#/external/umundo/re-0.4.7/include'])
+cxxpaths=['#/external/umundo/src',
+          '#/external/umundo/fastlz',
+          '#/external/umundo/zeromq-4.1.0/include',
+          '#/external/umundo/mDNSResponder-333.10/mDNSCore',
+          '#/external/umundo/mDNSResponder-333.10/mDNSShared',
+          '#/external/umundo/re-0.4.7/include']
 
-env.Append(CPPFLAGS = cppflags)
+if GetOption('win64'):
+    cxxpaths.append('#/external/umundo/src/include_win');
+    cxxpaths.append('#/external/umundo/mDNSResponder-333.10/mDNSWindows');
+else:
+    cxxpaths.append('#/external/umundo/src/include_linux');
+    cxxpaths.append('#/external/umundo/mDNSResponder-333.10/mDNSPosix');
+
+local_env.Append(CPPPATH = cxxpaths)
+
+local_env.Append(CPPFLAGS = cppflags)
 
 coreFiles = ['Message.cpp',
              'Debug.cpp',
@@ -69,13 +76,13 @@ fastlzFiles = '#/external/umundo/fastlz/fastlz.c'
 objs = []
 if isShared:
     for f in coreFiles:
-        objs.append(env.SharedObject('umundo/core/' + f))
-    objs.append(env.SharedObject(fastlzFiles))
-    coreLib = env.SharedLibrary('#/lib/' + env['target'] + '/libumundocore64', objs)
+        objs.append(local_env.SharedObject('umundo/core/' + f))
+    objs.append(local_env.SharedObject(fastlzFiles))
+    coreLib = local_env.SharedLibrary('#/lib/' + local_env['target'] + '/libumundocore64', objs)
 else:
     for f in coreFiles:
-        objs.append(env.StaticObject('umundo/core/' + f))
-    objs.append(env.StaticObject(fastlzFiles))
-    coreLib = env.StaticLibrary('#/lib/' + env['target'] + '/libumundocore64', objs)
+        objs.append(local_env.StaticObject('umundo/core/' + f))
+    objs.append(local_env.StaticObject(fastlzFiles))
+    coreLib = local_env.StaticLibrary('#/lib/' + local_env['target'] + '/libumundocore64', objs)
 
 Default(coreLib)

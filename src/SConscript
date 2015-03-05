@@ -52,7 +52,7 @@ if GetOption('win64'):
                 Glob('model/*.cpp') +
                 Glob('core/*.cpp') +
                 Glob('graphics/*.cpp') +
-#                Glob('net/*.cpp') +
+                Glob('net/*.cpp') +
                 Glob('math/*.cpp')]
     app = env.Program(target, cppFiles,
                       LIBPATH = libpaths,

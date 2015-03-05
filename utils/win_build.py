@@ -25,7 +25,7 @@ lFlite    = ['flite_voice_list',
              'flite_cmulex',
              'flite']
 lNoise    = ['noise']
-lUmundo  = ['zmq', 're', 'mDNSEmbedded', 'ws2_32', 'iphlpapi', 'netapi32']
+lUmundo  = ['umundocore64', 'zmq', 're', 'mDNSEmbedded', 'ws2_32', 'iphlpapi', 'netapi32']
 #lUmundo  = ['libumundocore64', 'zmq', 're', 'mDNSEmbedded', 'pthread', 'rt']
 lPolyVox  = ['PolyVoxCore', 'PolyVoxUtil']
 lAngelScript = ['angelscript']
@@ -89,6 +89,7 @@ cppflags.extend(['-fno-strict-aliasing',
                  '-D_REENTRANT',
                  '-Dmain=SDL_main',
                  '-DZMQ_STATIC',
+                 '-DUMUNDO_STATIC',
                  '-DGLM_FORCE_RADIANS'])
 cppflags.extend(['-isystem', pathBoost  + '/include',
                  '-isystem', pathCrossTools + '/include',
@@ -103,8 +104,8 @@ cppflags.extend(['-isystem', pathBoost  + '/include',
                  '-isystem', 'external/angelscript/include',
                  '-isystem', 'external/angelscript/add_on',
                  '-isystem', 'external/polyvox/library/PolyVoxCore/include',
-                 # '-isystem', 'external/umundo/src',
-                 # '-isystem', 'external/umundo/src/include_windows',
+                 '-isystem', 'external/umundo/src',
+                 '-isystem', 'external/umundo/src/include_win',
                  '-isystem', 'external/umundo/mDNSResponder-333.10/mDNSCore',
                  '-isystem', 'external/umundo/mDNSResponder-333.10/mDNSWindows',
                  '-isystem', 'external/umundo/mDNSResponder-333.10/mDNSShared',

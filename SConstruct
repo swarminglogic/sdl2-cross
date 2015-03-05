@@ -24,9 +24,8 @@ AddOption('--tests',
           help='compile and run unit tests',
           default=False)
 
-if not GetOption('win64'):
-    # Build uMundo external library
-    SConscript('external/umundo/SConscript')
+# Build uMundo external library
+SConscript('external/umundo/SConscript')
 
 # Build flite external library
 SConscript('external/flite/SConscript')
