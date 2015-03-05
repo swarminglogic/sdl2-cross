@@ -725,6 +725,7 @@ findXStatic SDL2_image --x-comp-sdl-image libSDL2_image.a libpng.a libjpeg.a lib
 findXStatic SDL2_mixer --x-comp-sdl-mixer libSDL2_mixer.a libogg.a libvorbis.a libvorbisfile.a
 findXStatic SDL2_ttf   --x-comp-sdl-ttf libSDL2_ttf.a   libfreetype.a
 findXStatic Bullet     --x-comp-bullet libBulletDynamics.a libBulletCollision.a libLinearMath.a
+findXStatic Umundo     --x-comp-umundo libre.a libzmq.a libmDNSEmbedded.a
 
 message "\n"
 

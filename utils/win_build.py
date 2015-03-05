@@ -25,12 +25,15 @@ lFlite    = ['flite_voice_list',
              'flite_cmulex',
              'flite']
 lNoise    = ['noise']
+lUmundo  = ['zmq', 're', 'mDNSEmbedded', 'ws2_32', 'iphlpapi', 'netapi32']
+#lUmundo  = ['libumundocore64', 'zmq', 're', 'mDNSEmbedded', 'pthread', 'rt']
 lPolyVox  = ['PolyVoxCore', 'PolyVoxUtil']
 lAngelScript = ['angelscript']
 lAll  = (lBullet +
          lAngelScript +
          lFlite + lNoise + lPolyVox +
          lSDL + lSDLimage + lSDLmixer + lSDLttf +
+         lUmundo +
          lGL + lOther)
 
 
@@ -62,8 +65,9 @@ gccWarningLevel = [
    '-Wredundant-decls', '-Wshadow',
    '-Wstrict-aliasing=2', '-Wunreachable-code',
    '-Wunused',
-   '-Wvariadic-macros', '-Wwrite-strings', '-pedantic',
-   '-pedantic-errors', '-Woverloaded-virtual',
+   '-Wvariadic-macros', '-Wwrite-strings',
+   # '-pedantic', '-pedantic-errors',
+   '-Woverloaded-virtual',
    '-Wswitch-enum', '-Werror'
    # # Clang unsupported flags.
    # '-fpermissive',
@@ -80,18 +84,33 @@ cppflags = ['-O0', '-g', '-gdwarf-2']
 #cppflags = ['-O3']
 cppflags.extend(['-fno-strict-aliasing',
                  '-std=c++11',
+                 '-DWIN32',
+                 '-DWIN32_LEAN_AND_MEAN',
                  '-D_REENTRANT',
                  '-Dmain=SDL_main',
+                 '-DZMQ_STATIC',
                  '-DGLM_FORCE_RADIANS'])
 cppflags.extend(['-isystem', pathBoost  + '/include',
                  '-isystem', pathCrossTools + '/include',
                  '-isystem', pathCrossTools + '/include/bullet',
+                 '-isystem', pathCrossTools + '/include/re',
                  '-isystem', 'external/',
                  '-isystem', pathGlm,
                  '-isystem', 'external/polyvox/library/PolyVoxCore/include',
                  '-isystem', 'external/angelscript/include',
                  '-isystem', 'external/angelscript/add_on',
-                 '-isystem', pathCxxTest])
+                 '-isystem', pathCxxTest,
+                 '-isystem', 'external/angelscript/include',
+                 '-isystem', 'external/angelscript/add_on',
+                 '-isystem', 'external/polyvox/library/PolyVoxCore/include',
+                 # '-isystem', 'external/umundo/src',
+                 # '-isystem', 'external/umundo/src/include_windows',
+                 '-isystem', 'external/umundo/mDNSResponder-333.10/mDNSCore',
+                 '-isystem', 'external/umundo/mDNSResponder-333.10/mDNSWindows',
+                 '-isystem', 'external/umundo/mDNSResponder-333.10/mDNSShared',
+                 # '-isystem', 'external/umundo/zeromq-4.1.0/include',
+                 # '-isystem', 'external/umundo/re-0.4.7/include'
+])
 cppflags.extend(gccWarningLevel)
 for macro in macroDefinitions:
    cppflags.append('-D' + macro)

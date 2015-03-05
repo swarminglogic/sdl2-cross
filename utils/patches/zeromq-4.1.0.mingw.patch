@@ -1,0 +1,13 @@
+diff --git a/zeromq-4.1.0/configure.ac b/zeromq-4.1.0/configure.ac
+index b9858cb..c375c34 100644
+--- a/zeromq-4.1.0/configure.ac
++++ b/zeromq-4.1.0/configure.ac
+@@ -291,7 +291,7 @@ case "${host_os}" in
+         libzmq_dso_visibility="no"
+ 
+         if test "x$enable_static" = "xyes"; then
+-            AC_MSG_ERROR([Building static libraries is not supported under MinGW32])
++           CPPFLAGS="-DZMQ_STATIC -DFD_SETSIZE=1024 $CPPFLAGS"
+         fi
+         ;;
+     *cygwin*)

@@ -67,10 +67,18 @@ say_done
 get_source zeromq-4.1.0 \
 "wget http://download.zeromq.org/zeromq-4.1.0-rc1.tar.gz"
 unpack "zeromq-4.1.0-rc1.tar.gz"
+if [ -e zeromq-4.1.0/.patched ] ; then
+    echo " - Already patched. ${YELLOW}Skipping${NORMAL}"
+else
+    echo "${TEAL} - patching ${NORMAL}"
+    patch -p1 < ~/gamedev/sdl2-cross/utils/patches/zeromq-4.1.0.mingw.patch
+    touch zeromq-4.1.0/.patched
+fi
 add_build_script "SCons" SConscript_zeromq "zeromq-4.1.0/SConscript"
 add_build_script "header file" zmq_platform_linux.hpp \
     "zeromq-4.1.0/include_linux/platform.hpp"
 add_build_script "Android.mk" Android_zmq.mk "zeromq-4.1.0/Android.mk"
+
 say_done
 
 
@@ -83,6 +91,7 @@ if [ -e re-0.4.7/.patched ] ; then
 else
     echo "${TEAL} - patching ${NORMAL}"
     patch -p1 < ../../utils/patches/re-0.4.7.android.patch
+    patch -p1 < ../../utils/patches/re-0.4.7.mingw.patch
     touch re-0.4.7/.patched
 fi
 add_build_script "SCons" SConscript_re "re-0.4.7/SConscript"
@@ -103,6 +112,7 @@ else
     patch -p0 < ../../utils/patches/mDNSResponder-333.10.umundo.patch
     patch -p1 < ../../utils/patches/mDNSResponder-333.10.reuseport.patch
     patch -p1 < ../../utils/patches/mDNSResponder-333.10.android.patch
+    patch -p1 < ../../utils/patches/mDNSResponder-333.10.mingw.patch
     touch ${mdir}/.patched
 fi
 add_build_script "SCons" SConscript_mDNSResponder "${mdir}/SConscript"

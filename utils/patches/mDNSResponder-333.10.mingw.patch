@@ -1,0 +1,95 @@
+diff --git a/mDNSResponder-333.10/mDNSShared/CommonServices.h b/mDNSResponder-333.10/mDNSShared/CommonServices.h
+index 1261f1d..6b85d40 100644
+--- a/mDNSResponder-333.10/mDNSShared/CommonServices.h
++++ b/mDNSResponder-333.10/mDNSShared/CommonServices.h
+@@ -240,12 +240,14 @@
+ 	
+ 		#pragma warning( disable:4127 )		// Disable "conditional expression is constant" warning for debug macros.
+ 		#pragma warning( disable:4706 )		// Disable "assignment within conditional expression" for Microsoft headers.
+-		
++
++	#elif( defined( __MINGW32__ ) )
++          #include	<stdint.h>
+ 	#endif
+ 
+ 	#include	<windows.h>
+ 	#include	<winsock2.h>
+-	#include	<Ws2tcpip.h>
++	#include	<ws2tcpip.h>
+ 	
+ 	#if( defined( _MSC_VER ) )
+ 		#pragma warning( default:4706 )
+@@ -456,8 +458,10 @@
+ 
+ #if( TARGET_LANGUAGE_C_LIKE )
+ 	#if( !defined(_SSIZE_T) && ( TARGET_OS_WIN32 || !defined( _BSD_SSIZE_T_DEFINED_ ) ) && !TARGET_OS_LINUX && !TARGET_OS_VXWORKS && !TARGET_OS_MAC)
++    #if( !defined( __MINGW32__ ) )
+ 		typedef int						ssize_t;
+ 	#endif
++	#endif
+ #endif
+ 
+ // sockaddr_storage is not supported on non-IPv6 machines so alias it to an IPv4-compatible structure.
+diff --git a/mDNSResponder-333.10/mDNSShared/dnssd_clientshim.c b/mDNSResponder-333.10/mDNSShared/dnssd_clientshim.c
+index 4dbf782..de1c08d 100644
+--- a/mDNSResponder-333.10/mDNSShared/dnssd_clientshim.c
++++ b/mDNSResponder-333.10/mDNSShared/dnssd_clientshim.c
+@@ -25,7 +25,7 @@
+ 
+ #include "dns_sd.h"				// Defines the interface to the client layer above
+ #include "mDNSEmbeddedAPI.h"		// The interface we're building on top of
+-#ifndef _MSC_VER
++#ifndef WIN32
+ #include <sys/socket.h>
+ #include <netinet/in.h>
+ #else
+diff --git a/mDNSResponder-333.10/mDNSWindows/SystemService/Service.c b/mDNSResponder-333.10/mDNSWindows/SystemService/Service.c
+index d175326..3cd1957 100644
+--- a/mDNSResponder-333.10/mDNSWindows/SystemService/Service.c
++++ b/mDNSResponder-333.10/mDNSWindows/SystemService/Service.c
+@@ -38,8 +38,6 @@
+ #include	"mDNSWin32.h"
+ #include	"mDNSDebug.h"
+ 
+-#include	"Firewall.h"
+-
+ #if( !TARGET_OS_WINDOWS_CE )
+ 	#include	<mswsock.h>
+ 	#include	<process.h>
+@@ -665,9 +663,6 @@ static OSStatus CheckFirewall()
+ 		err = translate_errno( size > 0, (OSStatus) GetLastError(), kPathErr );
+ 		require_noerr( err, exit );
+ 
+-		err = mDNSAddToFirewall(fullPath, kServiceFirewallName);
+-		require_noerr( err, exit );
+-
+ 		value = 1;
+ 		err = RegSetValueEx( key, kServiceManageFirewall, 0, REG_DWORD, (const LPBYTE) &value, sizeof( DWORD ) );
+ 		require_noerr( err, exit );
+diff --git a/mDNSResponder-333.10/mDNSWindows/mDNSWin32.c b/mDNSResponder-333.10/mDNSWindows/mDNSWin32.c
+index 9bdd769..e18a5c2 100755
+--- a/mDNSResponder-333.10/mDNSWindows/mDNSWin32.c
++++ b/mDNSResponder-333.10/mDNSWindows/mDNSWin32.c
+@@ -35,12 +35,11 @@
+ #include	"Poll.h"
+ #include	"CommonServices.h"
+ #include	"DebugServices.h"
+-#include	"Firewall.h"
+ #include	"RegNames.h"
+ #include	"Secret.h"
+ #include	<dns_sd.h>
+ 
+-#include	<Iphlpapi.h>
++#include	<iphlpapi.h>
+ #include	<mswsock.h>
+ #include	<process.h>
+ #include	<ntsecapi.h>
+@@ -4752,7 +4751,7 @@ CheckFileShares( mDNS * const m )
+ 		RegQueryValueEx( key, L"Advertise", NULL, NULL, (LPBYTE) &advertise, &dwSize );
+ 	}
+ 
+-	if ( advertise && mDNSIsFileAndPrintSharingEnabled( &retry ) )
++	if ( advertise )
+ 	{
+ 		dlog( kDebugLevelTrace, DEBUG_NAME "Sharing is enabled\n" );
+ 
