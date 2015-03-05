@@ -2,10 +2,11 @@
 
 SDL2, C++11, OpenGL 4.3, OpenGL ES 3, Android/Desktop Project.
 
-A WIP project to work to do game development targetting Android/Linux,
-with the intention to be easily extended to OSX, iOS, Win7.
+A WIP project for game development currently supporting Android/Linux/Windows,
+with the intention to be easily extended to OSX, iOS.
 
-This isn't a game engine (at least not in its current state), but serves as a good basis for doing cross-platform development.
+This isn't a game engine (at least not in its current state), but serves as a good basis for doing cross-platform development. It has support for cross-platform compilation of a large collection of libraries (see below). Development is done on linux, with all tools developed with that in mind.
+
 
 ### Implemented Features (summary):
 * Project initialization scripts for detecting required dependencies. [screenshot](https://raw.githubusercontent.com/swarminglogic/sdl2-cross/master/doc/initialize_project.png)
@@ -36,7 +37,6 @@ The framework relies on the following libraries
 | bullet     | `2.82-r2704`           | physics                                                 |
 | GLM        | `0.9.5.2`              | math library similar to GLSL (headers only)             |
 | boost      | `1.55`                 | boost (headers only)                                    |
-
 
 ### External Libraries (included):
 | Library    | Version                | Description                                             |
