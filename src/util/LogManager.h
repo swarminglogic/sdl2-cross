@@ -50,7 +50,8 @@ class LogManager
   LogLevel getStreamLogLevel() const;
   void setStreamLogLevel(LogLevel streamLogLevel);
   const std::string& getLogfileName() const;
-  void setLogfileName(std::string logfileName);
+  std::string getLogfilePath() const;
+  void setLogfileName(std::string logfileName, int id = 0);
 
   LogManager::ColorMode getStreamColorMode() const;
   void setStreamColorMode(LogManager::ColorMode streamColorMode);

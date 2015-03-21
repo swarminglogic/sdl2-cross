@@ -185,13 +185,24 @@ const std::string& LogManager::getLogfileName() const
 }
 
 
-void LogManager::setLogfileName(std::string logfileName)
+void LogManager::setLogfileName(std::string logfileName,
+                                int id)
 {
-  // If file already exists, remove it.
-  File logFile(logfileName, FileInfo::TYPE_WRITABLE);
-  if (logFile.exists() && fileLogLevel_ < LEVEL_NONE)
-    logFile.remove();
-  logfileName_ = logfileName;
+  std::string logfileNameUnique {logfileName};
+  if (id > 0)
+    logfileNameUnique += std::string(".") + std::to_string(id);
+
+  File logFile(logfileNameUnique, FileInfo::TYPE_WRITABLE);
+  if (logFile.exists() && fileLogLevel_ < LEVEL_NONE) {
+    setLogfileName(logfileName, ++id);
+  } else {
+    logfileName_ = logfileNameUnique;
+  }
+}
+
+std::string LogManager::getLogfilePath() const
+{
+  return FileUtil::prefixPath(logfileName_, FileInfo::TYPE_WRITABLE);
 }
 
 
