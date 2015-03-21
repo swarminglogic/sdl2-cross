@@ -1,0 +1,95 @@
+import os
+
+env = Environment(ENV = {'PATH' : os.environ['PATH'],
+                         'HOME' : os.environ['HOME'],
+                         'TERM' : 'xterm'},
+                  CXX='g++',
+                  tools=['default'], toolpath=[''])
+
+AddOption('--win64',
+          action='store_true',
+          help='cross-compiles for windows',
+          default=False)
+
+if GetOption('win64'):
+    env.Tool('crossmingw', toolpath = ['./utils/scripts/'])
+    vardir='build/win/utils'
+    libdir='lib/win/'
+    targetsuffix='.exe'
+    linkflags=('--static -Wl,--no-undefined ' +
+               '-static-libgcc -static-libstdc++')
+    pathSdl = os.environ["CROSS_TOOLS_DIR"]
+    otherlibs = ['winmm', 'imm32', 'ole32', 'oleaut32', 'gdi32', 'version']
+else:
+    vardir='build/linux/utils'
+    libdir='lib/linux/'
+    targetsuffix=''
+    linkflags=''
+    pathSdl = os.environ["SDL2_DIR"]
+    otherlibs = []
+
+VariantDir(vardir, 'utils')
+
+base ='#/src'
+target = '#/bin/wordgen' + targetsuffix
+
+gccWarningLevel = [
+   '-Wall', '-Wextra', '-Wcast-align', '-Wcast-qual',
+   '-fpermissive',
+   '-Wconversion', '-Wdisabled-optimization', #'-Weffc++',
+   '-Wfloat-equal', '-Wformat=2', '-Wimport', '-Winit-self',
+   '-Winline', '-Winvalid-pch', '-Wlong-long',
+   '-Wmissing-format-attribute', '-Wmissing-include-dirs',
+   '-Wmissing-noreturn', '-Wpacked', '-Wpointer-arith',
+   '-Wredundant-decls', '-Wshadow',# '-Wstack-protector',
+   '-Wstrict-aliasing=2', '-Wunreachable-code',
+   '-Wunsafe-loop-optimizations', '-Wunused',
+   '-Wvariadic-macros', '-Wwrite-strings', '-pedantic',
+   '-pedantic-errors', '-Woverloaded-virtual',
+   '-Wswitch-enum', # '-Werror'
+]
+
+pathBoost  = os.environ['BOOST_DIR'];
+
+# CPPFLAGS
+####################
+# cppflags = ['-O0', '-g', '-gdwarf-2']
+cppflags = ['-O3']
+cppflags.extend(['-fno-strict-aliasing',
+                 '-std=c++11'])
+cppflags.extend(gccWarningLevel)
+cppflags.extend(['-isystem', pathBoost + '/include'])
+
+sourcepaths = [
+    base,
+    '#external/angelscript/add_on',
+    '#external/angelscript/include',
+    pathSdl + '/include',
+    pathBoost + '/include'
+]
+
+libpaths = [ libdir,
+             pathSdl + '/lib',]
+#'swl-math', 'swl-util',
+libs = ['SDL2',
+        'noise', 'angelscript',
+        'pthread']
+libs.extend(otherlibs)
+
+cppMain = [Glob('utils/wordgen/wordgen.cpp') +
+           Glob('src/util/Asset*.cpp') +
+           Glob('src/util/File*.cpp') +
+           Glob('src/util/Clock.cpp') +
+           Glob('src/util/Exception.cpp') +
+           Glob('src/util/StringUtil.cpp') +
+           Glob('src/util/WordGenerator.cpp') +
+           Glob('src/util/WordGeneratorFactory.cpp') +
+           Glob('src/math/Random.cpp')]
+
+app = env.Program(target, cppMain,
+                  LIBS = libs,
+                  LINKFLAGS = linkflags,
+                  LIBPATH  = libpaths,
+                  CPPFLAGS = cppflags,
+                  CPPPATH  = sourcepaths);
+Default(app)

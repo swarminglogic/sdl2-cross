@@ -228,4 +228,5 @@ if [[ $utils ]]; then
     buildUtil simpletextpreprocess
     buildUtil obj2cobj
     buildUtil obj2info
+    buildUtil wordgen
 fi
