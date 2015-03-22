@@ -45,6 +45,9 @@ int main(int argc, char **argv)
     std::cerr << "Bad argument?" << std::endl;
   }
 
+
+  // Main program
+  Random::init();
   auto wg = WordGeneratorFactory::create(N, N_init);
   wg->addInputWords(file.read());
   wg->prepare();

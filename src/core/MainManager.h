@@ -58,6 +58,7 @@ class MainManager
   MainManager();
   void handleEvent(const SDL_Event& event);
 
+  void initRandom();
   void initLogger();
   void initSDL();
   void initSDLimg();

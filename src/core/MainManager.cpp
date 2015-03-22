@@ -15,6 +15,7 @@
 #include <graphics/SDL_image.h>
 #include <graphics/SDL_opengl.h>
 #include <graphics/SDL_ttf.h>
+#include <math/Random.h>
 #include <util/Assert.h>
 #include <util/CharMap.h>
 #include <util/Log.h>
@@ -47,6 +48,7 @@ MainManager::MainManager()
   fpsCounter_(30)
 {
   initLogger();
+  initRandom();
   initSDL();
   initSDLimg();
   initSDLttf();
@@ -217,6 +219,16 @@ void MainManager::handleEvent(const SDL_Event& event)
   } else if (event.type == SDL_QUIT) {
     isRunning_ = false;
   }
+}
+
+
+void MainManager::initRandom()
+{
+  log_.i("Initializing Randomizer");
+  Random::init();
+  std::stringstream ss;
+  Random::seed().param(std::ostream_iterator<int>(ss, " "));
+  log_.d() << "Randomizer seeded with: " << ss.str() << Log::end;
 }
 
 namespace {
