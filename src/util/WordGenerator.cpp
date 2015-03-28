@@ -17,13 +17,6 @@ WordGenerator<N>::WordGenerator(int N_init)
 
 
 template<int N>
-void WordGenerator<N>::addInputWords(const std::string& text, char dlim)
-{
-  addInputWords(StringUtil::split(StringUtil::trimc(text), dlim));
-}
-
-
-template<int N>
 void WordGenerator<N>::addInputWords(const std::vector<std::string>& words)
 {
   // Sanitize input list
@@ -183,15 +176,6 @@ void WordGenerator<N>::prepareInitKeyList()
   }
   initList_ = localInitList;
 }
-
-
-template<int N>
-int WordGenerator<N>::getN() const { return N; }
-
-
-template<int N>
-int WordGenerator<N>::getN_init() const { return N_init_ ; }
-
 
 
 template<int N>

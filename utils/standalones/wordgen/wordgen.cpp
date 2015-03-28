@@ -22,6 +22,8 @@ int main(int argc, char **argv)
               << "Usage: "
               << argv[0] << " WORDFILE N N_init #GEN" << std::endl;
     std::cerr << "" << std::endl;
+    std::cerr << "Max supported N is "
+              << WordGeneratorInterface::MAX_ORDER << std::endl;
     return EXIT_FAILURE;
   }
 
@@ -47,14 +49,21 @@ int main(int argc, char **argv)
   }
 
 
-  // Main program
+  // Create WordGenerator from factory
   Random::init();
   auto wg = WordGeneratorFactory::create(N, N_init);
-  wg->addInputWords(file.read());
+  if (!wg) {
+    std::cerr << "Failed to create WordGenerator object." << std::endl;
+    std::cerr << "Bad paramters?" << std::endl;
+    return EXIT_FAILURE;
+  }
+
+
+  wg->addInputWords(StringUtil::trimSplit(file.read()));
   wg->prepare();
 
-  std::cerr << "Debug: N      = " << wg->getN() << std::endl;
-  std::cerr << "Debug: N_init = " << wg->getN_init() << std::endl;
+  std::cerr << "Debug: N      = " << N << std::endl;
+  std::cerr << "Debug: N_init = " << N_init << std::endl;
   std::cerr << "Debug: #Gen   = " << wordToGen << std::endl;
   std::cerr << "----------------------------------------" << std::endl;
 
@@ -62,7 +71,7 @@ int main(int argc, char **argv)
   int count = 0;
 
   std::unordered_set<std::string> newWords;
-  while (count < wordToGen && tries < wordToGen * 1) {
+  while (count < wordToGen && tries < wordToGen * 10) {
     ++tries;
     std::string word = wg->generate();
     auto localListIt = newWords.find(word);

@@ -1,6 +1,7 @@
 #ifndef UTIL_TESTWORDGENERATOR_H
 #define UTIL_TESTWORDGENERATOR_H
 
+#include <util/StringUtil.h>
 #include <util/WordGenerator.h>
 #include <util/WordGeneratorInterface.h>
 
@@ -77,7 +78,7 @@ class TestWordGenerator : public CxxTest::TestSuite
   // FRIENDLY
   void testBasicInput() {
     WordGenerator<4> wg;
-    wg.addInputWords("fantastic");
+    wg.addInputWords({"fantastic"});
     wg.prepare();
 
     linearKeyTesting(wg, 'f', 5u,
@@ -89,7 +90,7 @@ class TestWordGenerator : public CxxTest::TestSuite
   // FRIENDLY
   void testBasicInput2() {
     WordGenerator<3> wg;
-    wg.addInputWords("fantastic");
+    wg.addInputWords({"fantastic"});
     wg.prepare();
 
     linearKeyTesting(wg, 'f', 6u,
@@ -101,7 +102,7 @@ class TestWordGenerator : public CxxTest::TestSuite
   // FRIENDLY
   void testBasicInput3() {
     WordGenerator<3> wg;
-    wg.addInputWords("croatia");
+    wg.addInputWords({"croatia"});
     wg.prepare();
 
     // c -> roa -> oat -> ati -> tia -> END
@@ -114,7 +115,7 @@ class TestWordGenerator : public CxxTest::TestSuite
   // FRIENDLY
   void testBasicInput4() {
     WordGenerator<4> wg;
-    wg.addInputWords("croatia");
+    wg.addInputWords({"croatia"});
     wg.prepare();
 
     // c -> roa -> oat -> ati -> tia -> END
@@ -128,7 +129,7 @@ class TestWordGenerator : public CxxTest::TestSuite
   // FRIENDLY
   void testBasicInput5() {
     WordGenerator<4> wg;
-    wg.addInputWords("fantasti");
+    wg.addInputWords({"fantasti"});
     wg.prepare();
 
     // f -> anta -> ntas -> tast -> asti -> END
@@ -143,7 +144,7 @@ class TestWordGenerator : public CxxTest::TestSuite
   // TEST FOR <4> CATON, C -> ATON -> #
   void testBasicInput6() {
     WordGenerator<4> wg;
-    wg.addInputWords("caton");
+    wg.addInputWords({"caton"});
     wg.prepare();
     linearKeyTesting(wg, 'c', 1, {"aton"});
     std::string word = wg.generate();
@@ -154,7 +155,7 @@ class TestWordGenerator : public CxxTest::TestSuite
   // ADD TEST FOR <4> CATONI,  C -> ATON -> TONI -> #
   void testBasicInput7() {
     WordGenerator<4> wg;
-    wg.addInputWords("catoni");
+    wg.addInputWords({"catoni"});
     wg.prepare();
     linearKeyTesting(wg, 'c', 2, {"aton", "toni"});
 
@@ -166,7 +167,7 @@ class TestWordGenerator : public CxxTest::TestSuite
   // ADD TEST FOR <4> CATO,  C -> ATO_ -> #
   void testShortWord() {
     WordGenerator<4> wg;
-    wg.addInputWords("cato");
+    wg.addInputWords({"cato"});
     wg.prepare();
     linearKeyTesting(wg, 'c', 1, {"ato "});
 
@@ -177,7 +178,7 @@ class TestWordGenerator : public CxxTest::TestSuite
   // FRIENDLY
   void testShortWord2() {
     WordGenerator<4> wg;
-    wg.addInputWords("cat");
+    wg.addInputWords({"cat"});
     wg.prepare();
     linearKeyTesting(wg, 'c', 1, {"at  "});
 
@@ -188,7 +189,7 @@ class TestWordGenerator : public CxxTest::TestSuite
   // FRIENDLY
   void testMediumInput1() {
     WordGenerator<2> wg;
-    wg.addInputWords("okeskena");
+    wg.addInputWords({"okeskena"});
     wg.prepare();
 
     // o -> ke -> es -> sk -> ke -> en -> na -> END
@@ -231,7 +232,7 @@ class TestWordGenerator : public CxxTest::TestSuite
     // KEYS: c -> ata -> tar -> ara -> rat -> ate -> tes -> #
     {  // N_INIT = N
       WordGenerator<3> wg;
-      wg.addInputWords("catarates");
+      wg.addInputWords({"catarates"});
       wg.prepare();
       linearKeyTesting(wg, 'c', 6,
                        {"ata", "tar", "ara", "rat", "ate", "tes"});
@@ -241,7 +242,7 @@ class TestWordGenerator : public CxxTest::TestSuite
 
     {  // N_INIT = 2 < N
     WordGenerator<3> wg(2);
-    wg.addInputWords("catarates");
+    wg.addInputWords({"catarates"});
     wg.prepare();
     // When preparing the initial key table
     // it now should extpand 'at', to all matches, which is 'ata', and 'ate'
@@ -261,7 +262,9 @@ class TestWordGenerator : public CxxTest::TestSuite
   // FRIENDLY
   void testSmallerInitKey2() {
     WordGenerator<3> wg(2);
-    wg.addInputWords("dink dino gnasher laska sandy snitter", ' ');
+    wg.addInputWords(
+        StringUtil::trimSplit("dink dino gnasher laska sandy snitter",
+                              ' '));
     wg.prepare();
 
     // N = 3 keys
@@ -309,7 +312,8 @@ class TestWordGenerator : public CxxTest::TestSuite
 
   void testIsInputWord() {
     WordGenerator<3> wg;
-    wg.addInputWords("CAT FISH potatoe", ' ');
+    wg.addInputWords(
+        StringUtil::trimSplit("CAT FISH potatoe", ' '));
 
     TS_ASSERT(wg.isInputWord("cat"));
     TS_ASSERT(wg.isInputWord("CAT"));
@@ -325,7 +329,7 @@ class TestWordGenerator : public CxxTest::TestSuite
   void testGenerate() {
     // Just adding a single word.
     WordGenerator<3> wg;
-    wg.addInputWords("fantastic", ' ');
+    wg.addInputWords({"fantastic"});
     wg.prepare();
     std::string word = wg.generate();
     TS_ASSERT_EQUALS(word, "fantastic");
@@ -337,19 +341,20 @@ class TestWordGenerator : public CxxTest::TestSuite
   {
     {
       WordGenerator<3> wg;
-      wg.addInputWords(R"(This
-  is
-a
-list
-of
-words)");
+      wg.addInputWords({"This",
+              "  is",
+              "a",
+              "list",
+              "of",
+              "words"});
       auto lst = wg.getInputWords();
       TS_ASSERT(true);
       TS_ASSERT_EQUALS(lst.size(), 3u);
     }
     {
       WordGenerator<2> wg;
-      wg.addInputWords("This is a list of words", ' ');
+      wg.addInputWords(
+          StringUtil::trimSplit("This is a list of words", ' '));
       auto lst = wg.getInputWords();
       TS_ASSERT(true);
       TS_ASSERT_EQUALS(lst.size(), 3u);
@@ -357,8 +362,7 @@ words)");
 
     {
       WordGenerator<3> wg;
-      wg.addInputWords("This is a\n"
-                       "list of words");
+      wg.addInputWords({"This is a", "list of words"});
       auto lst = wg.getInputWords();
       TS_ASSERT_EQUALS(lst.size(), 2u);
       TS_ASSERT(wg.isInputWord("list of words"));
@@ -367,7 +371,8 @@ words)");
 
     {
       WordGenerator<3> wg;
-      wg.addInputWords("CAT FISH potatoe", ' ');
+      wg.addInputWords(
+          StringUtil::trimSplit("CAT FISH potatoe", ' '));
       auto lst = wg.getInputWords();
       TS_ASSERT_EQUALS(lst.size(), 3u);
       TS_ASSERT(wg.isInputWord("cat"));
@@ -375,7 +380,9 @@ words)");
       TS_ASSERT(wg.isInputWord("potatoe"));
       TS_ASSERT_EQUALS(lst.size(), 3u);
 
-      wg.addInputWords("OX HEN", ' ');  // OX ignored for being too short.
+      // OX ignored for being too short.addInputWords
+      wg.addInputWords(
+          StringUtil::trimSplit("OX HEN", ' '));
       TS_ASSERT_EQUALS(wg.getInputWords().size(), 4u);
       TS_ASSERT(wg.isInputWord("cat"));
       TS_ASSERT(wg.isInputWord("fish"));
@@ -388,7 +395,8 @@ words)");
     WordGenerator<3> wg;
     // Words that have length < 3 should be ignored.
 
-    wg.addInputWords("CAT FISH POTATOE OX HEN", ' ');
+    wg.addInputWords(
+        StringUtil::trimSplit("CAT FISH POTATOE OX HEN", ' '));
     auto lst = wg.getInputWords();
     TS_ASSERT_EQUALS(lst.size(), 4u);
     TS_ASSERT(wg.isInputWord("cat"));
@@ -446,27 +454,23 @@ words)");
     }
   }
 
+  // Friendly
   void testConstructor()
   {
     WordGenerator<4> wg2;
-    TS_ASSERT_EQUALS(wg2.getN(), 4);
-    TS_ASSERT_EQUALS(wg2.getN_init(), 4);
+    TS_ASSERT_EQUALS(wg2.N_init_, 4);
 
     WordGenerator<2> wg2b(3);
-    TS_ASSERT_EQUALS(wg2b.getN(), 2);
-    TS_ASSERT_EQUALS(wg2b.getN_init(), 2);
+    TS_ASSERT_EQUALS(wg2b.N_init_, 2);
 
     WordGenerator<4> wg3(2);
-    TS_ASSERT_EQUALS(wg3.getN(), 4);
-    TS_ASSERT_EQUALS(wg3.getN_init(), 2);
+    TS_ASSERT_EQUALS(wg3.N_init_, 2);
 
     WordGenerator<WordGeneratorInterface::MAX_ORDER> wg4(0);
-    TS_ASSERT_EQUALS(wg4.getN(), WordGeneratorInterface::MAX_ORDER);
-    TS_ASSERT_EQUALS(wg4.getN_init(), WordGeneratorInterface::MAX_ORDER);
+    TS_ASSERT_EQUALS(wg4.N_init_, WordGeneratorInterface::MAX_ORDER);
 
     WordGenerator<WordGeneratorInterface::MAX_ORDER> wg5(5);
-    TS_ASSERT_EQUALS(wg5.getN(), WordGeneratorInterface::MAX_ORDER);
-    TS_ASSERT_EQUALS(wg5.getN_init(), 5);
+    TS_ASSERT_EQUALS(wg5.N_init_, 5);
   }
 };
 

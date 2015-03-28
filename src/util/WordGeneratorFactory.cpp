@@ -15,9 +15,7 @@
 
 WordGeneratorPtr WordGeneratorFactory::create(int N, int N_init)
 {
-  assert((N > 0) && (N <= WordGeneratorInterface::MAX_ORDER) &&
-         "N parameter is outside template class definiton");
-  WordGeneratorPtr local_ref;
+  WordGeneratorPtr local_ref = nullptr;
   BOOST_PP_SEQ_FOR_EACH_PRODUCT(MACRO, RANGE)
   return local_ref;
 }

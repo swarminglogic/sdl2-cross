@@ -58,7 +58,6 @@ class WordGenerator : public WordGeneratorInterface
   /**
    * Add words as initializer list.
    */
-  void addInputWords(const std::string& text, char dlim = '\n') override;
   void addInputWords(const std::vector<std::string>& words) override;
 
   /**
@@ -76,15 +75,8 @@ class WordGenerator : public WordGeneratorInterface
 
   /**
    * Checks if the word parameter already exists as a input word.
-   * Note: this function is many times faster after calling prepare()
    */
   bool isInputWord(const std::string& word) const override;
-
-  /**
-   * Properties of WordGenerator
-   */
-  int getN() const override;
-  int getN_init() const override;
 
   // Disable copy
   WordGenerator(const WordGenerator& c) = delete;
@@ -141,7 +133,6 @@ class WordGenerator : public WordGeneratorInterface
   std::string prepareInputWord(const std::string& word) const;
 
   // Sanitized copy of input values
-  // std::vector<std::string> inputWords_;
   std::set<std::string> inputWords_;
 
   // Unrolled markov chain entries.
@@ -154,16 +145,12 @@ class WordGenerator : public WordGeneratorInterface
 
   static const KeyNode END_NODE;
   const int N_init_;
-
-  // bool isReadyForIsInputWord_;
-  // std::unordered_set<std::string> inputWordsQuickLookup_;
 };
 
 // Defines a special end-node, that can be asigned to a KeyNode child,
 // which, if selected upon word-generation, signifies the end of the word.
 template<int N>
 const typename WordGenerator<N>::KeyNode
-WordGenerator<N>::END_NODE {
-  {WordGeneratorInterface::END_VALUE}, {}};
+WordGenerator<N>::END_NODE {{{}}, {}};
 
 #endif  // UTIL_WORDGENERATOR_H
