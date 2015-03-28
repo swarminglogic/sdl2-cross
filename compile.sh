@@ -205,22 +205,19 @@ fi
 
 function buildUtil {
     target=$1
-    echo -e "\nBuilding utils/$target"
+    echo -e "\nBuilding utils/standalones/$target"
     echo "--------------------"
-    sconsfile="utils/${target}/SConstruct"
+    sconsfile="utils/standalones/SConstruct"
+    winflag=""
+    if [[ $windows ]] ; then
+        winflag="--win64"
+    fi
+
     if [[ $cleanTarget ]] ; then
-        echo "Cleaning utils/${target} build ..."
-        scons -f $sconsfile -c;
+        echo "Cleaning utils/standalones/${target} build ..."
+        scons -f $sconsfile ${target} ${winflag} -c;
     else
-        nice scons -f $sconsfile $serial
-        # preliminary cleanup
-        if [[ -x ./bin/${target} ]] ; then
-            mv ./bin/${target}{,-tmp}
-        fi
-        scons -f $sconsfile -c
-        if [[ -x ./bin/${target}-tmp ]] ; then
-            mv ./bin/${target}{-tmp,}
-        fi
+        nice scons -f $sconsfile ${target} ${winflag} ${serial}
     fi
 }
 

@@ -1,0 +1,76 @@
+import os, SCons.Script, sys
+
+env = Environment(ENV = {'PATH' : os.environ['PATH'],
+                         'HOME' : os.environ['HOME'],
+                         'TERM' : 'xterm'},
+                  CXX='g++',
+                  tools=['default'], toolpath=[''])
+
+
+AddOption('--release',
+          action='store_true',
+          help='no debug, optimized compile',
+          default=False)
+
+AddOption('--win64',
+          action='store_true',
+          help='cross-compiles for windows',
+          default=False)
+
+
+Help("""
+Type: 'scons TARGET [OPTIONS]' -> compiles program
+
+TARGETS:
+      obj2cobj
+      obj2info
+      simpletextpreprocess
+      wordgen
+
+OPTIONS:
+      '--release'       -> compiles with -O2, and without debugging info
+      '--win64'         -> cross-compiles program for win64 platform.
+""")
+
+
+if GetOption('win64'):
+    env.Tool('crossmingw', toolpath = ['./utils/scripts/'])
+    vardir='#/build/win/utils/standalones'
+else:
+    vardir='#/build/linux/utils/standalones'
+
+
+
+if GetOption('release'):
+    env['cxx_debug'] = ['-O2', '-DNDEBUG']
+else:
+    env['cxx_debug'] = ['-O0', '-g', '-gdwarf-2']
+
+env['ldflags'] = ['--static']
+env['gccWarningFlags'] = [
+   '-Wall', '-Wextra', '-Wcast-align', '-Wcast-qual',
+   '-fpermissive',
+   '-Wconversion', '-Wdisabled-optimization',
+   '-Wfloat-equal', '-Wformat=2', '-Wimport', '-Winit-self',
+   '-Winline', '-Winvalid-pch', '-Wlong-long',
+   '-Wmissing-format-attribute', '-Wmissing-include-dirs',
+   '-Wmissing-noreturn', '-Wpacked', '-Wpointer-arith',
+   '-Wredundant-decls', '-Wshadow', '-Wstack-protector',
+   '-Wstrict-aliasing=2', '-Wunreachable-code',
+   '-Wunsafe-loop-optimizations', '-Wunused',
+   '-Wvariadic-macros', '-Wwrite-strings', '-pedantic',
+   '-pedantic-errors', '-Woverloaded-virtual',
+   '-Wswitch-enum'
+]
+
+
+for target in BUILD_TARGETS:
+    if (target == "obj2cobj"
+        or target == "obj2info"
+        or target == "simpletextpreprocess"
+        or target == "wordgen"):
+        env.VariantDir(vardir + '/' + target, './utils/standalones/' + target)
+        env.SConscript(vardir + '/' + target + '/SConscript', {'env': env})
+    else:
+        print "ERROR, invalid target: " + target
+

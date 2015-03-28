@@ -1,0 +1,64 @@
+import os
+
+Import('env')
+
+target = '#/bin/wordgen' + env['PROGSUFFIX']
+env.Alias('wordgen', target)
+
+if GetOption('win64'):
+    libdir='#/lib/win/'
+    pathSdl = os.environ["CROSS_TOOLS_DIR"]
+    otherlibs = ['winmm', 'imm32', 'ole32', 'oleaut32', 'gdi32', 'version']
+else:
+    vardir='build/linux/utils'
+    libdir='#/lib/linux/'
+    pathSdl = os.environ["SDL2_DIR"]
+    otherlibs = []
+
+
+pathBoost  = os.environ['BOOST_DIR'];
+cppflags = env['cxx_debug']
+cppflags.extend(['-fno-strict-aliasing',
+                 '-funsafe-loop-optimizations',
+                 '-std=c++11'])
+gccWarningFlags=env['gccWarningFlags']
+gccWarningFlags.remove('-Wstack-protector');
+cppflags.extend(env['gccWarningFlags'])
+cppflags.extend(['-isystem', pathBoost + '/include'])
+
+
+sourcepaths = [
+    '#/src',
+    '#external/angelscript/add_on',
+    '#external/angelscript/include',
+    pathSdl + '/include',
+    pathBoost + '/include'
+]
+
+ldflags = env['ldflags']
+
+libpaths = [ libdir,
+             pathSdl + '/lib',]
+
+libs = ['SDL2',
+        'noise', 'angelscript',
+        'pthread']
+libs.extend(otherlibs)
+
+cppMain = [Glob('wordgen.cpp') +
+           Glob('#/src/util/Asset*.cpp') +
+           Glob('#/src/util/File*.cpp') +
+           Glob('#/src/util/Clock.cpp') +
+           Glob('#/src/util/Exception.cpp') +
+           Glob('#/src/util/StringUtil.cpp') +
+           Glob('#/src/util/WordGenerator.cpp') +
+           Glob('#/src/util/WordGeneratorFactory.cpp') +
+           Glob('#/src/math/Random.cpp')]
+
+wordgen = env.Program(target, cppMain,
+                      LIBS = libs,
+                      LINKFLAGS = ldflags,
+                      LIBPATH  = libpaths,
+                      CPPFLAGS = cppflags,
+                      CPPPATH  = sourcepaths);
+Default(wordgen)

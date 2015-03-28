@@ -1,0 +1,32 @@
+import os
+
+Import('env')
+
+target = '#/bin/obj2info' + env['PROGSUFFIX']
+env.Alias('obj2info', target)
+
+pathBoost  = os.environ['BOOST_DIR'];
+cppflags = env['cxx_debug']
+cppflags.extend(['-fno-strict-aliasing',
+                 '-std=c++11'])
+cppflags.extend(env['gccWarningFlags'])
+cppflags.extend(['-isystem', pathBoost + '/include'])
+
+sourcepaths = ['#/src']
+
+ldflags = env['ldflags']
+
+libpaths = []
+libs = []
+cppMain = [Glob('obj2info.cpp') +
+           Glob('#/src/util/CObjUtil.cpp') +
+           Glob('#/src/util/StringUtil.cpp') +
+           Glob('#/src/extern/tiny_obj_loader.cpp')]
+
+obj2info = env.Program(target, cppMain,
+                       LIBS = libs,
+                       LINKFLAGS = ldflags,
+                       LIBPATH  = libpaths,
+                       CXXFLAGS = cppflags,
+                       CPPPATH  = sourcepaths);
+Default(obj2info)
