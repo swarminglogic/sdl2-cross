@@ -23,6 +23,8 @@ class StringUtil
   static std::vector<std::string> split(const std::string &text,
                                         char delimiter);
 
+  static std::vector<std::string> trimSplit(const std::string &text,
+                                            char delimiter = '\n');
 
   /**
    * Extracts last #length chars from #text

@@ -5,7 +5,7 @@
 #include <boost/algorithm/string.hpp>
 
 
-typedef std::vector<std::string> StringVector;
+using StringVector = std::vector<std::string>;
 
 void StringUtil::split(const std::string &text,
                        StringVector& elements,
@@ -23,8 +23,24 @@ StringVector StringUtil::split(const std::string &text,
 {
   StringVector elements;
   split(text, elements, delimiter);
-  return elements;
+  return std::move(elements);
 }
+
+
+StringVector StringUtil::trimSplit(const std::string &text,
+                                   char delimiter)
+{
+  StringVector elements;
+  std::stringstream ss(text);
+  std::string token;
+  while (std::getline(ss, token, delimiter)) {
+    trim(token);
+    if (!token.empty())
+      elements.push_back(token);
+  }
+  return std::move(elements);
+}
+
 
 std::string StringUtil::suffix(const std::string& text, int length)
 {

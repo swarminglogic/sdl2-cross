@@ -27,6 +27,32 @@ class TestStringUtil : public CxxTest::TestSuite
     TS_ASSERT_EQUALS(res[1], "   sweet world!");
   }
 
+
+  void testTrimSplit()
+  {
+    std::string txt {R"(Hello
+  my
+ sweet
+world!   )"};
+    std::vector<std::string> res = StringUtil::trimSplit(txt);
+    TS_ASSERT(!res.empty());
+    TS_ASSERT_EQUALS(res.size(), 4);
+    TS_ASSERT_EQUALS(res[0], "Hello");
+    TS_ASSERT_EQUALS(res[1], "my");
+    TS_ASSERT_EQUALS(res[2], "sweet");
+    TS_ASSERT_EQUALS(res[3], "world!");
+
+    std::string txt2 {"Hello   my   sweet  world!   "};
+    std::vector<std::string> res2 = StringUtil::trimSplit(txt2, ' ');
+    TS_ASSERT(!res2.empty());
+    TS_ASSERT_EQUALS(res2.size(), 4);
+    TS_ASSERT_EQUALS(res2[0], "Hello");
+    TS_ASSERT_EQUALS(res2[1], "my");
+    TS_ASSERT_EQUALS(res2[2], "sweet");
+    TS_ASSERT_EQUALS(res2[3], "world!");
+  }
+
+
   void testTrim()
   {
     std::string txt {"   Hello world!   "};
