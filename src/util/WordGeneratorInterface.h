@@ -29,6 +29,7 @@ class WordGeneratorInterface
   virtual ~WordGeneratorInterface(){}
 
   static const int MAX_ORDER = 6;
+  static const char END_VALUE = '#';
 };
 
 using WordGeneratorPtr = std::unique_ptr<WordGeneratorInterface>;

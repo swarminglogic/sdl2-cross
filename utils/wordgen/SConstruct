@@ -54,7 +54,7 @@ pathBoost  = os.environ['BOOST_DIR'];
 # CPPFLAGS
 ####################
 # cppflags = ['-O0', '-g', '-gdwarf-2']
-cppflags = ['-O3']
+cppflags = ['-O3', '-g', '-gdwarf-2']
 cppflags.extend(['-fno-strict-aliasing',
                  '-std=c++11'])
 cppflags.extend(gccWarningLevel)
@@ -84,6 +84,7 @@ cppMain = [Glob('utils/wordgen/wordgen.cpp') +
            Glob('src/util/StringUtil.cpp') +
            Glob('src/util/WordGenerator.cpp') +
            Glob('src/util/WordGeneratorFactory.cpp') +
+           Glob('src/util/WordGeneratorInterface.cpp') +
            Glob('src/math/Random.cpp')]
 
 app = env.Program(target, cppMain,

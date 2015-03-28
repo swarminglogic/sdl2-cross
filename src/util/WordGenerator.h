@@ -7,6 +7,10 @@
 #include <utility>
 #include <vector>
 
+#include <boost/functional/hash.hpp>
+
+#include <unordered_map>
+#include <unordered_set>
 #include <util/UnitTestUtil.h>
 #include <util/WordGeneratorInterface.h>
 
@@ -16,8 +20,6 @@
  *
  * Markov Chain Random Word Generation tool.
  *
- * Does not words containing spaces
- *
  * Takes a list of words as input, creates a likelihood table with
  * "what is the prability that the letter is X, given that previous N letters
  * were [n_{i-1}, n_{i-2}, ..., n_{i-N}]
@@ -26,9 +28,14 @@
  * The nodes are character N-gram.
  *
  * To allow more variability, a shallower depth can be used for the
- * initalization. This is called N_init, and follows 1 <= N_init <= N
+ * initalization. This is called N_init.  1 <= N_init <= N
  *
  * Valid N in range [1, .., WordGeneratorInterface::MAX_ORDER]
+ *
+ * Complexity:
+ * Creating the markov chain is O(k lg k), where k is the number of input words.
+ * Generating a new word is considered O(1) (the average input
+ * word length is considered to be constant).
  *
  * @author SwarmingLogic
  */
@@ -62,11 +69,14 @@ class WordGenerator : public WordGeneratorInterface
 
   /**
    * Generates a word. It has no guarantee of being unique
+   * Choses a random starting node, and keeps selecting a random child,
+   * (building up the word), until it encounters END_NODE
    */
   std::string generate() const override;
 
   /**
    * Checks if the word parameter already exists as a input word.
+   * Note: this function is many times faster after calling prepare()
    */
   bool isInputWord(const std::string& word) const override;
 
@@ -82,24 +92,78 @@ class WordGenerator : public WordGeneratorInterface
 
 
  private:
-  using ListKey = std::array<char, N>;
-  using ListValue = std::vector<char>;
+  // The NGRAM in the markov chain nodes
+  using NGramKey = std::array<char, N>;
 
+  // A graph node, representing the markov chain model
+  struct KeyNode {
+    NGramKey key;
+    std::vector<KeyNode*> children;
+  };
+
+  /**
+   * Processes all input words, and generates the list of NGramKeys
+   */
   void prepareLookupTable();
-  void prepareInitKeyList();
-  void insertWordIntoLookupTable(const std::string& word);
-  ListValue& getEntry(const ListKey& key);
-  static bool isSubkey(const ListKey& sub, const ListKey& key);
-  const std::vector<std::string>& getInputWords() const;
 
-  static const char END_VALUE;
-  std::vector<std::string> inputWords_;
-  std::map<ListKey, ListValue> entries_;
-  std::vector<std::pair<char, ListKey>> initList_;
+  /**
+   * For the case of N_init < N, this function creates the initial starting
+   * array (all possible starting points), based on a M-gram, where M < N, which
+   * are then expanded to all existing, and matching N-grams.
+   */
+  void prepareInitKeyList();
+
+
+  /**
+   * A type of factory creation method. It checks to see if a NGram has
+   * an existing node. If so, it returns this node, otherwise creates and
+   * initializes a new one, before returning it.
+   */
+  KeyNode& getEntry(const NGramKey& key);
+  KeyNode& getEntry(const std::string& word, size_t start);
+
+
+  /**
+   * Helper function to extract N characters from a string,
+   * at specified start index, and return this as an NGram.
+   */
+  static NGramKey createNGram(const std::string& word, size_t start);
+
+  /**
+   * Helper function to determine if an NGram is a prefix subkey of another
+   * NGram. Spaces are used for the un-set values in the subkey.
+   *
+   * E.g. {'foo   '} is a subkey of {'foobar'}, while {'fooqux'} is not.
+   */
+  static bool isSubkey(const NGramKey& sub, const NGramKey& key);
+
+  const std::set<std::string>& getInputWords() const;
+  std::string prepareInputWord(const std::string& word) const;
+
+  // Sanitized copy of input values
+  // std::vector<std::string> inputWords_;
+  std::set<std::string> inputWords_;
+
+  // Unrolled markov chain entries.
+  // This serves as the memory management container for the KeyNodes
+  std::unordered_map<NGramKey, KeyNode,
+                     boost::hash<NGramKey>> keyNodes_;
+
+  // Entry point for the word generator.
+  std::vector<std::pair<char, KeyNode*> > initList_;
+
+  static const KeyNode END_NODE;
   const int N_init_;
+
+  // bool isReadyForIsInputWord_;
+  // std::unordered_set<std::string> inputWordsQuickLookup_;
 };
 
+// Defines a special end-node, that can be asigned to a KeyNode child,
+// which, if selected upon word-generation, signifies the end of the word.
 template<int N>
-const char WordGenerator<N>::END_VALUE = '#';
+const typename WordGenerator<N>::KeyNode
+WordGenerator<N>::END_NODE {
+  {WordGeneratorInterface::END_VALUE}, {}};
 
 #endif  // UTIL_WORDGENERATOR_H

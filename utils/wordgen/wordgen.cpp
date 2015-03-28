@@ -6,6 +6,7 @@
 
 #include <boost/algorithm/clamp.hpp>
 
+#include <unordered_set>
 #include <math/MathUtil.h>
 #include <math/Random.h>
 #include <util/File.h>
@@ -59,11 +60,14 @@ int main(int argc, char **argv)
 
   int tries = 0;
   int count = 0;
-  while (count < wordToGen && tries < wordToGen * 10) {
+
+  std::unordered_set<std::string> newWords;
+  while (count < wordToGen && tries < wordToGen * 1) {
     ++tries;
     std::string word = wg->generate();
-    if (!wg->isInputWord(word)) {
-      wg->addInputWords(word);
+    auto localListIt = newWords.find(word);
+    if (!wg->isInputWord(word) && (localListIt == newWords.end())) {
+      newWords.insert(word);
       word[0] = static_cast<char>(std::toupper(word[0]));
       std::cout << word << std::endl;
       ++count;
