@@ -466,10 +466,10 @@ class TestWordGenerator : public CxxTest::TestSuite
     WordGenerator<4> wg3(2);
     TS_ASSERT_EQUALS(wg3.N_init_, 2);
 
-    WordGenerator<WordGeneratorInterface::MAX_ORDER> wg4(0);
-    TS_ASSERT_EQUALS(wg4.N_init_, WordGeneratorInterface::MAX_ORDER);
+    WordGenerator<1337> wg4(0);
+    TS_ASSERT_EQUALS(wg4.N_init_, 1337);
 
-    WordGenerator<WordGeneratorInterface::MAX_ORDER> wg5(5);
+    WordGenerator<1337> wg5(5);
     TS_ASSERT_EQUALS(wg5.N_init_, 5);
   }
 };

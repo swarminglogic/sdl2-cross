@@ -6,6 +6,8 @@
 #include <util/WordGenerator.h>
 
 
+// Note: Extending this range increases compilation time!
+
 #define RANGE ((1)(2)(3)(4)(5)(6))
 #define MACRO(r, p)                   \
     if (BOOST_PP_SEQ_ELEM(0, p) == N) \
@@ -20,5 +22,9 @@ WordGeneratorPtr WordGeneratorFactory::create(int N, int N_init)
   return local_ref;
 }
 
+
 #undef MACRO
 #undef RANGE
+
+
+const int WordGeneratorFactory::MAX_ORDER;

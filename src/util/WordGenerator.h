@@ -153,4 +153,8 @@ template<int N>
 const typename WordGenerator<N>::KeyNode
 WordGenerator<N>::END_NODE {{{}}, {}};
 
+
+// Templetized type needs definition in header
+#include <util/WordGenerator.tpp>
+
 #endif  // UTIL_WORDGENERATOR_H

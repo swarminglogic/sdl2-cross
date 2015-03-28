@@ -24,8 +24,6 @@ class WordGeneratorInterface
   virtual std::string generate() const = 0;
   virtual bool isInputWord(const std::string& word) const = 0;
   virtual ~WordGeneratorInterface(){}
-
-  static const int MAX_ORDER = 6;
 };
 
 using WordGeneratorPtr = std::unique_ptr<WordGeneratorInterface>;

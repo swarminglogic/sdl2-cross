@@ -23,6 +23,8 @@ class WordGeneratorFactory
    */
   static WordGeneratorPtr create(int N, int N_init);
 
+  static const int MAX_ORDER = 6;
+
   // TODO swarminglogic, 2015-03-21:
   // /**
   //  * Uses a provided input list and generates a prepared word generator list

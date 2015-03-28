@@ -23,7 +23,7 @@ int main(int argc, char **argv)
               << argv[0] << " WORDFILE N N_init #GEN" << std::endl;
     std::cerr << "" << std::endl;
     std::cerr << "Max supported N is "
-              << WordGeneratorInterface::MAX_ORDER << std::endl;
+              << WordGeneratorFactory::MAX_ORDER << std::endl;
     return EXIT_FAILURE;
   }
 
@@ -41,7 +41,7 @@ int main(int argc, char **argv)
   int wordToGen = 0;
   try {
     N = boost::algorithm::clamp(static_cast<int>(std::atol(argv[2])),
-                                1, WordGeneratorInterface::MAX_ORDER);
+                                1, WordGeneratorFactory::MAX_ORDER);
     N_init = static_cast<int>(std::atol(argv[3]));
     wordToGen = static_cast<int>(std::atol(argv[4]));
   } catch (...) {

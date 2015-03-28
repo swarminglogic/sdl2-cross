@@ -32,14 +32,26 @@ class TestWordGeneratorFactory : public CxxTest::TestSuite
     TS_ASSERT_EQUALS(wgc2->N_init_, 3);
 
     auto wg3 = WordGeneratorFactory::create(
-        WordGeneratorInterface::MAX_ORDER, 5);
+        WordGeneratorFactory::MAX_ORDER, 5);
     auto wgc3 = dynamic_cast<
-      WordGenerator<WordGeneratorInterface::MAX_ORDER>*>(wg3.get());
+      WordGenerator<WordGeneratorFactory::MAX_ORDER>*>(wg3.get());
     TS_ASSERT(wgc3);
     TS_ASSERT_EQUALS(wgc3->N_init_, 5);
 
     auto wg4 = WordGeneratorFactory::create(-1, 4);
     TS_ASSERT(!wg4);
+
+    auto wg5 =
+        WordGeneratorFactory::create(WordGeneratorFactory::MAX_ORDER + 1, 0);
+    TS_ASSERT(!wg5);
+
+    auto wg6 =
+        WordGeneratorFactory::create(WordGeneratorFactory::MAX_ORDER - 1, 0);
+    TS_ASSERT(wg6);
+    auto wgc6 = dynamic_cast<
+      WordGenerator<WordGeneratorFactory::MAX_ORDER - 1>*>(wg6.get());
+    TS_ASSERT(wgc6);
+    TS_ASSERT_EQUALS(wgc6->N_init_, WordGeneratorFactory::MAX_ORDER - 1);
   }
 };
 
