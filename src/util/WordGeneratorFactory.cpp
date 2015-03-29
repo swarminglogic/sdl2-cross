@@ -12,7 +12,7 @@
 #define MACRO(r, p)                   \
     if (BOOST_PP_SEQ_ELEM(0, p) == N) \
       local_ref.reset(                \
-        new WordGenerator             \
+        new WordGenerator       \
            <BOOST_PP_TUPLE_REM_CTOR(1, BOOST_PP_SEQ_TO_TUPLE(p))>(N_init));
 
 WordGeneratorPtr WordGeneratorFactory::create(int N, int N_init)

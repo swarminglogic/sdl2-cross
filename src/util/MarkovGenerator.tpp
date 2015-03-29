@@ -1,4 +1,4 @@
-#include <util/WordGenerator.h>
+#include <util/MarkovGenerator.h>
 
 #include <algorithm>
 
@@ -8,94 +8,77 @@
 #include <util/StringUtil.h>
 
 
-template<int N>
-WordGenerator<N>::WordGenerator(int N_init)
+template<int N, typename T>
+MarkovGenerator<N, T>::MarkovGenerator(int N_init)
     : N_init_((N < N_init || N_init <= 0) ? N : N_init)
 {
   (void)N_init;
 }
 
 
-template<int N>
-void WordGenerator<N>::addInputWords(const std::vector<std::string>& words)
+template<int N, typename T>
+void MarkovGenerator<N, T>::addInputData(
+    const std::vector<std::vector<T> >& words)
 {
   // Sanitize input list
-  for (auto& word : words) {
-    std::string local = prepareInputWord(word);
-
-    if (static_cast<int>(local.size()) > std::max(N - 2, 2))
-      inputWords_.insert(local);
+  for (const auto& word : words) {
+    if (static_cast<int>(word.size()) > std::max(N - 2, 2))
+      inputData_.insert(word);
   }
 }
 
 
-template<int N>
-void WordGenerator<N>::prepare()
+template<int N, typename T>
+void MarkovGenerator<N, T>::prepare()
 {
   prepareLookupTable();
   prepareInitKeyList();
 }
 
 
-template<int N>
-std::string WordGenerator<N>::generate() const
+template<int N, typename T>
+std::vector<T> MarkovGenerator<N, T>::generate() const
 {
   if (initList_.empty())
-    return "";
+    return std::vector<T>{};
 
-  std::string word("");
+  std::vector<T> word;
   // Get start key
   auto& init = MiscUtil::getRandomElement(initList_);
 
-  word += init.first;
-  word += init.second->key[0];
+  word.push_back(init.first);
+  word.push_back(init.second->key[0]);
 
   KeyNode* currentNode = init.second;
   KeyNode* nextNode = MiscUtil::getRandomElement(init.second->children);
 
   while (nextNode != &END_NODE) {
-    word += nextNode->key[0];
+    word.push_back(nextNode->key[0]);
     currentNode = nextNode;
     nextNode = MiscUtil::getRandomElement(currentNode->children);
   }
   assert(nextNode == &END_NODE);
-  if (N > 1)
-    word.append(&currentNode->key[1], N - 1);
+  if (N > 1) {
+    word.insert(word.end(),
+                currentNode->key.begin() + 1,
+                currentNode->key.begin() + N);
+  }
 
-  StringUtil::rtrim(word);
+  rtrim(word);
   return word;
 }
 
 
-template<int N>
-bool WordGenerator<N>::isInputWord(const std::string& word) const
+template<int N, typename T>
+bool MarkovGenerator<N, T>::isInputData(const std::vector<T>& word) const
 {
-  const std::string local = prepareInputWord(word);
-  return inputWords_.find(local) != inputWords_.end();
+  return inputData_.find(word) != inputData_.end();
 }
 
 
-template<int N>
-std::string WordGenerator<N>::prepareInputWord(const std::string& word) const
-{
-  std::string local = word;
-  StringUtil::trim(local);
-  boost::algorithm::to_lower(local);
-  return std::move(local);
-}
-
-
-template<int N>
-const std::set<std::string>& WordGenerator<N>::getInputWords() const
-{
-  (void)inputWords_;
-  return inputWords_;
-}
-
-
-template<int N>
-void WordGenerator<N>::prepareLookupTable() {
-  for (const auto& word : inputWords_) {
+template<int N, typename T>
+void MarkovGenerator<N, T>::prepareLookupTable() {
+  for (const auto& word : inputData_) {
     // For each word, first, get ngram key
     KeyNode* currentNode = &getEntry(createNGram(word, 1));
     initList_.push_back(std::make_pair(word[0], currentNode));
@@ -111,16 +94,16 @@ void WordGenerator<N>::prepareLookupTable() {
 }
 
 
-template<int N>
-void WordGenerator<N>::prepareInitKeyList()
+template<int N, typename T>
+void MarkovGenerator<N, T>::prepareInitKeyList()
 {
   if (N_init_ == N)
     return;
 
-  std::vector<std::pair<NGramKey, char> > initPrefixList;
-  for (const auto& w : inputWords_) {
+  std::vector<std::pair<NGramKey, T> > initPrefixList;
+  for (const auto& w : inputData_) {
     NGramKey key;
-    key.fill(' ');
+    key.fill(T{});
     for (int i = 1 ; i < N_init_ + 1 ; ++i)
       key[i-1] = w[i];
 
@@ -133,7 +116,7 @@ void WordGenerator<N>::prepareInitKeyList()
   initPrefixList.erase(it, initPrefixList.end());
 
   std::map<NGramKey, KeyNode> entries(keyNodes_.begin(), keyNodes_.end());
-  std::vector<std::pair<char, KeyNode*> > localInitList;
+  std::vector<std::pair<T, KeyNode*> > localInitList;
 
   std::vector<NGramKey> expandedPrefixes;
   NGramKey lastPrefixKey;
@@ -178,9 +161,9 @@ void WordGenerator<N>::prepareInitKeyList()
 }
 
 
-template<int N>
-typename WordGenerator<N>::KeyNode&
-WordGenerator<N>::getEntry(const NGramKey& key)
+template<int N, typename T>
+typename MarkovGenerator<N, T>::KeyNode&
+MarkovGenerator<N, T>::getEntry(const NGramKey& key)
 {
   auto it = keyNodes_.find(key);
   if ( it == keyNodes_.end() ) {
@@ -192,45 +175,40 @@ WordGenerator<N>::getEntry(const NGramKey& key)
   }
 }
 
-template<int N>
-typename WordGenerator<N>::KeyNode&
-WordGenerator<N>::getEntry(const std::string& word, size_t start)
+template<int N, typename T>
+typename MarkovGenerator<N, T>::KeyNode&
+MarkovGenerator<N, T>::getEntry(const std::vector<T>& word, size_t start)
 {
   return getEntry(createNGram(word, start));
 }
 
 
-template<int N>
-bool WordGenerator<N>::isSubkey(const NGramKey& sub, const NGramKey& key)
+template<int N, typename T>
+bool MarkovGenerator<N, T>::isSubkey(const NGramKey& sub, const NGramKey& key)
 {
   for (size_t i = 0 ; i < key.size() ; ++i)
-    if ((sub[i] != key[i]) && (sub[i] != ' '))
+    if ((sub[i] != key[i]) && (sub[i] != T{}))
       return false;
   return true;
 }
 
 
-template<int N>
-typename WordGenerator<N>::NGramKey
-WordGenerator<N>::createNGram(const std::string& word, size_t start)
+template<int N, typename T>
+void MarkovGenerator<N, T>::rtrim(std::vector<T>& word) {
+  while (!word.empty() && *--word.cend() == T{})
+    word.pop_back();
+}
+
+
+template<int N, typename T>
+typename MarkovGenerator<N, T>::NGramKey
+MarkovGenerator<N, T>::createNGram(const std::vector<T>& word,
+                                   size_t start)
 {
   NGramKey key;
-  key.fill(' ');
+  key.fill(T{});
   std::copy(word.begin() + start,
             std::min(word.begin() + start + N, word.end()),
             key.begin());
   return std::move(key);
 }
-
-
-/**
- * We instantiate the template for the valid range of integers.  This isn't
- * particularly pretty, but the increased executable size is negligeble. And it
- * allows a separated .cpp file with implementation.
- */
-template class WordGenerator<1>;
-template class WordGenerator<2>;
-template class WordGenerator<3>;
-template class WordGenerator<4>;
-template class WordGenerator<5>;
-template class WordGenerator<6>;
