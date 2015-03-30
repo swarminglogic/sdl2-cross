@@ -36,12 +36,13 @@ class Random
     return dist(device_);
   }
 
-  static void seed(const std::seed_seq&  s) {
+  static void seed(const std::vector<size_t>&  s) {
     seed_ = s;
-    device_.seed(seed_);
+    std::seed_seq tmp(seed_.begin(), seed_.end());
+    device_.seed(tmp);
   }
 
-  static const std::seed_seq& seed() {
+  static const std::vector<size_t>& seed() {
     return seed_;
   }
 
@@ -59,7 +60,7 @@ class Random
 
   static std::mt19937 device_;
   static std::uniform_real_distribution<float> dist_;
-  static std::seed_seq seed_;
+  static std::vector<size_t> seed_;
 
   // NonCopyable
   Random(const Random& c);

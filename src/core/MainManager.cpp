@@ -226,9 +226,13 @@ void MainManager::initRandom()
 {
   log_.i("Initializing Randomizer");
   Random::init();
-  std::stringstream ss;
-  Random::seed().param(std::ostream_iterator<int>(ss, " "));
-  log_.d() << "Randomizer seeded with: " << ss.str() << Log::end;
+  const auto& seed = Random::seed();
+  log_.d() << "Randomizer seeded with: ";
+  if (!seed.empty())
+    log_ << seed[0];
+  for (size_t i = 1 ; i < seed.size() ; ++i)
+    log_ << " " << seed[i];
+  log_ << Log::end;
 }
 
 namespace {
