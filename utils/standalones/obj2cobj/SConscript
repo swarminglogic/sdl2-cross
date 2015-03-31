@@ -2,19 +2,16 @@ import os
 
 Import('env')
 
-target = '#/bin/obj2cobj' + env['PROGSUFFIX']
+target =  env['base_exec_dir'] + '/obj2cobj' + env['PROGSUFFIX']
 env.Alias('obj2cobj', target)
 
 pathBoost  = os.environ['BOOST_DIR'];
-cppflags = env['cxx_debug']
-cppflags.extend(['-fno-strict-aliasing',
-                 '-std=c++11'])
+cppflags = ['-fno-strict-aliasing',
+            '-std=c++11']
 cppflags.extend(env['gccWarningFlags'])
 cppflags.extend(['-isystem', pathBoost + '/include'])
 
 sourcepaths = ['#/src']
-
-ldflags = env['ldflags']
 
 libpaths = []
 libs = []
@@ -25,7 +22,6 @@ cppMain = [Glob('obj2cobj.cpp') +
 
 obj2cobj = env.Program(target, cppMain,
                        LIBS = libs,
-                       LINKFLAGS = ldflags,
                        LIBPATH  = libpaths,
                        CXXFLAGS = cppflags,
                        CPPPATH  = sourcepaths);

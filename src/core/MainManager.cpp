@@ -1,5 +1,6 @@
 #include <core/MainManager.h>
 
+#include <iostream>
 #include <sstream>
 
 #include <audio/AudioPlayback.h>

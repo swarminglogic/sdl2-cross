@@ -1,15 +1,13 @@
-import os
-common_env = Environment(ENV = {'PATH' : os.environ['PATH'],
-                                'HOME' : os.environ['HOME'],
-                                'TERM' : 'xterm'})
-
+Import('env')
+common_env = env.Clone();
 
 if GetOption('win64'):
-    common_env.Tool('crossmingw', toolpath = ['../../utils/scripts/'])
     common_env['CCFLAGS'].append('-DCST_NO_SOCKETS -DUNDER_WINDOWS -DWIN32')
-    vardir='#/build/win/external/flite'
 else:
-    vardir='#/build/linux/external/flite'
+    common_env['CCFLAGS'].append('-fPIC')
+
+common_env['CCFLAGS'].extend(env['cc_optflags'])
+vardir = common_env['base_vardir'] + '/external/flite'
 
 common_env.Append(CPPPATH = ['#/external/flite/include/'])
 

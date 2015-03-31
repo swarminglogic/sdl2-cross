@@ -3,8 +3,6 @@
 import os
 Import('env')
 
-isShared = False
-
 cppflags = [
 '-pedantic',
 '-Werror',
@@ -14,8 +12,6 @@ cppflags = [
 '-D_THREAD_SAFE',
 '-DZMQ_USE_EPOLL',
 '-fvisibility=hidden',
-# '-O2'
-'-O0', '-g', '-gdwarf-2'
 ]
 
 local_env = env.Clone()
@@ -105,14 +101,7 @@ zmqFiles = [
 
 objs = []
 for f in zmqFiles:
-    if isShared:
-        objs.append(local_env.SharedObject('src/' + f))
-    else:
-        objs.append(local_env.StaticObject('src/' + f))
+    objs.append(local_env.StaticObject('src/' + f))
 
-if isShared:
-    zmqLib = local_env.SharedLibrary('#/lib/' + local_env['target'] + '/zmq', objs)
-else:
-    zmqLib = local_env.StaticLibrary('#/lib/' + local_env['target'] + '/zmq', objs)
-
+zmqLib = local_env.StaticLibrary(env['base_lib_dir'] + '/zmq', objs)
 Default(zmqLib)

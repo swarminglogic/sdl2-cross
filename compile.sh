@@ -215,9 +215,9 @@ function buildUtil {
 
     if [[ $cleanTarget ]] ; then
         echo "Cleaning utils/standalones/${target} build ..."
-        scons -f $sconsfile ${target} ${winflag} -c;
+        scons -f $sconsfile ${target} ${winflag} -c
     else
-        nice scons -f $sconsfile ${target} ${winflag} ${serial}
+        nice scons -f $sconsfile ${target} ${winflag} ${serial} --release
     fi
 }
 
@@ -226,4 +226,6 @@ if [[ $utils ]]; then
     buildUtil obj2cobj
     buildUtil obj2info
     buildUtil wordgen
+    # Cleanup:
+    find src/ -name "*.o" -type f -ctime -1 -exec rm {} \;
 fi

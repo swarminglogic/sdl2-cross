@@ -80,17 +80,15 @@ gccWarningLevel = [
 
 # CPPFLAGS
 ####################
-cppflags = ['-O0', '-g', '-gdwarf-2']
-#cppflags = ['-O3']
-cppflags.extend(['-fno-strict-aliasing',
-                 '-std=c++11',
-                 '-DWIN32',
-                 '-DWIN32_LEAN_AND_MEAN',
-                 '-D_REENTRANT',
-                 '-Dmain=SDL_main',
-                 '-DZMQ_STATIC',
-                 '-DUMUNDO_STATIC',
-                 '-DGLM_FORCE_RADIANS'])
+cppflags = ['-fno-strict-aliasing',
+            '-std=c++11',
+            '-DWIN32',
+            '-DWIN32_LEAN_AND_MEAN',
+            '-D_REENTRANT',
+            '-Dmain=SDL_main',
+            '-DZMQ_STATIC',
+            '-DUMUNDO_STATIC',
+            '-DGLM_FORCE_RADIANS']
 cppflags.extend(['-isystem', pathBoost  + '/include',
                  '-isystem', pathCrossTools + '/include',
                  '-isystem', pathCrossTools + '/include/bullet',

@@ -2,25 +2,21 @@ import os
 
 Import('env')
 
-target = '#/bin/wordgen' + env['PROGSUFFIX']
+target = env['base_exec_dir'] + '/wordgen' + env['PROGSUFFIX']
 env.Alias('wordgen', target)
 
 if GetOption('win64'):
-    libdir='#/lib/win/'
     pathSdl = os.environ["CROSS_TOOLS_DIR"]
     otherlibs = ['winmm', 'imm32', 'ole32', 'oleaut32', 'gdi32', 'version']
 else:
-    vardir='build/linux/utils'
-    libdir='#/lib/linux/'
     pathSdl = os.environ["SDL2_DIR"]
     otherlibs = []
 
 
 pathBoost  = os.environ['BOOST_DIR'];
-cppflags = env['cxx_debug']
-cppflags.extend(['-fno-strict-aliasing',
+cppflags = ['-fno-strict-aliasing',
                  '-funsafe-loop-optimizations',
-                 '-std=c++11'])
+                 '-std=c++11']
 gccWarningFlags=env['gccWarningFlags']
 gccWarningFlags.remove('-Wstack-protector');
 cppflags.extend(env['gccWarningFlags'])
@@ -35,10 +31,8 @@ sourcepaths = [
     pathBoost + '/include'
 ]
 
-ldflags = env['ldflags']
-
-libpaths = [ libdir,
-             pathSdl + '/lib',]
+libpaths = [ env['base_lib_dir'],
+             pathSdl + '/lib']
 
 libs = ['SDL2',
         'noise', 'angelscript',
@@ -57,7 +51,6 @@ cppMain = [Glob('wordgen.cpp') +
 
 wordgen = env.Program(target, cppMain,
                       LIBS = libs,
-                      LINKFLAGS = ldflags,
                       LIBPATH  = libpaths,
                       CPPFLAGS = cppflags,
                       CPPPATH  = sourcepaths);

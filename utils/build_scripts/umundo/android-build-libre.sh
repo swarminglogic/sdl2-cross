@@ -3,8 +3,8 @@
 # USER DEFINES
 # TODO swarminglogic, 2015-03-04: Refactor these defines
 HOST_OS=linux-x86_64
-NDK_PATH=${NDK_HOME}
 ARCH=arm
+NDK_PATH=${NDK_HOME}
 APP_PLATFORM=android-18
 NDK_TOOLCHAIN_VERSION=4.8
 APP_ABI=armeabi

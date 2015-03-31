@@ -6,9 +6,10 @@ Import('env')
 
 c.sourcepaths.extend([c.pathCxxTest]);
 c.cppflags.extend(['-isystem', c.pathCxxTest]);
-c.libpaths.extend(['#/lib'])
+c.libpaths.extend(['#/lib/linux/debug/'])
 
 macroDefinitions = [
+   'UNIT_TESTING'
    # 'SLOW_TESTS' # Also compiles slow tests
 ]
 for macro in macroDefinitions:
@@ -57,7 +58,7 @@ utilFiles = [Glob('util/Test*.h') +
 testUtil = env_test.CxxTest('#/bin/tests/TestUtil',
                             utilFiles,
                             LIBS = ([ 'swl-extern', 'swl-util','swl-math'] +
-                                    c.lSDL + c.lNoise))
+                                    c.lSDL + c.lNoise + c.lAngelScript + c.lOther))
 Default(testUtil)
 
 
@@ -80,7 +81,7 @@ graphicsFiles = [Glob('graphics/Test*.h') +
 testGraphics = env_test.CxxTest('#/bin/tests/TestGraphics',
                                 graphicsFiles,
                                 LIBS = ['swl-graphics', 'swl-util', 'swl-math', 'swl-extern']
-                                + c.lSDL + c.lSDLimage + c.lSDLttf + c.lGL)
+                                + c.lSDL + c.lSDLimage + c.lSDLttf + c.lGL + c.lAngelScript + c.lOther)
 Default(testGraphics)
 
 
@@ -94,6 +95,17 @@ testIo = env_test.CxxTest('#/bin/tests/TestIo',
                           LIBS = ['swl-io', 'swl-util', 'swl-math']
                           + c.lSDL)
 Default(testIo)
+
+# ######################
+# # NET LIBRARY TESTS
+# #######################
+# netFiles = [Glob('net/Test*.h') +
+#            Glob('net/*/Test*.h')]
+# testNet = env_test.CxxTest('#/bin/tests/TestNet',
+#                           netFiles,
+#                           LIBS = ['swl-net']
+#                            + c.lUmundo)
+# Default(testNet)
 
 
 ######################

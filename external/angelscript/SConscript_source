@@ -23,6 +23,6 @@ if not GetOption('win64'):
 objs = []
 for src in srclist:
     objs.append(env.Object(src,
-                       CPPPATH='#/external/angelscript/include'))
+                           CPPPATH='#/external/angelscript/include'))
 
 Return('objs')

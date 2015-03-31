@@ -25,6 +25,9 @@ lAll      = c.lAll
 lAngelScript  = c.lAngelScript
 
 Import('env')
+libprefix = env['base_lib_dir']
+libpaths.append(libprefix)
+cppflags += env['cc_optflags']
 
 # List of unit test files to prune away
 unitTests = set(Glob('Test*.cpp') + Glob('*/Test*.cpp') + Glob('*/*/Test*.cpp'))
@@ -37,7 +40,7 @@ env.Append(LINKFLAGS = linkflags)
 
 swlMain = os.getenv('SWL_MAIN_FILE', 'main.cpp')
 swlTargetSuffix = os.getenv('SWL_TARGET_SUFFIX', '')
-target = '#/bin/main' + swlTargetSuffix
+target = env['base_exec_dir'] + '/main' + swlTargetSuffix
 
 if GetOption('win64'):
     #############################################
@@ -78,7 +81,7 @@ else:
     mathFiles = [list(set(Glob('math/*.cpp') +
                           Glob('math/*/*.cpp')) - unitTests - flymakeFiles)]
 
-    mathLib = env.SharedLibrary('#/lib/linux/swl-math',
+    mathLib = env.SharedLibrary(libprefix + '/swl-math',
                                 mathFiles,
                                 LIBS    = [],
                                 LIBPATH = []);
@@ -90,7 +93,7 @@ else:
     #######################
     externFiles = [list(set(Glob('extern/*.cpp') +
                             Glob('extern/*/*.cpp')) - unitTests - flymakeFiles)]
-    externLib = env.SharedLibrary('#/lib/linux/swl-extern',
+    externLib = env.SharedLibrary(libprefix + '/swl-extern',
                               externFiles,
                               LIBS     = [],
                               LIBPATH  = []);
@@ -101,7 +104,7 @@ else:
     #######################
     utilFiles = [list(set(Glob('util/*.cpp') +
                           Glob('util/*/*.cpp')) - unitTests - flymakeFiles)]
-    utilLib = env.SharedLibrary('#/lib/linux/swl-util',
+    utilLib = env.SharedLibrary(libprefix + '/swl-util',
                                 utilFiles,
                                 LIBS = externLib + mathLib + lSDL);
     Default(utilLib)
@@ -111,7 +114,7 @@ else:
     #######################
     audioFiles = [list(set(Glob('audio/*.cpp') +
                            Glob('audio/*/*.cpp')) - unitTests - flymakeFiles)]
-    audioLib = env.SharedLibrary('#/lib/linux/swl-audio',
+    audioLib = env.SharedLibrary(libprefix + '/swl-audio',
                                  audioFiles,
                                  LIBS = lSDL + lSDLmixer + lFlite + mathLib + utilLib);
     Default(audioLib)
@@ -122,7 +125,7 @@ else:
     #######################
     graphicsFiles = [list(set(Glob('graphics/*.cpp') +
                               Glob('graphics/*/*.cpp')) - unitTests - flymakeFiles)]
-    graphicsLib = env.SharedLibrary('#/lib/linux/swl-graphics',
+    graphicsLib = env.SharedLibrary(libprefix + '/swl-graphics',
                                     graphicsFiles,
                                     LIBS = mathLib + utilLib + externLib +
                                     lSDL + lSDLimage + lSDLttf +
@@ -135,7 +138,7 @@ else:
     #######################
     ioFiles = [list(set(Glob('io/*.cpp') +
                         Glob('io/*/*.cpp')) - unitTests - flymakeFiles)]
-    ioLib = env.SharedLibrary('#/lib/linux/swl-io',
+    ioLib = env.SharedLibrary(libprefix + '/swl-io',
                               ioFiles,
                               LIBS = utilLib + lSDL + mathLib);
     Default(ioLib)
@@ -146,7 +149,7 @@ else:
     #######################
     netFiles = [list(set(Glob('net/*.cpp') +
                          Glob('net/*/*.cpp')) - unitTests - flymakeFiles)]
-    netLib = env.StaticLibrary('#/lib/linux/swl-net',
+    netLib = env.StaticLibrary(libprefix + '/swl-net',
                                netFiles,
                                LIBS = lUmundo);
     Default(netLib)
@@ -157,7 +160,7 @@ else:
     #######################
     modelFiles = [list(set(Glob('model/*.cpp') +
                            Glob('model/*/*.cpp')) - unitTests - flymakeFiles)]
-    modelLib = env.SharedLibrary('#/lib/linux/swl-model',
+    modelLib = env.SharedLibrary(libprefix + '/swl-model',
                                  modelFiles,
                                  LIBS = mathLib + utilLib + lSDL + lBullet);
     Default(modelLib)
@@ -168,7 +171,7 @@ else:
     #######################
     coreFiles = [list(set(Glob('core/*.cpp') +
                           Glob('core/*/*.cpp')) - unitTests - flymakeFiles)]
-    coreLib = env.SharedLibrary('#/lib/linux/swl-core',
+    coreLib = env.SharedLibrary(libprefix + '/swl-core',
                                 coreFiles,
                                 LIBS = mathLib + utilLib + externLib +
                                 audioLib + modelLib + ioLib + graphicsLib +

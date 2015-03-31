@@ -26,8 +26,7 @@ lPolyVox  = ['PolyVoxCore', 'PolyVoxUtil']
 lAngelScript = ['angelscript']
 lUmundo  = ['libumundocore64', 'zmq', 're', 'mDNSEmbedded', 'pthread', 'rt']
 lOther    = ['pthread', 'm', 'dl', 'rt']
-libpaths = ['#/lib/linux/',
-            pathSdl    + '/lib',
+libpaths = [pathSdl    + '/lib',
             pathBullet + '/lib']
 
 lAll  = (lBullet +
@@ -51,7 +50,8 @@ gccWarningLevel = [
    '-Wall', '-Wextra', '-Wcast-align', '-Wcast-qual',
    '-Wconversion', '-Wdisabled-optimization', #'-Weffc++',
    '-Wfloat-equal', '-Wformat=2', '-Wimport', '-Winit-self',
-   '-Winline', '-Winvalid-pch', '-Wlong-long',
+   # '-Winline', 
+   '-Winvalid-pch', '-Wlong-long',
    '-Wmissing-format-attribute', '-Wmissing-include-dirs',
    '-Wmissing-noreturn', '-Wpacked', '-Wpointer-arith',
    '-Wredundant-decls', '-Wshadow',
@@ -69,13 +69,11 @@ gccWarningLevel = [
 
 # CPPFLAGS
 ####################
-cppflags = ['-O0', '-g', '-gdwarf-2']
-#cppflags = ['-O3']
-cppflags.extend(['-fno-strict-aliasing',
-                 '-fdiagnostics-color=always',
-                 '-std=c++11',
-                 '-D_REENTRANT',
-                 '-DGLM_FORCE_RADIANS'])
+cppflags = ['-fno-strict-aliasing',
+            '-fdiagnostics-color=always',
+            '-std=c++11',
+            '-D_REENTRANT',
+            '-DGLM_FORCE_RADIANS']
 cppflags.extend(['-isystem', pathBoost  + '/include',
                  '-isystem', pathSdl    + '/include/',
                  '-isystem', pathGlm,

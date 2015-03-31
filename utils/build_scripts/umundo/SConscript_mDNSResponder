@@ -13,15 +13,16 @@ cppflags = [
     '-DNOT_HAVE_SA_LEN',
     '-DHAVE_LINUX',
     '-DUSES_NETLINK',
-    # '-DANONYMOUS_DISABLED',
     '-DUNICAST_DISABLED',
     '-DDNSSEC_DISABLED',
     '-fpic',
     '-Wdeclaration-after-statement',
-#    '-Os',
-    '-DMDNS_DEBUGMSGS=0'
-    '-O0', '-g', '-gdwarf-2'
 ]
+
+if GetOption('release'):
+    cppflags.append('-DMDNS_DEBUGMSGS=0')
+else:
+    cppflags.append('-DMDNS_DEBUGMSGS=1')
 
 local_env.Append(CPPFLAGS = cppflags)
 
@@ -43,6 +44,6 @@ objs = []
 for f in files:
     objs.append(local_env.Object(f))
 
-objLib = local_env.StaticLibrary('#/lib/' + local_env['target'] + '/mDNSEmbedded', objs)
+objLib = local_env.StaticLibrary(env['base_lib_dir'] + '/mDNSEmbedded', objs)
 Default(objLib)
 

@@ -2,19 +2,16 @@ import os
 
 Import('env')
 
-target = '#/bin/simpletextpreprocess' + env['PROGSUFFIX']
+target = env['base_exec_dir'] + '/simpletextpreprocess' + env['PROGSUFFIX']
 env.Alias('simpletextpreprocess', target)
 
 pathBoost  = os.environ['BOOST_DIR'];
-cppflags = env['cxx_debug']
-cppflags.extend(['-fno-strict-aliasing',
-                 '-std=c++11'])
+cppflags = ['-fno-strict-aliasing',
+            '-std=c++11']
 cppflags.extend(env['gccWarningFlags'])
 cppflags.extend(['-isystem', pathBoost + '/include'])
 
 sourcepaths = ['#/src']
-
-ldflags = env['ldflags']
 
 libpaths = []
 libs = []
@@ -23,7 +20,6 @@ cppMain = [Glob('simpletextpreprocess.cpp') +
 
 simpletextpreprocess = env.Program(target, cppMain,
                                    LIBS = libs,
-                                   LINKFLAGS = ldflags,
                                    LIBPATH  = libpaths,
                                    CPPFLAGS = cppflags,
                                    CPPPATH  = sourcepaths);

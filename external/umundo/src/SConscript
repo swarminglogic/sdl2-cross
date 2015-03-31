@@ -5,9 +5,6 @@ local_env = env.Clone()
 isShared = False
 
 cppflags = [
-'-DBUILD_RELEASE',
-#'-O3',
-#'-DNDEBUG',
 '-Wall',
 '-Wno-attributes',
 '-Wno-uninitialized',
@@ -16,9 +13,10 @@ cppflags = [
 '-fno-strict-aliasing',
 '-Wno-unused-value',
 '-Wno-unused-function',
-'-Wno-sign-compare',
-'-O0', '-g', '-gdwarf-2'
-]
+'-Wno-sign-compare']
+
+if GetOption('release'):
+    cppflags.append('-DBUILD_RELEASE')
 
 if isShared:
     cppflags.extend(['-DCOMPILING_DLL', '-Dumundocore_EXPORTS'])
@@ -42,9 +40,10 @@ else:
     cxxpaths.append('#/external/umundo/src/include_linux');
     cxxpaths.append('#/external/umundo/mDNSResponder-333.10/mDNSPosix');
 
-local_env.Append(CPPPATH = cxxpaths)
 
+local_env.Append(CPPPATH = cxxpaths)
 local_env.Append(CPPFLAGS = cppflags)
+
 
 coreFiles = ['Message.cpp',
              'Debug.cpp',
@@ -78,11 +77,11 @@ if isShared:
     for f in coreFiles:
         objs.append(local_env.SharedObject('umundo/core/' + f))
     objs.append(local_env.SharedObject(fastlzFiles))
-    coreLib = local_env.SharedLibrary('#/lib/' + local_env['target'] + '/libumundocore64', objs)
+    coreLib = local_env.SharedLibrary(env['base_lib_dir'] + '/libumundocore64', objs)
 else:
     for f in coreFiles:
         objs.append(local_env.StaticObject('umundo/core/' + f))
     objs.append(local_env.StaticObject(fastlzFiles))
-    coreLib = local_env.StaticLibrary('#/lib/' + local_env['target'] + '/libumundocore64', objs)
+    coreLib = local_env.StaticLibrary(env['base_lib_dir'] + '/libumundocore64', objs)
 
 Default(coreLib)

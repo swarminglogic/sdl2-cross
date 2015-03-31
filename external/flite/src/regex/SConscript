@@ -1,7 +1,0 @@
-Import('env')
-
-objs = []
-for obj in Glob('*.c'):
-    objs.append(env.Object(obj))
-
-Return('objs')

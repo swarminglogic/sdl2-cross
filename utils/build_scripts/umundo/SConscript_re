@@ -8,10 +8,8 @@ cppflags = [
 '-Wbad-function-cast', '-Wsign-compare', '-Wnested-externs', '-Wshadow',
 '-Waggregate-return', '-Wcast-align', '-Wextra', '-Wold-style-definition',
 '-Wdeclaration-after-statement',
-'-O0', '-g',
 '-fPIC',
 '-DLINUX', '-DOS=\\"linux\\"', '-std=c99', '-pedantic', '-DARCH=\\"x86_64\\"',
-#'-DUSE_OPENSSL',
 '-DUSE_TLS',
 '-DUSE_ZLIB', '-DHAVE_PTHREAD', '-DHAVE_GETIFADDRS', '-DHAVE_STRERROR_R',
 '-DHAVE_GETOPT', '-DHAVE_INTTYPES_H', '-DHAVE_NET_ROUTE_H',
@@ -23,7 +21,6 @@ cppflags = [
 '-DHAVE_SYS_TIME_H', '-DHAVE_UNAME', '-DHAVE_UNISTD_H', '-DHAVE_STRINGS_H',
 '-DHAVE_GAI_STRERROR',
 '-DVERSION=\\"0.4.7\\"',
-#'-Iinclude',
 '-DHAVE_ROUTE_LIST',
 '-DUSE_OPENSSL_DTLS=1'
 ]
@@ -42,8 +39,8 @@ for f in reFiles:
         objs.append(local_env.StaticObject('src/' + f))
 
 if isShared:
-    reLib = local_env.SharedLibrary('#/lib/' + local_env['target'] + '/re', objs)
+    reLib = local_env.SharedLibrary(env['base_lib_dir']  + '/re', objs)
 else:
-    reLib = local_env.StaticLibrary('#/lib/' + local_env['target'] + '/re', objs)
+    reLib = local_env.StaticLibrary(env['base_lib_dir']  + '/re', objs)
 
 Default(reLib)

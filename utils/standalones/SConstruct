@@ -32,21 +32,27 @@ OPTIONS:
       '--win64'         -> cross-compiles program for win64 platform.
 """)
 
+if GetOption('release'):
+    env['CCFLAGS'].extend(['-O2', '-DNDEBUG'])
+    build_type = 'release'
+else:
+    env['CCFLAGS'].extend(['-O0', '-g', '-gdwarf-2'])
+    build_type = 'debug'
 
 if GetOption('win64'):
     env.Tool('crossmingw', toolpath = ['./utils/scripts/'])
-    vardir='#/build/win/utils/standalones'
+    env['LINKFLAGS'].append('--static')
+    os_target = 'win'
 else:
-    vardir='#/build/linux/utils/standalones'
+    os_target = 'linux'
 
+build_type_path = os_target + '/'+ build_type
+env['base_vardir'] = '#build/' + build_type_path
+env['base_exec_dir'] = '#/bin/' + build_type_path
+env['base_lib_dir'] = '#/lib/' + build_type_path
 
+vardir = env['base_vardir'] + '/utils/standalones'
 
-if GetOption('release'):
-    env['cxx_debug'] = ['-O2', '-DNDEBUG']
-else:
-    env['cxx_debug'] = ['-O0', '-g', '-gdwarf-2']
-
-env['ldflags'] = ['--static']
 env['gccWarningFlags'] = [
    '-Wall', '-Wextra', '-Wcast-align', '-Wcast-qual',
    '-fpermissive',

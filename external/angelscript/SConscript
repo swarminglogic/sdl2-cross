@@ -1,22 +1,21 @@
 import os
-common_env = Environment(ENV = {'PATH' : os.environ['PATH'],
-                                'HOME' : os.environ['HOME'],
-                                'TERM' : 'xterm'})
+
+Import('env')
+common_env = env.Clone();
+
 if GetOption('win64'):
-    target='win'
-    common_env.Tool('crossmingw', toolpath = ['../../utils/scripts/'])
-    vardir='#/build/win/external/angelscript'
     common_env['CCFLAGS'].extend(['-static-libgcc', '-ggdb'])
 else:
-    target='linux'
-    vardir='#/build/linux/external/angelscript'
     common_env['CCFLAGS'].extend(['-fPIC', '-fno-strict-aliasing'])
+
+vardir = common_env['base_vardir'] + '/external/angelscript'
+common_env['CCFLAGS'].extend(env['cc_optflags'])
 
 common_env.VariantDir(vardir + '/source', 'source')
 objs = common_env.SConscript(vardir + '/source/SConscript', {'env': common_env})
 
 common_env.VariantDir(vardir + '/add_on', 'add_on')
-objs.extend(common_env.SConscript(vardir + '/add_on/SConscript', {'env': common_env}))
+objs += common_env.SConscript(vardir + '/add_on/SConscript', {'env': common_env})
 
-angelscriptLib = common_env.StaticLibrary('#/lib/' + target + '/angelscript', objs)
+angelscriptLib = common_env.StaticLibrary(env['base_lib_dir'] + '/angelscript', objs)
 Default(angelscriptLib)

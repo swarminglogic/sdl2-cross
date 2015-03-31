@@ -1,15 +1,25 @@
 Import('env')
 
-if GetOption('win64'):
-    target='win'
-else:
-    env['CCFLAGS'].append('-fPIC')
-    target='linux'
-
 objs = []
-for subdir in ['cg', 'synth', 'wavesynth', 'utils', 'stats', 'speech'
-               ,'regex', 'lexicon', 'hrg', 'audio']:
-    objs.extend(env.SConscript('%s/SConscript' % subdir, {'env': env}))
+for subdir in ['cg', 'synth', 'wavesynth',
+               'stats', 'speech', 'regex',
+               'lexicon', 'hrg']:
+    sources = Glob(subdir + '/*.c')
+    objs.extend(env.Object(sources))
 
-fliteLib = env.StaticLibrary('#/lib/' + target + '/flite', objs)
+util_sources = list(set(Glob('utils/*.c')) -
+                    set(Glob('utils/cst_file_palmos.c')) -
+                    set(Glob('utils/cst_file_wince.c')) -
+                    set(Glob('utils/cst_mmap*.c')))
+objs.extend(env.Object(util_sources))
+
+audio_sources = [Glob('audio/auclient.c') +
+                 Glob('audio/au_command.c') +
+                 Glob('audio/audio.c') +
+                 Glob('audio/au_none.c') +
+                 Glob('audio/auserver.c') +
+                 Glob('audio/au_streaming.c')]
+objs.extend(env.Object(audio_sources))
+
+fliteLib = env.StaticLibrary(env['base_lib_dir'] + '/flite', objs)
 Default(fliteLib)
