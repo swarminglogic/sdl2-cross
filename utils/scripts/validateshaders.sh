@@ -30,7 +30,7 @@ VERSIONSTRING is the GLSL version string to be prepended as:
 
 Prerequisites:
   glslangValidator
-  ./bin/simpletextpreprocess  (./compile.sh utils)
+  ./bin/linux/{debug,release}/simpletextpreprocess  (./compile.sh utils)
 "
     exit
 }
@@ -56,11 +56,18 @@ if [[ ! -x `which glslangValidator` ]] ; then
         exit 1
     fi
 fi
-if [[ ! -x ./bin/simpletextpreprocess ]] ; then
-    echo "Could not find ./bin/simpletextpreprocess"
+
+
+stpp="./bin/linux/release/simpletextpreprocess"
+if [ ! -x "$stpp" ] ; then
+    stpp=./bin/linux/debug/simpletextpreprocess
+fi
+if [ ! -x "$stpp" ] ; then
+    echo "Could not find ./bin/linux/{release,debug}/simpletextpreprocess"
     echo "Build utilities using: ./compile.sh utils"
     exit 1
 fi
+
 if [[ ! -d ./assets/shaders ]] ; then
     echo "Could not find shader directory. Not in project root?"
     exit 1
@@ -75,7 +82,7 @@ for i in ./assets/shaders/* ; do
     # Perform shader validation
     tmpfile=$tmpdir/`basename $i`
     echo -e "#version $version\n" > $tmpfile
-    ./bin/simpletextpreprocess $keyword $i >> $tmpfile
+    ${stpp} $keyword $i >> $tmpfile
     out=`glslangValidator $tmpfile | sed "s/$ignore//g" | \
 sed "s/ERROR/${RED}ERROR${NORMAL}/g" | \
 sed "s/Warning/${YELLOW}Warning${NORMAL}/g"`

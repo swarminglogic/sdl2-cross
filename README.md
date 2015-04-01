@@ -159,32 +159,26 @@ desktop build, but will soon also be used for android.
     +––––––––––––––––––––––––––––––––––––––––––––––––––––––+
 ```
 
-### Compilation & Special Files
+### Special Files
 * Special files:
 
 | File    | Description |
 | :--------------------------------- | :-------------------------------------------------------- |
-| `./initialize_project.sh`          | Check all dependencies and sets up symbolic links         |
-| `./compile.sh`                     | Utility for simplifying build commands                    |
-| `./devtools.sh`                    | Another utility for simplifying development commands      |
-| `./validateshaders.sh`             | Utility for preprocessing and validating GL/GLES shaders  |
+| `./devtools.sh`                    | Utility for simplifying development commands              |
 | `./src/util/gitrev.h`              | Automatically generated file for accessing current git id |
 
-* Linux/Android:
+### Building & running
+* Configuring dependencies and patching files, etc :
+ Run `. ./devtools.sh init`
+ Note that it is `. ./devtools.sh init` and not `./devtools.sh init`
 
-1. Run `. ./initialize_project.sh` and pay attention to output
+ If everything passes, you are good to go. Otherwise, follow instructions.
 
-   Note that it is `. ./initialize_project.sh` and not `./initialize_project.sh`
-
-   It is recommended that you define the detected enviroment variable paths, so that this script isn't a required step.
-
-1. `./devtools.sh ball` (builds android and linux)
-
-See `./initialize_project.sh`, `./devtools.sh` and `./compile.sh` for details.
+* See `./devtools.sh help` for all development related commands.
 
 ### Suggested `.gitignore` content
 ```
-common_build.pyc
+common_build.pyc        
 bin/
 build/
 lib/

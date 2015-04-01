@@ -59,7 +59,7 @@ gccWarningLevel = [
    '-Wall', '-Wextra', '-Wcast-align', '-Wcast-qual',
    '-Wconversion', '-Wdisabled-optimization', #'-Weffc++',
    '-Wfloat-equal', '-Wformat=2', '-Wimport', '-Winit-self',
-   '-Winline', '-Winvalid-pch', '-Wlong-long',
+   '-Winvalid-pch', '-Wlong-long',
    '-Wmissing-format-attribute', '-Wmissing-include-dirs',
    '-Wmissing-noreturn', '-Wpacked', '-Wpointer-arith',
    '-Wredundant-decls', '-Wshadow',
