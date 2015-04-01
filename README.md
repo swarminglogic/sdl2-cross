@@ -106,7 +106,9 @@ The framework relies on the following libraries
 
 To enforce decoupling, and quicker build times, the source is structured into
 modules, compiled as shared libraries. This currently only applies to the
-desktop build, but will soon also be used for android.
+desktop linux.
+
+Libraries within [] are static.
 
 ```
     +––––––––––––––––––––––––––––––––––––––––––––––––––––––+
@@ -120,30 +122,31 @@ desktop build, but will soon also be used for android.
     |           \                  /                       |
     |            \______   _______/                        |
     |                   \ /                                |
-    |             +––––––+––––––+                          |
-    |             |    util     |                          |
-    |             |             |                          |
-    |             | SDL, noise  |                          |
-    |             | angelscript |                          |
-    |             +–––––––––––––+                          |
+    |            +–––––––+–––––––+                         |
+    |            |     util      |                         |
+    |            |               |                         |
+    |            | SDL, [noise]  |                         |
+    |            | [angelscript] |                         |
+    |            +–––––––––––––––+                         |
     |                                                      |
     |                                                      |
     +–––––––––––––––––––––––––+––––––––––––––––––––––––––––+
                               |
     +–––––––––––––––––––––––––+––––––––––––––––––––––––––––+
+    |                   System libaries                    |
     |                                                      |
     |   +––––––––––––––––+   +–––––––––––––––––––––+       |
     |   |     audio      |   |     graphics        |       |
     |   |                |   |                     |       |
-    |   | SDL, SDL_Mixer |   | SDL, SDL_image, GL  |       |
-    |   | flite          |   | SDL_ttf             |       |
+    |   | SDL, SDL_Mixer |   | SDL_image, SDL_ttf  |       |
+    |   | [flite]        |   | SDL, OpenGL         |       |
     |   +––––––––––––––––+   +–––––––––––––––––––––+       |
     |                                                      |
-    |   +––––––––––––––––+   +–––––––––+   +–––––––––+     |
-    |   |      model     |   |    io   |   |   net   |     |
-    |   |                |   |         |   |         |     |
-    |   | SDL, bullet    |   | SDL     |   | umundo  |     |
-    |   | polyvox        |   +–––––––––+   +–––––––––+     |
+    |   +––––––––––––––––+   +–––––––––+   +––––––––––+    |
+    |   |      model     |   |    io   |   |   net    |    |
+    |   |                |   |         |   |          |    |
+    |   | SDL, bullet    |   | SDL     |   | [umundo] |    |
+    |   | [polyvox]      |   +–––––––––+   +––––––––––+    |
     |   +––––––––––––––––+                                 |
     |                                                      |
     +–––––––––––––––––––––––––+––––––––––––––––––––––––––––+
@@ -155,6 +158,8 @@ desktop build, but will soon also be used for android.
     |             |                       |                |
     |             |    all of the above   |                |
     |             +–––––––––––––––––––––––+                |
+    |                         |                            |
+    |                    src/main.cpp                      |
     |                                                      |
     +––––––––––––––––––––––––––––––––––––––––––––––––––––––+
 ```

@@ -8,6 +8,8 @@ vardir = common_env['base_vardir'] + '/external/umundo'
 common_env['CCFLAGS'].extend(env['cc_optflags'])
 
 if not GetOption('win64'):
+    common_env['CCFLAGS'].append('-fPIC')
+
     # All of these are x-compiled externally for mingw win32
     common_env.VariantDir(vardir + '/mDNSEmbedded', 'mDNSResponder-333.10')
     common_env.SConscript(vardir + '/mDNSEmbedded/SConscript', {'env': common_env})

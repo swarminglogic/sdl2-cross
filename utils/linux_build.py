@@ -24,7 +24,7 @@ lFlite    = ['flite_voice_list',
 lNoise    = ['noise']
 lPolyVox  = ['PolyVoxCore', 'PolyVoxUtil']
 lAngelScript = ['angelscript']
-lUmundo  = ['libumundocore64', 'zmq', 're', 'mDNSEmbedded', 'pthread', 'rt']
+lUmundo  = ['libumundocore64', 'zmq', 're', 'mDNSEmbedded']
 lOther    = ['pthread', 'm', 'dl', 'rt']
 libpaths = [pathSdl    + '/lib',
             pathBullet + '/lib']
@@ -66,6 +66,7 @@ gccWarningLevel = [
    # -Wunsafe-loop-optimizations'
    # '-Wstack-protector',
 ]
+
 
 # CPPFLAGS
 ####################

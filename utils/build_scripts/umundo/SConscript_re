@@ -8,7 +8,6 @@ cppflags = [
 '-Wbad-function-cast', '-Wsign-compare', '-Wnested-externs', '-Wshadow',
 '-Waggregate-return', '-Wcast-align', '-Wextra', '-Wold-style-definition',
 '-Wdeclaration-after-statement',
-'-fPIC',
 '-DLINUX', '-DOS=\\"linux\\"', '-std=c99', '-pedantic', '-DARCH=\\"x86_64\\"',
 '-DUSE_TLS',
 '-DUSE_ZLIB', '-DHAVE_PTHREAD', '-DHAVE_GETIFADDRS', '-DHAVE_STRERROR_R',
