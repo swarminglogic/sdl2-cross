@@ -228,8 +228,7 @@ H_SERIAL=$FW_SERIAL
 H_RELEASE=$FW_RELEASE
 
 if [ ! -z "$VERBOSE" ] ; then
-#   TODO swarminglogic, 2015-04-01: implement default quiet scons output
-#   H_SCONS_VERBOSE="--verbose"
+    H_SCONS_VERBOSE="--verbose"
     H_MAKE_VERBOSE="V=1"
 fi
 
@@ -247,6 +246,14 @@ if [ -z "$RELEASE" ] ; then
 else
     BUILD_TYPE="release"
 fi
+
+
+
+exit_commands() {
+    echoerr "SIGINT caught. Terminating"
+    exit 1
+}
+trap 'exit_commands' SIGINT
 
 
 # WORKER FUNCTIONS

@@ -1,9 +1,11 @@
 import os
+from utils import formatted_output
 
 Help("""
 Type: 'scons [OPTIONS]' -> compiles program
 
 OPTIONS:
+      '--verbose'       -> outputs full build commands
       '--release'       -> no debug, optimized compile
       '--tests'         -> builds CxxTest unit tests
       '--win64'         -> cross-compiles program for win64 platform.
@@ -14,6 +16,12 @@ env = Environment(ENV = {'PATH' : os.environ['PATH'],
                          'TERM' : 'xterm'},
                   CXX='g++-4.9',
                   tools=['default'], toolpath=[''])
+
+
+AddOption('--verbose',
+          action='store_true',
+          help='outputs full build commands',
+          default=False)
 
 AddOption('--release',
           action='store_true',
@@ -30,6 +38,8 @@ AddOption('--tests',
           help='compile and run unit tests',
           default=False)
 
+if not GetOption('verbose'):
+    formatted_output.enableShortenedColoredOuput(env)
 
 if GetOption('release'):
     env['cc_optflags'] = ['-O2', '-DNDEBUG']

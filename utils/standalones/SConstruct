@@ -1,11 +1,19 @@
 import os, SCons.Script, sys
 
+sys.path.insert(1, os.path.join(sys.path[0], '..'))
+import formatted_output
+
 env = Environment(ENV = {'PATH' : os.environ['PATH'],
                          'HOME' : os.environ['HOME'],
                          'TERM' : 'xterm'},
                   CXX='g++',
                   tools=['default'], toolpath=[''])
 
+
+AddOption('--verbose',
+          action='store_true',
+          help='outputs full build commands',
+          default=False)
 
 AddOption('--release',
           action='store_true',
@@ -17,7 +25,6 @@ AddOption('--win64',
           help='cross-compiles for windows',
           default=False)
 
-
 Help("""
 Type: 'scons TARGET [OPTIONS]' -> compiles program
 
@@ -28,9 +35,14 @@ TARGETS:
       wordgen
 
 OPTIONS:
+      '--verbose'       -> outputs full build commands
       '--release'       -> compiles with -O2, and without debugging info
       '--win64'         -> cross-compiles program for win64 platform.
 """)
+
+
+if not GetOption('verbose'):
+    formatted_output.enableShortenedColoredOuput(env)
 
 if GetOption('release'):
     env['CCFLAGS'].extend(['-O2', '-DNDEBUG'])
