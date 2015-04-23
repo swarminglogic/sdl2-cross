@@ -331,7 +331,7 @@ function execute_build {
     else
         case "$PLATFORM" in
             linux|windows)
-                watchfile -s "find ./utils ./src ./SConstruct \
+                watchfile -s "find ./external ./utils ./src ./SConstruct \
                 -name '[!\.]*.cpp' -or \
                 -name '[!\.]*.h'   -or \
                 -name '[!\.]*.tpp' -or \
@@ -344,7 +344,7 @@ function execute_build {
                     $THIS build $PLATFORM $TARGET $FW_SERIAL $FW_VERBOSE $FW_RELEASE
                 ;;
             android)
-                watchfile -s "find ./src ./android/jni/ \
+                watchfile -s "find ./external ./src ./android/jni/ \
                 -name '[!\.]*.cpp' -or \
                 -name '[!\.]*.h'   -or \
                 -name '[!\.]*.tpp' -or \
