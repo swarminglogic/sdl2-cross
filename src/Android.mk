@@ -45,7 +45,7 @@ LOCAL_SHARED_LIBRARIES := SDL2 SDL2_image SDL2_mixer SDL2_ttf \
 	                        PolyVoxCore PolyVoxUtil \
 	                        bullet \
 	                        angelscript \
-	                        libumundocore64 zmq re mDNSEmbedded \
+	                        czmq zmq \
 	                        flite_cmu_us_awb flite_cmu_us_rms \
 	                        flite_voice_list flite_cmulex flite_usenglish flite
 
@@ -60,13 +60,9 @@ LOCAL_CFLAGS += -isystem $(BOOST_DIR)/include
 LOCAL_CFLAGS += -isystem $(LOCAL_PATH)/$(SDL_PATH)/include
 LOCAL_CFLAGS += -isystem $(BULLET_DIR)/include/bullet
 LOCAL_CFLAGS += -isystem $(CXXTEST)
-LOCAL_CFLAGS += -isystem $(JNI_PATH)/src/../external/umundo/src
-LOCAL_CFLAGS += -isystem $(JNI_PATH)/src/../external/umundo/src/include_android
-LOCAL_CFLAGS += -isystem $(JNI_PATH)/src/../external/umundo/re-0.4.7/include
-LOCAL_CFLAGS += -isystem $(JNI_PATH)/src/../external/umundo/zeromq-4.1.0/include
-LOCAL_CFLAGS += -isystem $(JNI_PATH)/src/../external/umundo/mDNSResponder-333.10/mDNSCore/
-LOCAL_CFLAGS += -isystem $(JNI_PATH)/src/../external/umundo/mDNSResponder-333.10/mDNSPosix/
-LOCAL_CFLAGS += -isystem $(JNI_PATH)/src/../external/umundo/mDNSResponder-333.10/mDNSShared/
+LOCAL_CFLAGS += -isystem $(JNI_PATH)/src/../external/netlibs/zeromq-4.1.0/include
+LOCAL_CFLAGS += -isystem $(JNI_PATH)/src/../external/netlibs/czmq-3.0.0/include
+LOCAL_CFLAGS += -isystem $(SDL_PATH)/src/core/android
 
 # Android ndk and stl include paths
 LOCAL_CFLAGS += -isystem $(NDK_PLATFORMS_ROOT)/$(APP_PLATFORM)/arch-$(TARGET_ARCH)/usr/include

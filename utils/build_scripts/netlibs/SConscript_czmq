@@ -1,0 +1,79 @@
+#-*- mode: python -*-
+
+import os
+Import('env')
+
+cppflags = [
+'-std=gnu99',
+'-pedantic',
+'-Werror',
+'-Wall',
+'-D_GNU_SOURCE=1',
+'-D_REENTRANT',
+'-D_THREAD_SAFE',
+'-DHAVE_CONFIG_H',
+'-DLIBCZMQ_STATIC',
+'-DZMQ_STATIC'
+]
+
+local_env = env.Clone()
+local_env.Append(CPPFLAGS = cppflags)
+local_env.Append(CPPPATH=['#/external/netlibs/czmq-3.0.0/include'])
+local_env.Append(CPPPATH=['#/external/netlibs/zeromq-4.1.0/include'])
+
+if GetOption('win64'):
+    local_env.Append(CPPPATH=['#/external/netlibs/czmq-3.0.0/include_windows'])
+else:
+    local_env.Append(CPPPATH=['#/external/netlibs/czmq-3.0.0/include_linux'])
+    local_env['CCFLAGS'].append('-DLINUX')
+    local_env['CCFLAGS'].append('-fPIC')
+
+
+zmqFiles = [
+    'czmq_selftest.c',
+    'zbeacon.c',
+    'zchunk.c',
+    'zdigest.c',
+    'zframe.c',
+    'zlist.c',
+    'zmsg.c',
+    'zproxy_v2.c',
+    'zsocket.c',
+    'zsys.c',
+    'zactor.c',
+    'zclock.c',
+    'zdir.c',
+    'zgossip.c',
+    'zhash.c',
+    'zloop.c',
+    'zmutex.c',
+    'zrex.c',
+    'zsockopt.c',
+    'zthread.c',
+    'zauth.c',
+    'zcert.c',
+    'zconfig.c',
+    'zdir_patch.c',
+    'zmonitor.c',
+    'zpoller.c',
+    'zring.c',
+    'zsock_option.c',
+    'zuuid.c',
+    'zauth_v2.c',
+    'zcertstore.c',
+    'zctx.c',
+    'zfile.c',
+    'zgossip_msg.c',
+    'ziflist.c',
+    'zmonitor_v2.c',
+    'zproxy.c',
+    'zsock.c',
+    'zstr.c'
+]
+
+objs = []
+for f in zmqFiles:
+    objs.append(local_env.StaticObject('src/' + f))
+
+czmqLib = local_env.StaticLibrary(env['base_lib_dir'] + '/czmq', objs)
+Default(czmqLib)

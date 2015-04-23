@@ -14,7 +14,7 @@ OPTIONS:
 env = Environment(ENV = {'PATH' : os.environ['PATH'],
                          'HOME' : os.environ['HOME'],
                          'TERM' : 'xterm'},
-                  CXX='g++-4.9',
+                  CXX='g++',
                   tools=['default'], toolpath=[''])
 
 
@@ -61,8 +61,8 @@ env['base_lib_dir'] = '#/lib/' + build_type_path
 
 Export('env')
 
-# Build uMundo external library
-SConscript('external/umundo/SConscript')
+# # Build external networking libraries
+SConscript('external/netlibs/SConscript')
 
 # Build flite external library
 SConscript('external/flite/SConscript')

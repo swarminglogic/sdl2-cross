@@ -1,0 +1,113 @@
+#-*- mode: python -*-
+
+import os
+Import('env')
+
+cppflags = [
+'-pedantic',
+'-Werror',
+'-Wall',
+'-DHAVE_CONFIG_H',
+'-D_GNU_SOURCE',
+'-D_REENTRANT',
+'-D_THREAD_SAFE',
+'-DZMQ_STATIC',
+'-fvisibility=hidden',
+]
+
+local_env = env.Clone()
+local_env.Append(CPPFLAGS = cppflags)
+if GetOption('win64'):
+    local_env.Append(CPPPATH=['#/external/netlibs/zeromq-4.1.0/include_windows'])
+    local_env.Append(CPPFLAGS = ['-DZMQ_USE_SELECT', '-DFD_SETSIZE=1024'])
+else:
+    local_env.Append(CPPPATH=['#/external/netlibs/zeromq-4.1.0/include_linux'])
+    local_env.Append(CPPFLAGS = ['-DZMQ_USE_EPOLL'])
+
+zmqFiles = [
+    'address.cpp',
+    'clock.cpp',
+    'ctx.cpp',
+    'curve_client.cpp',
+    'curve_server.cpp',
+    'devpoll.cpp',
+    'dist.cpp',
+    'epoll.cpp',
+    'err.cpp',
+    'fq.cpp',
+    # 'gssapi_mechanism_base.cpp',
+    # 'gssapi_client.cpp',
+    # 'gssapi_server.cpp',
+    'io_object.cpp',
+    'io_thread.cpp',
+    'ip.cpp',
+    'ipc_address.cpp',
+    'ipc_connecter.cpp',
+    'ipc_listener.cpp',
+    'kqueue.cpp',
+    'lb.cpp',
+    'mailbox.cpp',
+    'mechanism.cpp',
+    'metadata.cpp',
+    'msg.cpp',
+    'mtrie.cpp',
+    'norm_engine.cpp',
+    'null_mechanism.cpp',
+    'object.cpp',
+    'options.cpp',
+    'own.cpp',
+    'pair.cpp',
+    'pgm_receiver.cpp',
+    'pgm_sender.cpp',
+    'pgm_socket.cpp',
+    'pipe.cpp',
+    'plain_client.cpp',
+    'plain_server.cpp',
+    'poll.cpp',
+    'poller_base.cpp',
+    'pull.cpp',
+    'push.cpp',
+    'proxy.cpp',
+    'reaper.cpp',
+    'pub.cpp',
+    'random.cpp',
+    'rep.cpp',
+    'req.cpp',
+    'select.cpp',
+    'session_base.cpp',
+    'signaler.cpp',
+    'socket_base.cpp',
+    'socks.cpp',
+    'socks_connecter.cpp',
+    'stream.cpp',
+    'stream_engine.cpp',
+    'sub.cpp',
+    'tcp.cpp',
+    'tcp_address.cpp',
+    'tcp_connecter.cpp',
+    'tcp_listener.cpp',
+    'thread.cpp',
+    'trie.cpp',
+    'xpub.cpp',
+    'router.cpp',
+    'dealer.cpp',
+    'v1_decoder.cpp',
+    'v1_encoder.cpp',
+    'v2_decoder.cpp',
+    'v2_encoder.cpp',
+    'xsub.cpp',
+    'zmq.cpp',
+    'zmq_utils.cpp',
+    'raw_decoder.cpp',
+    'raw_encoder.cpp',
+    'tipc_address.cpp',
+    'tipc_listener.cpp',
+    'tipc_connecter.cpp'
+]
+
+objs = []
+for f in zmqFiles:
+    objs.append(local_env.StaticObject('src/' + f))
+
+zmqLib = local_env.StaticLibrary(env['base_lib_dir'] + '/zmq', objs)
+Default(zmqLib)

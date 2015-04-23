@@ -1,0 +1,24 @@
+diff --git a/czmq-3.0.0/src/ziflist.c b/czmq-3.0.0/src/ziflist.c
+index 5aa9c06..f640647 100644
+--- a/czmq-3.0.0/src/ziflist.c
++++ b/czmq-3.0.0/src/ziflist.c
+@@ -227,10 +227,8 @@ ziflist_reload (ziflist_t *self)
+         PIP_ADAPTER_PREFIX pPrefix = cur_address->FirstPrefix;
+ 
+         PWCHAR friendlyName = cur_address->FriendlyName;
+-        size_t friendlyLength = 0;
+         size_t asciiSize = wcstombs (0, friendlyName, 0) + 1;
+         char *asciiFriendlyName = (char *) zmalloc (asciiSize);
+-        friendlyLength = wcstombs (asciiFriendlyName, friendlyName, asciiSize);
+ 
+         bool valid = (cur_address->OperStatus == IfOperStatusUp)
+                      && (pUnicast && pPrefix)
+@@ -361,7 +359,7 @@ ziflist_test (bool verbose)
+     size_t items = ziflist_size (iflist);
+ 
+     if (verbose) {
+-        printf ("ziflist: interfaces=%zu\n", ziflist_size (iflist));
++        printf ("ziflist: interfaces=%u\n", (unsigned int)ziflist_size (iflist));
+         const char *name = ziflist_first (iflist);
+         while (name) {
+             printf (" - name=%s address=%s netmask=%s broadcast=%s\n",

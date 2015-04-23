@@ -25,15 +25,15 @@ lFlite    = ['flite_voice_list',
              'flite_cmulex',
              'flite']
 lNoise    = ['noise']
-lUmundo  = ['umundocore64', 'zmq', 're', 'mDNSEmbedded', 'ws2_32', 'iphlpapi', 'netapi32']
-#lUmundo  = ['libumundocore64', 'zmq', 're', 'mDNSEmbedded', 'pthread', 'rt']
+lLsNet  = ['czmq', 'zmq', 'ws2_32', 'iphlpapi', 'netapi32']
+
 lPolyVox  = ['PolyVoxCore', 'PolyVoxUtil']
 lAngelScript = ['angelscript']
 lAll  = (lBullet +
          lAngelScript +
          lFlite + lNoise + lPolyVox +
          lSDL + lSDLimage + lSDLmixer + lSDLttf +
-         lUmundo +
+         lLsNet +
          lGL + lOther)
 
 
@@ -86,8 +86,8 @@ cppflags = ['-fno-strict-aliasing',
             '-DWIN32_LEAN_AND_MEAN',
             '-D_REENTRANT',
             '-Dmain=SDL_main',
+            '-DLIBCZMQ_STATIC',
             '-DZMQ_STATIC',
-            '-DUMUNDO_STATIC',
             '-DGLM_FORCE_RADIANS']
 cppflags.extend(['-isystem', pathBoost  + '/include',
                  '-isystem', pathCrossTools + '/include',
@@ -102,14 +102,8 @@ cppflags.extend(['-isystem', pathBoost  + '/include',
                  '-isystem', 'external/angelscript/include',
                  '-isystem', 'external/angelscript/add_on',
                  '-isystem', 'external/polyvox/library/PolyVoxCore/include',
-                 '-isystem', 'external/umundo/src',
-                 '-isystem', 'external/umundo/src/include_win',
-                 '-isystem', 'external/umundo/mDNSResponder-333.10/mDNSCore',
-                 '-isystem', 'external/umundo/mDNSResponder-333.10/mDNSWindows',
-                 '-isystem', 'external/umundo/mDNSResponder-333.10/mDNSShared',
-                 # '-isystem', 'external/umundo/zeromq-4.1.0/include',
-                 # '-isystem', 'external/umundo/re-0.4.7/include'
-])
+                 '-isystem', 'external/netlibs/zeromq-4.1.0/include',
+                 '-isystem', 'external/netlibs/czmq-3.0.0/include'])
 cppflags.extend(gccWarningLevel)
 for macro in macroDefinitions:
    cppflags.append('-D' + macro)

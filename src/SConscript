@@ -19,7 +19,7 @@ lGL       = c.lGL
 lFlite    = c.lFlite
 lNoise    = c.lNoise
 lPolyVox  = c.lPolyVox
-lUmundo   = c.lUmundo
+lLsNet   = c.lLsNet
 lOther    = c.lOther
 lAll      = c.lAll
 lAngelScript  = c.lAngelScript
@@ -65,7 +65,7 @@ if GetOption('win64'):
                       LIBS = (lSDL + lSDLmixer + lSDLttf + lSDLimage +
                               lNoise + lPolyVox + lFlite + lBullet +
                               lAngelScript +
-                              lUmundo +
+                              lLsNet +
                               lGL + lOther))
     Default(app)
 
@@ -158,7 +158,7 @@ else:
                          Glob('net/*/*.cpp')) - unitTests - flymakeFiles)]
     netLib = env.SharedLibrary(libprefix + '/swl-net',
                                netFiles,
-                               LIBS = commonLibs + lUmundo);
+                               LIBS = commonLibs + lLsNet);
     Default(netLib)
 
 

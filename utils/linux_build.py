@@ -24,7 +24,7 @@ lFlite    = ['flite_voice_list',
 lNoise    = ['noise']
 lPolyVox  = ['PolyVoxCore', 'PolyVoxUtil']
 lAngelScript = ['angelscript']
-lUmundo  = ['libumundocore64', 'zmq', 're', 'mDNSEmbedded']
+lLsNet  = ['czmq', 'zmq']
 lOther    = ['pthread', 'm', 'dl', 'rt']
 libpaths = [pathSdl    + '/lib',
             pathBullet + '/lib']
@@ -33,7 +33,7 @@ lAll  = (lBullet +
          lAngelScript +
          lFlite + lNoise + lPolyVox +
          lSDL + lSDLimage + lSDLmixer + lSDLttf +
-         lUmundo  +
+         lLsNet  +
          lGL + lOther)
 
 
@@ -50,7 +50,7 @@ gccWarningLevel = [
    '-Wall', '-Wextra', '-Wcast-align', '-Wcast-qual',
    '-Wconversion', '-Wdisabled-optimization', #'-Weffc++',
    '-Wfloat-equal', '-Wformat=2', '-Wimport', '-Winit-self',
-   # '-Winline', 
+   # '-Winline',
    '-Winvalid-pch', '-Wlong-long',
    '-Wmissing-format-attribute', '-Wmissing-include-dirs',
    '-Wmissing-noreturn', '-Wpacked', '-Wpointer-arith',
@@ -83,13 +83,8 @@ cppflags.extend(['-isystem', pathBoost  + '/include',
                  '-isystem', 'external/angelscript/include',
                  '-isystem', 'external/angelscript/add_on',
                  '-isystem', 'external/polyvox/library/PolyVoxCore/include',
-                 '-isystem', 'external/umundo/src',
-                 '-isystem', 'external/umundo/src/include_linux',
-                 '-isystem', 'external/umundo/mDNSResponder-333.10/mDNSCore',
-                 '-isystem', 'external/umundo/mDNSResponder-333.10/mDNSPosix',
-                 '-isystem', 'external/umundo/mDNSResponder-333.10/mDNSShared',
-                 '-isystem', 'external/umundo/re-0.4.7/include',
-                 '-isystem', 'external/umundo/zeromq-4.1.0/include',
+                 '-isystem', 'external/netlibs/zeromq-4.1.0/include',
+                 '-isystem', 'external/netlibs/czmq-3.0.0/include',
                  '-isystem', pathBullet + '/include/bullet'])
 cppflags.extend(gccWarningLevel)
 for macro in macroDefinitions:

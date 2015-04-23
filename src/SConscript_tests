@@ -104,7 +104,7 @@ Default(testIo)
 # testNet = env_test.CxxTest('#/bin/tests/TestNet',
 #                           netFiles,
 #                           LIBS = ['swl-net']
-#                            + c.lUmundo)
+#                            + c.LsNet)
 # Default(testNet)
 
 

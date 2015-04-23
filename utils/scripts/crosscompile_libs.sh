@@ -44,57 +44,6 @@ function require_lib_xor_abort {
 }
 
 
-function x-compile-mDNSEmbedded {
-    # Note: configure.ac has been patched.
-    dirpath=external/umundo/mDNSResponder-333.10/
-    if [ ! -d "$dirpath" ] ; then
-        echo "Error, could not cd into ${dirpath}"
-        exit 0;
-    fi
-    cd "$dirpath"/..
-    # if [ ! -f .autogen_rebuilt ] ; then
-    #     ./autogen.sh && touch .autogen_rebuilt
-    # fi
-    buildscript=../../utils/build_scripts/umundo/mingw-build-mDNSEmbedded.sh
-    if [ ! -x ${buildscript} ]  ; then
-        echo "Error, could not find executable $(pwd)${buildscript}"
-        exit 0;
-    fi
-    $buildscript
-    # mkdir -p win64-build && cd win64-build && \
-    #     call_configure ../configure \
-    #     --enable-static --disable-shared --without-documentation && \
-    #     make -C src && \
-    #     sudo make -C src install
-}
-
-function x-compile-zmq {
-    # Note: configure.ac has been patched.
-    dirpath=external/umundo/zeromq-4.1.0
-    if [ ! -d "$dirpath" ] ; then
-        echo "Error, could not cd into ${dirpath}"
-        exit 0;
-    fi
-    cd "$dirpath"
-    if [ ! -f .autogen_rebuilt ] ; then
-        ./autogen.sh && touch .autogen_rebuilt
-    fi
-
-    mkdir -p win64-build && cd win64-build && \
-        call_configure ../configure \
-        --enable-static --disable-shared --without-documentation && \
-        make -C src && \
-        sudo make -C src install
-}
-
-
-function x-compile-libre {
-    cd external/umundo/re-0.4.7/ && \
-        make -f Makefile_static CC=x86_64-w64-mingw32-gcc && \
-        sudo make -f Makefile_static CC=x86_64-w64-mingw32-gcc PREFIX=${CROSSPATH} install
-}
-
-
 function x-compile-zlib {
     # We do this in /tmp/x-comp
     cd $tmpdir
@@ -282,10 +231,6 @@ while test $# -gt 0; do
 --x-comp-libvorbis
 --x-comp-freetype
 --x-comp-glew
---x-comp-libre
---x-comp-zmq
---x-comp-mDNSEmbedded
---x-comp-umundo
 --x-comp-sdl
 --x-comp-sdl-image
 --x-comp-sdl-mixer
@@ -303,18 +248,6 @@ while test $# -gt 0; do
             ;;
         --x-comp-libjpeg)
             (x-compile-libjpeg)
-            exit
-            ;;
-        --x-comp-libre)
-            (x-compile-libre)
-            exit
-            ;;
-        --x-comp-zmq)
-            (x-compile-zmq)
-            exit
-            ;;
-        --x-comp-mDNSEmbedded)
-            (x-compile-mDNSEmbedded)
             exit
             ;;
         --x-comp-libogg)
@@ -365,12 +298,6 @@ while test $# -gt 0; do
             require_lib_xor_abort libfreetype.a
             require_env_xor_abort SDL2_TTF_SRC_DIR
             (x-compile-sdl-any "SDL_ttf" "$SDL2_TTF_SRC_DIR" "SDL_ttf.c")
-            exit
-            ;;
-        --x-comp-umundo)
-            $0 --x-comp-libre
-            $0 --x-comp-zmq
-            $0 --x-comp-mDNSEmbedded
             exit
             ;;
         --x-comp-sdl-all)

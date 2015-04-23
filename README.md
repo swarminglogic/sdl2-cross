@@ -13,10 +13,10 @@ This isn't a game engine (at least not in its current state), but serves as a go
 * Utility for common development tasks (building android/linux, android logcat, unit testing, etc)
 * `CxxTest` based unit-testing (linux, windows and android)
 * Combined OpenGL/GLES files with `#ifdef ES`, `#else`, `#endif` directives.
-* Build system that supports many external libraries (bullet, flite, libnoise, polyvox, umundo, angelscript)
+* Build system that supports many external libraries (bullet, flite, libnoise, polyvox, zmq, angelscript)
 * Script for generating html code coverage report.
 * Windows 64-bit [cross-compilation](http://swarminglogic.com/article/2014_11_crosscompile2) using `mingw-w64-x86-64`
-* Embedded mDNSResponder + ZMQ for automatic service detection and networking
+* ZMQ + CZMQ for automatic service detection and networking
 
 ### Future Features:
 * Deferred rendering
@@ -46,15 +46,13 @@ The framework relies on the following libraries
 | polyvox    | `0.2.1`                | voxel library                                           |
 | CxxTest    | `4.4`                  | unit test code generation utility                       |
 | angelscrip | `2.29.2`               | scripting engine                                        |
-| umundo     | `0.5.0`                | networking library that glues mDNSResponder + ZeroMQ    |
 
 ### External Libraries (script-download):
-| Library       | Version                | Description                                             |
-| :---------    | :--------------------- | :------------------------------------------------------ |
-| mDNSResponder | `333.10`               | Apple's mDNS, DNS-SD implementation (aka Bonjour)       |
-| ZeroMQ        | `4.1.0`                | Async network messaging library                         |
-| re            | `0.4.7`                | SIP/SDP/RTCP/RTCP/DNS library                           |
-| fastlz        | `0.1.0`                | Compression library                                     |
+| Library       | Version                | Description                                          |
+| :---------    | :--------------------- | :--------------------------------------------------- |
+| ZeroMQ        | `4.1.0`                | Async network messaging library                      |
+| CZMQ          | `3.0.0`                | Utility library built on top of ZeroMQ               |
+
 
 
 ### Project Structure
@@ -80,10 +78,11 @@ The framework relies on the following libraries
 │   └── sounds
 ├── coveragehistory            { Unit test coverage history folder, used by gencoverage.sh}
 ├── external                   { External Libraries }
+│   └── angelscript                { scripting library / engine }
 │   └── flite                      { flite, TTS synthesis engine }
+│   └── netlibs                    { networking libraries, e.g. zmq, czmq  }
 │   └── noise                      { libnoise, noise generation library }
 │   └── polyvox                    { polyvox, voxel library }
-│   └── umundo                     { mDNS + ZMQ library }
 └── src                        { All code source files used by the application, excl. shaders }
 │   ├── audio                      { Audio and music playback }
 │   ├── core                       { Base that uses all other parts }
@@ -92,14 +91,18 @@ The framework relies on the following libraries
 │   ├── io                         { Input/Output, keyboard, mouse, gamecontroller, }
 │   ├── math                       { Basic math classes }
 │   ├── model                      { Physics and world related }
+│   ├── net                        { Networking related }
 │   └── util                       { Utility and helper classes }
 └── utils                      { Misc utilities }
+    ├── build_scripts               { Various files and scripts used related to building code }
     ├── cxxtest                     { Unit testing library, downloaded by initialize_project.sh}
-    ├── obj2cobj                    { Utility for compressing Wavefront OBJ files}
-    ├── obj2info                    { Utility for printing Wabefront OBJ data summary}
     ├── patches                     { Patches used by initialize_project.sh}
     ├── scripts                     { Various minor helper scripts, some downloaded by initialize_project.sh}
-    └── simpletextpreprocess        { Utility for preprocessing GL/GLES shader files}
+    └── standalones            { Various standalone utilities }
+        ├── obj2cobj                { Utility for compressing Wavefront OBJ files}
+        ├── obj2info                { Utility for printing Wabefront OBJ data summary}
+        ├── simpletextpreprocess    { Utility for preprocessing GL/GLES shader files}
+        └── wordgen                 { Markov chain random text generator }
 ```
 
 ### Dependency tree
@@ -135,18 +138,18 @@ Libraries within [] are static.
     +–––––––––––––––––––––––––+––––––––––––––––––––––––––––+
     |                   System libaries                    |
     |                                                      |
-    |   +––––––––––––––––+   +–––––––––––––––––––––+       |
-    |   |     audio      |   |     graphics        |       |
-    |   |                |   |                     |       |
-    |   | SDL, SDL_Mixer |   | SDL_image, SDL_ttf  |       |
-    |   | [flite]        |   | SDL, OpenGL         |       |
-    |   +––––––––––––––––+   +–––––––––––––––––––––+       |
+    |   +––––––––––––––––+  +–––––––––––––––––––––+        |
+    |   |     audio      |  |     graphics        |        |
+    |   |                |  |                     |        |
+    |   | SDL, SDL_Mixer |  | SDL_image, SDL_ttf  |        |
+    |   | [flite]        |  | SDL, OpenGL         |        |
+    |   +––––––––––––––––+  +–––––––––––––––––––––+        |
     |                                                      |
-    |   +––––––––––––––––+   +–––––––––+   +––––––––––+    |
-    |   |      model     |   |    io   |   |   net    |    |
-    |   |                |   |         |   |          |    |
-    |   | SDL, bullet    |   | SDL     |   | [umundo] |    |
-    |   | [polyvox]      |   +–––––––––+   +––––––––––+    |
+    |   +––––––––––––––––+  +–––––––––+  +–––––––––––––+   |
+    |   |      model     |  |    io   |  |     net     |   |
+    |   |                |  |         |  |             |   |
+    |   | SDL, bullet    |  | SDL     |  | [zmq, czmq] |   |
+    |   | [polyvox]      |  +–––––––––+  +–––––––––––––+   |
     |   +––––––––––––––––+                                 |
     |                                                      |
     +–––––––––––––––––––––––––+––––––––––––––––––––––––––––+
@@ -183,7 +186,7 @@ Libraries within [] are static.
 
 ### Suggested `.gitignore` content
 ```
-common_build.pyc        
+common_build.pyc
 bin/
 build/
 lib/
@@ -202,13 +205,12 @@ android/jni/flite
 android/jni/noise
 android/jni/polyvox
 android/jni/angelscript
+android/jni/netlibs
 external/angelscript/add_on/
 external/angelscript/include/
 external/angelscript/source/
-external/umundo/fastlz
-external/umundo/mDNSResponder-333.10
-external/umundo/re-0.4.7
-external/umundo/zeromq-4.1.0
+external/netlibs/zeromq-4.1.0
+external/netlibs/czmq-3.0.0
 src/util/gitrev.h
 html/
 utils/cxxtest
