@@ -2,6 +2,7 @@
 #define UTIL_LOGMANAGER_H
 
 #include <iosfwd>
+#include <mutex>
 #include <string>
 
 
@@ -77,6 +78,8 @@ class LogManager
   std::string logfileName_;
   const std::string androidLoggerTag_;
   mutable std::ostream* out_;
+  mutable std::mutex streamMutex_;
+  mutable std::mutex logfileMutex_;
 
   // NonCopyable
   LogManager(const LogManager& c);

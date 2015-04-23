@@ -109,6 +109,7 @@ void LogManager::log2Stream(
       const std::string& formatted) const
 {
 #ifndef LOG2STREAM_DISABLED
+  std::lock_guard<std::mutex> guard(streamMutex_);
   #ifdef __ANDROID__
   log2AndroidStream(level, formatted);
   #endif  // __ANDROID__
@@ -147,6 +148,7 @@ void LogManager::log2File(const std::string& formatted) const
 #ifndef LOG2FILE_DISABLED
   if (logfileName_.empty())
     return;
+  std::lock_guard<std::mutex> guard(logfileMutex_);
   FileUtil::append(logfileName_, formatted, FileInfo::TYPE_WRITABLE);
   FileUtil::append(logfileName_, "\n", FileInfo::TYPE_WRITABLE);
 #else
