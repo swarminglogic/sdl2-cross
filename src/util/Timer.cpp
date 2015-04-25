@@ -4,9 +4,12 @@
 #if defined USING_SDL
 #include <util/SDL.h>
 struct Timer::Timer_impl
-{ unsigned int getTicksSinceStart() const {
-  return SDL_GetTicks();
-}};
+{
+  Timer_impl* Clone() const {return new Timer_impl(*this);}
+  unsigned int getTicksSinceStart() const {
+    return SDL_GetTicks();
+  }
+};
 #else
 
 //  USE C++11 CHRONO FALLBACK
@@ -14,6 +17,7 @@ struct Timer::Timer_impl
 class Timer::Timer_impl
 {
  public:
+  Timer_impl* Clone() const {return new Timer_impl(*this);}
   Timer_impl() : start_(std::chrono::high_resolution_clock::now()) {}
   unsigned int getTicksSinceStart() const {
     using std::chrono::high_resolution_clock;
@@ -41,7 +45,23 @@ Timer::Timer()
 
 Timer::~Timer()
 {
-  delete impl_;
+}
+
+Timer::Timer(const Timer& c)
+    : impl_(c.impl_->Clone()),
+      state_(c.state_),
+      ticksWhenStarted_(c.ticksWhenStarted_),
+      ticksAccum_(c.ticksAccum_)
+{
+}
+
+Timer& Timer::operator=(const Timer& c)
+{
+  this->impl_.reset(c.impl_->Clone());
+  this->state_ = c.state_;
+  this->ticksWhenStarted_ = c.ticksWhenStarted_;
+  this->ticksAccum_ = c.ticksAccum_;
+  return *this;
 }
 
 

@@ -1,6 +1,9 @@
 #ifndef UTIL_TIMER_H
 #define UTIL_TIMER_H
 
+#include <memory>
+
+
 /**
  * Timer class for doing timing functions.
  *
@@ -33,6 +36,9 @@ class Timer
   bool isStopped() const;
   bool isRunning() const;
 
+  Timer(const Timer& c);
+  Timer& operator=(const Timer& c);
+
  private:
   enum Event{
     STOPPING = 0,
@@ -53,15 +59,12 @@ class Timer
 
   // Hiding external library dependant timing code (pimpl pattern)
   class Timer_impl;
-  Timer_impl* impl_;
+  std::unique_ptr<Timer_impl> impl_;
 
   State state_;
   unsigned int ticksWhenStarted_;
   unsigned int ticksAccum_;
 
-  // Disabled copy, implement and test when needed.
-  Timer(const Timer& c);
-  Timer& operator=(const Timer& c);
 };
 
 #endif  // UTIL_TIMER_H

@@ -163,6 +163,48 @@ class TestTimer : public CxxTest::TestSuite
     timer.togglePauseResume();
     TS_ASSERT(!timer.isPaused());
   }
+
+
+  void testCopyable() {
+    Timer timer;
+    Timer timer2 = timer;
+    timer.start();
+    TS_ASSERT(!timer.isStopped());
+    TS_ASSERT(!timer.isPaused());
+    TS_ASSERT(timer.isRunning());
+
+    timer2 = timer;
+    TS_ASSERT(!timer2.isStopped());
+    TS_ASSERT(!timer2.isPaused());
+    TS_ASSERT(timer2.isRunning());
+
+    unsigned int milliseconds = 5;
+    msleep(milliseconds);
+
+    unsigned int timeWhenRunning = timer.getTicks();
+    unsigned int timeWhenReset = timer.reset();
+    TS_ASSERT(timer.isStopped());
+    TS_ASSERT(!timer.isPaused());
+    TS_ASSERT(!timer.isRunning());
+    TS_ASSERT_LESS_THAN_EQUALS(timeWhenRunning, timeWhenReset);
+    TS_ASSERT_LESS_THAN_EQUALS(milliseconds, timeWhenReset);
+    TS_ASSERT_EQUALS(0u, timer.getTicks());
+
+    timer2 = timer;
+    TS_ASSERT(timer2.isStopped());
+    TS_ASSERT(!timer2.isPaused());
+    TS_ASSERT(!timer2.isRunning());
+    TS_ASSERT_LESS_THAN_EQUALS(timeWhenRunning, timeWhenReset);
+    TS_ASSERT_LESS_THAN_EQUALS(milliseconds, timeWhenReset);
+    TS_ASSERT_EQUALS(0u, timer2.getTicks());
+    Timer timer3(timer2);
+    TS_ASSERT(timer3.isStopped());
+    TS_ASSERT(!timer3.isPaused());
+    TS_ASSERT(!timer3.isRunning());
+    TS_ASSERT_LESS_THAN_EQUALS(timeWhenRunning, timeWhenReset);
+    TS_ASSERT_LESS_THAN_EQUALS(milliseconds, timeWhenReset);
+    TS_ASSERT_EQUALS(0u, timer3.getTicks());
+  }
 };
 
 #endif  // UTIL_TESTTIMER_H
