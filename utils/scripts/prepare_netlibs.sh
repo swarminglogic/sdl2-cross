@@ -28,6 +28,20 @@ ${GREEN}[ Preparing ${BOLD}$1${NORMAL}${GREEN} ]${NORMAL}"
     fi
 }
 
+# $1 filepath
+# $2 command to download and prepare the file
+function get_file {
+    echo "
+${GREEN}[ Preparing ${BOLD}$1${NORMAL}${GREEN} ]${NORMAL}"
+    if [ -f "$1" ] ; then
+        echo " - File $1 already exists. ${YELLOW}Skipping.${NORMAL}"
+    else
+        echo " - Downloading $1..."
+        eval "$2"
+    fi
+}
+
+
 function say_done {
     echo "${GREEN} - done${NORMAL}"
 }
@@ -90,6 +104,9 @@ add_build_script "header file" zmq_platform_android.hpp \
 add_build_script "Android.mk" Android_zmq.mk "zeromq-4.1.0/Android.mk"
 say_done
 
+get_file zeromq-4.1.0/include/zmq.hpp \
+"wget https://raw.githubusercontent.com/zeromq/cppzmq/master/zmq.hpp -O zeromq-4.1.0/include/zmq.hpp"
+say_done
 
 # re
 get_source czmq-3.0.0 \
