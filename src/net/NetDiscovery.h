@@ -3,36 +3,37 @@
 
 #include <atomic>
 #include <map>
+#include <memory>
 #include <mutex>
+#include <set>
 #include <thread>
 
+#include <net/Zmq.h>
 #include <util/Log.h>
+#include <util/Timer.h>
 #include <util/Uuid.h>
 
+
 typedef struct _zmsg_t zmsg_t;
+class NetPublisher;
+class NetSubscriber;
 
 /**
  * NetDiscovery class.
  *
- * Acts as interface to mDNS service for discovering other
+ * Provides service for discovering other
  * running processes on the local area network.
  *
- * The application should only ever need one instance of this class.
- * An instance of this class makes it discoverable by other
- * processes with an instance of this class.
+ * The application should only ever need one instance of this class, which
+ * is enforced with a singleton construct.
  *
- * A connected nodes is called a Peer.
- * ATM a Peer only has
+ * After init(), it becomes discoverable by other processes with an instance of
+ * this class.
  *
- * This is a PUB/SUB style discovery, where each node is both a SUB and PUB.
- * However, there is no need to worry about these details.
+ * getPublisher() and getSubscriber() return nodes that follow the PUB/SUB,
+ * style, where the subscriber is connected to all known publishers.
  *
- * It simply provides the following functionality:
- *  - Give me a list of all known peers.
- *  - Send this message to peer X.
- *  - Send this message to all peers.
- *
- * @author SwarmingLogic
+ * @author SwarmingLogic (Roald Fernandez)
  */
 class NetDiscovery
 {
@@ -46,26 +47,58 @@ class NetDiscovery
 
   static NetDiscovery& instance();
 
-  void debugState() const;
+  std::shared_ptr<NetPublisher> getPublisher();
+  std::shared_ptr<NetSubscriber> getSubscriber();
+
   NetDiscovery(const NetDiscovery& c) = delete;
   NetDiscovery& operator=(const NetDiscovery& c) = delete;
 
  private:
-  // static void run_broadcast();
+  /**
+   * Entry function for background thread
+   */
   static void run();
-  static bool extractUuid(zmsg_t *msg);
+
+  /**
+   * Processes incomming broadcasted message.
+   * If this message has already been processed,
+   * already aware of this client (e.g. myself)
+   * it returns false, otherwise true.
+   *
+   * A nullptr message is considered to be processed by default.
+   */
+  bool processMessage(zmsg_t *msg);
+  void validateHeartBeats();
 
   ~NetDiscovery();
 
   Log log_;
+
+  // zmq stuff
+  std::shared_ptr<NetPublisher> publisher_;
+  std::shared_ptr<NetSubscriber> subscriber_;
+
+  // czmq stuff
+  net::czmq::zactor_ptr discoveryPub_;
+  net::czmq::zactor_ptr discoverySub_;
+
+  // Threading
   std::atomic_bool isRunning_;
   std::atomic_bool isSuspended_;
   std::thread thread_;
   std::mutex mutex_;
 
-  std::map<std::string, std::string> participants_;
+  // Discovery, <id, time since last heartbeat>
+  std::map<Uuid, Timer> knownBroadcasters_;
 
-  Uuid uuid_;
+  // magic needs to be the first data element, as filtering on receibed packages
+  // done on this value, assuming it is prefixed
+  struct BroadcastData {
+    int32_t magic;
+    Uuid uuid;
+    int32_t port;
+  } broadcastData_;
+
   std::string hostname_;
 };
 
